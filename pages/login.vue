@@ -33,7 +33,7 @@
       </v-btn>
 
       <!-- login -->
-      <nuxt-link to="/login">
+      <nuxt-link to="/register">
         <p class="text-xs sm:text-sm text-neutral-300">
           حساب کاربری ندارید؟
           <span class="text-secondary underline">ثبت نام کنید</span>

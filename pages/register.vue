@@ -68,7 +68,7 @@
       </v-btn>
 
       <!-- login -->
-      <nuxt-link to="/register">
+      <nuxt-link to="/login">
         <p class="text-xs sm:text-sm text-neutral-300">
           حساب کاربری دارید؟
           <span class="text-secondary underline">وارد شوید</span>
