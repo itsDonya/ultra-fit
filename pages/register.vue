@@ -1,6 +1,6 @@
 <template>
   <form
-    @keydown.enter="registerUser"
+    @keydown.enter="userRegister"
     class="w-full flex flex-col items-center justify-center gap-4 sm:gap-8">
     <h1 class="sm:text-xl text-neutral-200">ایجاد حساب کاربری</h1>
 
@@ -62,13 +62,13 @@
         color="primary"
         :loading="loading"
         :disabled="!validData || loading"
-        @click.prevent="registerUser"
+        @click.prevent="userRegister"
         class="w-full h-9 sm:h-12 rounded-lg sm:rounded-xl">
         <span class="text-xs sm:text-base">ثبت نام</span>
       </v-btn>
 
       <!-- login -->
-      <nuxt-link to="/login">
+      <nuxt-link to="/register">
         <p class="text-xs sm:text-sm text-neutral-300">
           حساب کاربری دارید؟
           <span class="text-secondary underline">وارد شوید</span>
@@ -112,7 +112,7 @@ const passwordIsConfirmed = computed(() => {
     return true;
   }
 });
-const registerUser = async () => {
+const userRegister = async () => {
   // check if resgiter api is already called, prevent from calling again
   if (loading.value) return;
 
