@@ -12,7 +12,11 @@ export default defineNuxtConfig({
     },
     pageTransition: { name: "page", mode: "out-in" },
   },
-  plugins: ["~/plugins/axios.js", "~/plugins/toastification.js"],
+  plugins: [
+    "~/plugins/mitt.js",
+    "~/plugins/axios.js",
+    "~/plugins/toastification.js",
+  ],
   modules: ["nuxt-svgo"],
   svgo: {
     autoImportPath: "./assets/svg/",
