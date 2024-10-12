@@ -1,5 +1,5 @@
 import axios from "axios";
-import { errorPersianMessage } from "../utils/errors";
+// import { errorPersianMessage } from "../utils/errors";
 
 export default defineNuxtPlugin((nuxtApp) => {
   // Set baseURL of axios instance

@@ -54,75 +54,54 @@
       </tbody>
     </v-table>
 
-    <!-- <ul
-      class="w-full flex flex-col items-start justify-start gap-0 rounded-xl overflow-hidden shadow">
-      <li class="list-item">
-        <p class="list-item-text">ردیف</p>
-        <p class="list-item-text col-span-2">نام و نام خانوادگی</p>
-        <p class="list-item-text col-span-2">شماره موبایل</p>
-      </li>
+    <!-- add modal -->
+    <!-- <app-modal v-if="addPupilModal" title="افزودن شاگرد" @close="closeAddModal">
+      
+    </app-modal> -->
+    <v-dialog v-model="addPupilModal">
+      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
+        <div
+          class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
+          <p class="text-sm text-neutral-600">
+            اطلاعات شاگرد جدید را وارد کنید
+          </p>
 
-      <span class="w-full h-[1px] bg-neutral-200"></span>
+          <div class="w-full flex flex-col items-start justify-start gap-2.5">
+            <input
+              type="text"
+              placeholder="نام"
+              v-model="pupil.firstName"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
-      <li :key="i" v-for="(item, i) in pupilsList" class="list-item">
-        <p class="list-item-text">{{ i + 1 }}</p>
-        <p class="list-item-text col-span-2">
-          {{ item.firstName }} {{ item.lastName }}
-        </p>
-        <p class="list-item-text col-span-2">{{ item.mobile }}</p>
+            <input
+              type="text"
+              v-model="pupil.lastName"
+              placeholder="نام خانوادگی"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
-        <div class="flex items-center justify-end gap-2 col-span-7">
-          <div
-            @click="pupilForDelete = item"
-            class="size-9 hover:bg-primary/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-            <i-trash-can-regular
-              class="text-primary/60 group-hover:text-primary transition-200"></i-trash-can-regular>
+            <input
+              type="text"
+              v-model="pupil.mobile"
+              placeholder="شماره موبایل"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
         </div>
-      </li>
-    </ul> -->
 
-    <!-- add modal -->
-    <app-modal v-if="addPupilModal" title="افزودن شاگرد" @close="closeAddModal">
-      <div
-        class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-        <p class="text-sm text-neutral-600">اطلاعات شاگرد جدید را وارد کنید</p>
+        <div class="w-full flex items-center justify-center gap-2">
+          <button
+            :disabled="!validPupil"
+            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-white">ثبت</span>
+          </button>
 
-        <div class="w-full flex flex-col items-start justify-start gap-2.5">
-          <input
-            type="text"
-            placeholder="نام"
-            v-model="pupil.firstName"
-            class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-          <input
-            type="text"
-            v-model="pupil.lastName"
-            placeholder="نام خانوادگی"
-            class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-          <input
-            type="text"
-            v-model="pupil.mobile"
-            placeholder="شماره موبایل"
-            class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
+          <button
+            @click="closeAddModal"
+            class="w-full h-11 flex flex-center border border-primary rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-primary">انصراف</span>
+          </button>
         </div>
       </div>
-
-      <div class="w-full flex items-center justify-center gap-2">
-        <button
-          :disabled="!validPupil"
-          class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-          <span class="text-sm text-white">ثبت</span>
-        </button>
-
-        <button
-          @click="closeAddModal"
-          class="w-full h-11 flex flex-center border border-primary rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-          <span class="text-sm text-primary">انصراف</span>
-        </button>
-      </div>
-    </app-modal>
+    </v-dialog>
 
     <!-- delete modal -->
     <app-modal
