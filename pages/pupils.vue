@@ -41,14 +41,20 @@
         <tr v-for="(item, i) in pupilsList" :key="i">
           <td>{{ i + 1 }}</td>
           <td>{{ item.firstName }} {{ item.lastName }}</td>
-          <td>{{ item.username }}</td>
+          <td>{{ item.userName }}</td>
           <td class="flex items-center justify-end">
-            <div
-              @click="openDeleteModal(item)"
-              class="size-9 hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-              <i-trash-can-regular
-                class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
-            </div>
+            <!-- delete -->
+            <v-tooltip text="حذف شاگرد" location="bottom">
+              <template v-slot:activator="{ props }">
+                <div
+                  v-bind="props"
+                  @click="openDeleteModal(item)"
+                  class="size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                  <i-trash-can-regular
+                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
+                </div>
+              </template>
+            </v-tooltip>
           </td>
         </tr>
       </tbody>
@@ -113,7 +119,7 @@
 
         <div class="w-full flex items-center justify-center gap-2">
           <button
-            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            class="w-full h-11 bg-red-500 flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
             <span class="text-sm text-white">حذف</span>
           </button>
 
@@ -212,7 +218,7 @@ const openDeleteModal = (item) => {
   deletePupilModal.value = true;
 };
 const closeDeleteModal = () => {
-  pupilForDelete.value = null;
   deletePupilModal.value = false;
+  pupilForDelete.value = null;
 };
 </script>
