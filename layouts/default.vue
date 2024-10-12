@@ -7,9 +7,21 @@
       <app-sidebar></app-sidebar>
 
       <main
-        class="w-full h-full max-h-full p-6 bg-white rounded-tr-3xl overflow-auto">
+        :class="[`${isOpen ? 'rounded-tr-3xl' : 'rounded-none'}`]"
+        class="w-full h-full max-h-full gap-2 lg:p-6 bg-white lg:rounded-tr-3xl overflow-auto">
         <slot></slot>
       </main>
     </div>
   </div>
 </template>
+
+<script setup>
+// variables
+const isOpen = ref(false);
+const nuxtApp = useNuxtApp();
+
+// lifecycles
+onMounted(() => {
+  nuxtApp.$emitter.on("toggleSidebar", (e) => (isOpen.value = e));
+});
+</script>
