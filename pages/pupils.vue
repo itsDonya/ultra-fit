@@ -44,7 +44,7 @@
           <td>{{ item.username }}</td>
           <td class="flex items-center justify-end">
             <div
-              @click="pupilForDelete = item"
+              @click="openDeleteModal(item)"
               class="size-9 hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
               <i-trash-can-regular
                 class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
@@ -54,10 +54,6 @@
       </tbody>
     </v-table>
 
-    <!-- add modal -->
-    <!-- <app-modal v-if="addPupilModal" title="افزودن شاگرد" @close="closeAddModal">
-      
-    </app-modal> -->
     <v-dialog v-model="addPupilModal">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
         <div
@@ -104,32 +100,31 @@
     </v-dialog>
 
     <!-- delete modal -->
-    <app-modal
-      free-height
-      v-if="pupilForDelete"
-      title="حذف شاگرد"
-      @close="closeDeleteModal">
-      <p class="my-10 text-center text-neutral-600">
-        آیا از حذف این
-        <span class="font-bold">
-          {{ pupilForDelete.firstName }} {{ pupilForDelete.lastName }}
-        </span>
-        مطمئن هستید؟
-      </p>
+    <v-dialog v-model="deletePupilModal">
+      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
+        <p class="my-10 text-center text-neutral-600">
+          آیا از حذف
+          <span class="font-bold">
+            {{ pupilForDelete?.firstName || "" }}
+            {{ pupilForDelete?.lastName || "" }}
+          </span>
+          مطمئن هستید؟
+        </p>
 
-      <div class="w-full flex items-center justify-center gap-2">
-        <button
-          class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-          <span class="text-sm text-white">حذف</span>
-        </button>
+        <div class="w-full flex items-center justify-center gap-2">
+          <button
+            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-white">حذف</span>
+          </button>
 
-        <button
-          @click="closeDeleteModal"
-          class="w-full h-11 flex flex-center border border-primary rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-          <span class="text-sm text-primary">انصراف</span>
-        </button>
+          <button
+            @click="closeDeleteModal"
+            class="w-full h-11 flex flex-center border border-primary rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-primary">انصراف</span>
+          </button>
+        </div>
       </div>
-    </app-modal>
+    </v-dialog>
   </article>
 </template>
 
@@ -140,10 +135,11 @@ const pupil = ref({
   lastName: null,
   mobile: null,
 });
+const pupilForDelete = ref(null);
 
 // modals
 const addPupilModal = ref(false);
-const pupilForDelete = ref(null);
+const deletePupilModal = ref(false);
 
 // data
 const pupilsList = ref([
@@ -211,7 +207,12 @@ const closeAddModal = () => {
   pupil.value.mobile = null;
   addPupilModal.value = false;
 };
+const openDeleteModal = (item) => {
+  pupilForDelete.value = item;
+  deletePupilModal.value = true;
+};
 const closeDeleteModal = () => {
   pupilForDelete.value = null;
+  deletePupilModal.value = false;
 };
 </script>
