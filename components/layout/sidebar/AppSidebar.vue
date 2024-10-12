@@ -1,15 +1,18 @@
 <template>
   <aside
     :class="[`${isOpen ? 'min-w-52 w-52 p-2' : ' min-w-0 w-0 max-w-0 p-0'}`]"
-    class="h-full lg:min-w-52 lg:w-52 lg:max-w-52 lg:p-2">
+    class="h-full lg:min-w-52 lg:w-52 lg:max-w-52 lg:p-2 transition-all duration-200"
+  >
     <nav class="w-full flex flex-col items-start justify-start gap-1">
       <nuxt-link
         class="w-full"
         :key="i"
         v-for="(item, i) in sidebarLinks"
-        :to="item.path">
+        :to="item.path"
+      >
         <div
-          class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/20 rounded-lg transition-all duration-200">
+          class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/20 rounded-lg transition-all duration-200"
+        >
           <component :is="`i-${item.icon}`" class="text-white"></component>
           <span class="text-sm xl:text-base text-white">{{ item.title }}</span>
         </div>
@@ -20,7 +23,8 @@
 
 <script setup>
 // variables
-const isOpen = ref(true);
+const isOpen = ref(false);
+const nuxtApp = useNuxtApp();
 const sidebarLinks = ref([
   {
     icon: "chart-line",
@@ -52,6 +56,11 @@ const sidebarLinks = ref([
     path: "/coming-soon",
   },
 ]);
+
+// lifecycles
+onMounted(() => {
+  nuxtApp.$emitter.on("toggleSidebar", (e) => (isOpen.value = e));
+});
 </script>
 
 <style scoped>
