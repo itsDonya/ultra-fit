@@ -2,7 +2,7 @@
   <article class="w-full flex flex-col items-start justify-start gap-4">
     <div class="w-full flex items-center justify-between">
       <!-- title -->
-      <h2 class="text-xl text-neutral-700 font-bold">لیست شاگرد ها</h2>
+      <h2 class="text-xl text-neutral-700 font-bold">لیست حرکات</h2>
 
       <div class="flex items-center justify-end gap-2">
         <!-- search -->

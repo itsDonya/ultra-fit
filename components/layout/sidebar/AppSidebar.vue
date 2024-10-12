@@ -32,8 +32,7 @@ const sidebarLinks = ref([
   {
     icon: "dumbbell",
     title: "حرکات",
-    // path: "/movements",
-    path: "/coming-soon",
+    path: "/exercises",
   },
   {
     icon: "calendar-lines",
