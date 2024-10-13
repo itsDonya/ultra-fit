@@ -43,6 +43,18 @@
           <td>{{ item.firstName }} {{ item.lastName }}</td>
           <td>{{ item.userName }}</td>
           <td class="flex items-center justify-end">
+            <!-- edit -->
+            <v-tooltip text="حذف شاگرد" location="bottom">
+              <template v-slot:activator="{ props }">
+                <div
+                  v-bind="props"
+                  @click="openDeleteModal(item)"
+                  class="size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                  <i-pen-solid
+                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-pen-solid>
+                </div>
+              </template>
+            </v-tooltip>
             <!-- delete -->
             <v-tooltip text="حذف شاگرد" location="bottom">
               <template v-slot:activator="{ props }">
