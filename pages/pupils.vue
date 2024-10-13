@@ -7,24 +7,86 @@
       <div class="flex items-center justify-end gap-2">
         <!-- search -->
         <div
-          class="w-3/6 md:w-52 h-8 md:h-10 px-2.5 flex items-center justify-start gap-2 border border-neutral-950/10 rounded-lg">
+          class="w-3/6 md:w-52 h-8 md:h-10 px-2.5 flex items-center justify-start gap-2 border rounded-lg"
+        >
           <i-magnifying-glass class="text-neutral-300"></i-magnifying-glass>
 
           <input
             type="text"
             placeholder="جستجوی شاگرد"
-            class="w-full h-full text-xs md:text-sm text-neutral-700" />
+            class="w-full h-full text-xs md:text-sm text-neutral-700"
+          />
         </div>
 
-        <!-- add -->
-        <v-btn
-          variant="outlined"
-          color="primary"
-          @click="addPupilModal = true"
-          class="px-2.5 md:px-3.5 h-8 md:h-10 flex flex-center hover:bg-primary/5 !rounded-lg transition-200">
-          <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
-          <span class="text-xs md:text-sm text-primary">افزودن</span>
-        </v-btn>
+        <!-- add modal -->
+        <v-dialog>
+          <template v-slot:activator="{ props: activatorProps }">
+            <v-btn
+              color="primary"
+              variant="outlined"
+              v-bind="activatorProps"
+              @click="addPupilModal = true"
+              rounded="lg"
+              class="px-2.5 md:px-3.5 h-8 md:h-10 flex flex-center hover:bg-primary/5 transition-200"
+            >
+              <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
+              <span class="text-xs md:text-sm text-primary">افزودن</span>
+            </v-btn>
+          </template>
+
+          <template v-slot:default="{ isActive }">
+            <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
+              <div
+                class="w-full h-full flex flex-col items-start justify-start gap-4 py-2"
+              >
+                <p class="text-sm text-neutral-600">
+                  اطلاعات شاگرد جدید را وارد کنید
+                </p>
+
+                <div
+                  class="w-full flex flex-col items-start justify-start gap-2.5"
+                >
+                  <input
+                    type="text"
+                    placeholder="نام"
+                    v-model="pupil.firstName"
+                    class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200"
+                  />
+
+                  <input
+                    type="text"
+                    v-model="pupil.lastName"
+                    placeholder="نام خانوادگی"
+                    class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200"
+                  />
+
+                  <input
+                    type="text"
+                    v-model="pupil.username"
+                    placeholder="نام کاربری"
+                    class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200"
+                  />
+                </div>
+              </div>
+
+              <div class="w-full flex items-center justify-center gap-2">
+                <button
+                  :disabled="!validPupil"
+                  class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200"
+                >
+                  <span class="text-sm text-white">ثبت</span>
+                </button>
+
+                <button
+                  @click="isActive.value = false"
+                  class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200"
+                >
+                  <span class="text-sm text-neutral-500">انصراف</span>
+                </button>
+              </div>
+            </div>
+          </template>
+        </v-dialog>
       </div>
     </div>
 
@@ -41,96 +103,63 @@
         <tr v-for="(item, i) in pupilsList" :key="i">
           <td>{{ i + 1 }}</td>
           <td>{{ item.firstName }} {{ item.lastName }}</td>
-          <td>{{ item.userName }}</td>
+          <td>{{ item.username }}</td>
           <td class="flex items-center justify-end">
             <!-- delete -->
             <v-tooltip text="حذف شاگرد" location="bottom">
               <template v-slot:activator="{ props }">
-                <div
-                  v-bind="props"
-                  @click="openDeleteModal(item)"
-                  class="size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                  <i-trash-can-regular
-                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
-                </div>
+                <v-dialog>
+                  <template v-slot:activator="{ props: activatorProps }">
+                    <div
+                      v-bind="{ ...props, ...activatorProps }"
+                      @click="openDeleteModal(item)"
+                      class="size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group"
+                    >
+                      <i-trash-can-regular
+                        class="text-red-500/80 group-hover:text-red-500 transition-200"
+                      ></i-trash-can-regular>
+                    </div>
+                  </template>
+
+                  <template v-slot:default="{ isActive }">
+                    <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
+                      <p class="my-10 text-center text-neutral-600">
+                        آیا از حذف
+                        <span class="font-bold">
+                          {{ pupilForDelete?.firstName || "" }}
+                          {{ pupilForDelete?.lastName || "" }}
+                        </span>
+                        مطمئن هستید؟
+                      </p>
+
+                      <div
+                        class="w-full flex items-center justify-center gap-2"
+                      >
+                        <button
+                          class="w-full h-11 bg-red-500 flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200"
+                        >
+                          <span class="text-sm text-white">حذف</span>
+                        </button>
+
+                        <button
+                          @click="
+                            isActive.value = false;
+                            closeDeleteModal();
+                          "
+                          class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200"
+                        >
+                          <span class="text-sm text-neutral-500">انصراف</span>
+                        </button>
+                      </div>
+                    </div>
+                  </template>
+                </v-dialog>
               </template>
             </v-tooltip>
           </td>
         </tr>
       </tbody>
     </v-table>
-
-    <v-dialog v-model="addPupilModal">
-      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-        <div
-          class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-          <p class="text-sm text-neutral-600">
-            اطلاعات شاگرد جدید را وارد کنید
-          </p>
-
-          <div class="w-full flex flex-col items-start justify-start gap-2.5">
-            <input
-              type="text"
-              placeholder="نام"
-              v-model="pupil.firstName"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-            <input
-              type="text"
-              v-model="pupil.lastName"
-              placeholder="نام خانوادگی"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-            <input
-              type="text"
-              v-model="pupil.mobile"
-              placeholder="شماره موبایل"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-          </div>
-        </div>
-
-        <div class="w-full flex items-center justify-center gap-2">
-          <button
-            :disabled="!validPupil"
-            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-white">ثبت</span>
-          </button>
-
-          <button
-            @click="closeAddModal"
-            class="w-full h-11 flex flex-center border border-primary rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-primary">انصراف</span>
-          </button>
-        </div>
-      </div>
-    </v-dialog>
-
-    <!-- delete modal -->
-    <v-dialog v-model="deletePupilModal">
-      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-        <p class="my-10 text-center text-neutral-600">
-          آیا از حذف
-          <span class="font-bold">
-            {{ pupilForDelete?.firstName || "" }}
-            {{ pupilForDelete?.lastName || "" }}
-          </span>
-          مطمئن هستید؟
-        </p>
-
-        <div class="w-full flex items-center justify-center gap-2">
-          <button
-            class="w-full h-11 bg-red-500 flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-white">حذف</span>
-          </button>
-
-          <button
-            @click="closeDeleteModal"
-            class="w-full h-11 flex flex-center border border-primary rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-primary">انصراف</span>
-          </button>
-        </div>
-      </div>
-    </v-dialog>
   </article>
 </template>
 
@@ -139,7 +168,7 @@
 const pupil = ref({
   firstName: null,
   lastName: null,
-  mobile: null,
+  username: null,
 });
 const pupilForDelete = ref(null);
 
@@ -152,65 +181,65 @@ const pupilsList = ref([
   {
     firstName: "John",
     lastName: "Doe",
-    mobile: "09444567890",
+    username: "JohnDoe",
   },
   {
     firstName: "Jane",
     lastName: "Smith",
-    mobile: "09445678901",
+    username: "JaneSmith",
   },
   {
     firstName: "Alice",
     lastName: "Johnson",
-    mobile: "09446789012",
+    username: "AliceJohnson",
   },
   {
     firstName: "Bob",
     lastName: "Brown",
-    mobile: "09447890123",
+    username: "BobBrown",
   },
   {
     firstName: "Charlie",
     lastName: "Davis",
-    mobile: "09448901234",
+    username: "CharlieDavis",
   },
   {
     firstName: "David",
     lastName: "Wilson",
-    mobile: "09449012345",
+    username: "DavidWilson",
   },
   {
     firstName: "Emily",
     lastName: "Miller",
-    mobile: "09440123456",
+    username: "EmilyMiller",
   },
   {
     firstName: "Frank",
     lastName: "Moore",
-    mobile: "09441234567",
+    username: "FrankMoore",
   },
   {
     firstName: "Grace",
     lastName: "Taylor",
-    mobile: "09442345678",
+    username: "GraceTaylor",
   },
   {
     firstName: "Hannah",
     lastName: "Anderson",
-    mobile: "09443456789",
+    username: "HannahAnderson",
   },
 ]);
 
 // computed
 const validPupil = computed(() => {
-  return pupil.value.firstName && pupil.value.lastName && pupil.value.mobile;
+  return pupil.value.firstName && pupil.value.lastName && pupil.value.username;
 });
 
 // methods
 const closeAddModal = () => {
   pupil.value.firstName = null;
   pupil.value.lastName = null;
-  pupil.value.mobile = null;
+  pupil.value.username = null;
   addPupilModal.value = false;
 };
 const openDeleteModal = (item) => {
