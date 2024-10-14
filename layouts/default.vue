@@ -9,7 +9,7 @@
 
       <main
         :class="[`${isOpen ? 'rounded-tr-3xl' : 'rounded-none'}`]"
-        class="w-full h-full max-h-full gap-2 lg:p-6 bg-white lg:rounded-tr-3xl overflow-auto"
+        class="w-full h-full max-h-full gap-2 p-2 lg:p-6 bg-white lg:rounded-tr-3xl overflow-auto"
       >
         <slot></slot>
       </main>
