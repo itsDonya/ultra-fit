@@ -44,18 +44,18 @@
                   <input
                     type="text"
                     placeholder="نام"
-                    v-model="pupil.firstName"
+                    v-model="addAthleteData.firstName"
                     class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
                   <input
                     type="text"
-                    v-model="pupil.lastName"
+                    v-model="addAthleteData.lastName"
                     placeholder="نام خانوادگی"
                     class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
                   <input
                     type="text"
-                    v-model="pupil.username"
+                    v-model="addAthleteData.username"
                     placeholder="نام کاربری"
                     class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
                 </div>
@@ -63,7 +63,7 @@
 
               <div class="w-full flex items-center justify-center gap-2">
                 <button
-                  :disabled="!validPupil"
+                  :disabled="!validAddAthlete"
                   class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
                   <span class="text-sm text-white">ثبت</span>
                 </button>
@@ -91,7 +91,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, i) in pupilsList" :key="i">
+        <tr v-for="(item, i) in athletesList" :key="i">
           <td class="text-[10px] md:text-sm lg:text-base">
             {{ i + 1 }}
           </td>
@@ -152,7 +152,7 @@
                       <div
                         class="w-full flex items-center justify-center gap-2">
                         <button
-                          :disabled="!validPupil"
+                          :disabled="!validAddAthlete"
                           class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
                           <span class="text-sm text-white">ثبت</span>
                         </button>
@@ -191,8 +191,8 @@
                       <p class="my-10 text-center text-neutral-600">
                         آیا از حذف
                         <span class="font-bold">
-                          {{ pupilForDelete?.firstName || "" }}
-                          {{ pupilForDelete?.lastName || "" }}
+                          {{ deleteAthleteData?.firstName || "" }}
+                          {{ deleteAthleteData?.lastName || "" }}
                         </span>
                         مطمئن هستید؟
                       </p>
@@ -207,7 +207,7 @@
                         <button
                           @click="
                             isActive.value = false;
-                            closeDeleteModal();
+                            resetDeleteData();
                           "
                           class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
                           <span class="text-sm text-neutral-500">انصراف</span>
@@ -226,18 +226,26 @@
 </template>
 
 <script setup>
-// variables
-const pupil = ref({
+// add
+const addAthleteData = ref({
   firstName: null,
   lastName: null,
   username: null,
+  reset: function () {
+    this.firstName = null;
+    this.lastName = null;
+    this.username = null;
+  },
 });
-const pupilForDelete = ref(null);
 
-// modals
+// edit
+const editAthleteData = ref(null);
+
+// delete
+const deleteAthleteData = ref(null);
 
 // data
-const pupilsList = ref([
+const athletesList = ref([
   {
     firstName: "John",
     lastName: "Doe",
@@ -281,8 +289,19 @@ const pupilsList = ref([
 ]);
 
 // computed
-const validPupil = computed(() => {
-  return pupil.value.firstName && pupil.value.lastName && pupil.value.username;
+const validAddAthlete = computed(() => {
+  return (
+    addAthleteData.value.firstName &&
+    addAthleteData.value.lastName &&
+    addAthleteData.value.username
+  );
+});
+const validEditAthlete = computed(() => {
+  return (
+    editAthleteData.value.firstName &&
+    editAthleteData.value.lastName &&
+    editAthleteData.value.username
+  );
 });
 
 // methods
@@ -297,9 +316,9 @@ const resetPupilData = () => {
   pupil.value.username = null;
 };
 const openDeleteModal = (item) => {
-  pupilForDelete.value = item;
+  deleteAthleteData.value = item;
 };
-const closeDeleteModal = () => {
-  pupilForDelete.value = null;
+const resetDeleteData = () => {
+  deleteAthleteData.value = null;
 };
 </script>
