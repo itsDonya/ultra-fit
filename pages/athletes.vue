@@ -141,17 +141,21 @@
         </div>
 
         <div class="w-full flex items-center justify-center gap-2">
-          <button
+          <v-btn
             :disabled="!validAddAthlete"
-            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-white">ثبت</span>
-          </button>
+            :loading="addLoading"
+            class="w-1/2 !h-11 rounded-lg"
+            color="primary"
+            >ثبت</v-btn
+          >
 
-          <button
+          <v-btn
             @click="resetAthleteData"
-            class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-neutral-500">انصراف</span>
-          </button>
+            variant="outlined"
+            color="red"
+            class="w-1/2 !h-11 rounded-lg">
+            انصراف
+          </v-btn>
         </div>
       </div>
     </v-dialog>
@@ -187,17 +191,20 @@
         </div>
 
         <div class="w-full flex items-center justify-center gap-2">
-          <button
+          <v-btn
             :disabled="!validEditAthlete"
-            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-white">ثبت</span>
-          </button>
+            class="w-1/2 !h-11 rounded-lg"
+            color="primary"
+            >ثبت</v-btn
+          >
 
-          <button
+          <v-btn
             @click="resetAthleteData"
-            class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-neutral-500">انصراف</span>
-          </button>
+            variant="outlined"
+            color="red"
+            class="w-1/2 !h-11 rounded-lg">
+            انصراف
+          </v-btn>
         </div>
       </div>
     </v-dialog>
@@ -205,7 +212,7 @@
     <!-- delete athlete -->
     <v-dialog v-model="deleteAthleteDialog" @after-leave="resetAthleteData">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-        <p class="my-10 text-center text-neutral-600">
+        <p class="my-4 text-center text-neutral-600">
           آیا از حذف
           <span class="font-bold">
             {{ deleteAthleteData?.firstName || "" }}
@@ -215,16 +222,15 @@
         </p>
 
         <div class="w-full flex items-center justify-center gap-2">
-          <button
-            class="w-full h-11 bg-red-500 flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-white">حذف</span>
-          </button>
+          <v-btn class="w-1/2 !h-11 rounded-lg" color="red">حذف</v-btn>
 
-          <button
+          <v-btn
             @click="resetAthleteData"
-            class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-            <span class="text-sm text-neutral-500">انصراف</span>
-          </button>
+            variant="outlined"
+            color="red"
+            class="w-1/2 !h-11 rounded-lg">
+            انصراف
+          </v-btn>
         </div>
       </div>
     </v-dialog>
@@ -237,6 +243,7 @@ const nuxtApp = useNuxtApp();
 
 // loadings
 const fetchLoading = ref(false);
+const addLoading = ref(false);
 
 // dialogs
 const addAthleteDialog = ref(false);
