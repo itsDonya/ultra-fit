@@ -79,6 +79,8 @@
 </template>
 
 <script setup>
+import { navigateTo } from "nuxt/app";
+
 definePageMeta({
   layout: "auth",
 });
@@ -116,6 +118,11 @@ const userRegister = async () => {
   // check if resgiter api is already called, prevent from calling again
   if (loading.value) return;
 
+  if (data.value.password != confirmPassword.value) {
+    nuxtApp.$toast.error("گذراوژه با تکرار آن مغایرت دارد");
+    return;
+  }
+
   loading.value = true;
 
   await nuxtApp.$axios
@@ -123,7 +130,27 @@ const userRegister = async () => {
       ...data.value,
     })
     .then((res) => {
-      console.log(res);
+      if (res.data.errorCode == "UserNameAlreadyExsist") {
+        nuxtApp.$toast.error("نام کاربری تکراری است");
+        data.value.username = null;
+      } else {
+        const TOKEN = res.data.result.token;
+
+        const today = new Date();
+        const nextMonth = new Date(today);
+        nextMonth.setDate(today.getDate() + 30);
+
+        const cookieTOKEN = useCookie("ULTRA_TK", {
+          maxAge: 2592000,
+          expires: nextMonth,
+        });
+
+        cookieTOKEN.value = TOKEN;
+
+        nuxtApp.$toast.success("ثبت نام با موفقیت انجام شد؛ خوش آمدید");
+
+        navigateTo("/");
+      }
     })
     .catch((error) => {
       if (error) {
