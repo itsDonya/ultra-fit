@@ -160,23 +160,67 @@
           <p class="text-sm text-neutral-600">اطلاعات حرکت جدید را وارد کنید</p>
 
           <div class="w-full flex flex-col items-start justify-start gap-2.5">
+            <label
+              :class="[
+                addExerciseImage
+                  ? ' shadow-lg'
+                  : 'border-2 border-primary/20 border-dashed',
+              ]"
+              class="w-full h-44 flex flex-center gap-2 rounded-lg overflow-hidden">
+              <img
+                v-if="addExerciseImage"
+                :src="addExerciseImage"
+                class="w-full h-full object-cover"
+                alt="" />
+
+              <template v-else>
+                <i-plus-solid class="text-sm text-primary/40"></i-plus-solid>
+                <p class="text-primary/40">آپلود تصویر</p>
+              </template>
+
+              <input
+                type="file"
+                class="hidden"
+                @input="uploadAddImage($event)" />
+            </label>
+
             <input
               type="text"
-              placeholder="نام"
-              v-model="addExerciseData.firstName"
+              placeholder="عنوان حرکت"
+              v-model="addExerciseData.name"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
             <input
               type="text"
-              v-model="addExerciseData.lastName"
-              placeholder="نام خانوادگی"
+              v-model="addExerciseData.engName"
+              placeholder="عنوان حرکت (به انگلیسی)"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
-            <input
+            <select
+              v-model="addExerciseData.exerciseType"
+              :class="[addExerciseData.exerciseType ? '' : 'text-neutral-400']"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200">
+              <option :value="undefined" disabled selected>نوع حرکت</option>
+              <option value="1" class="text-black">1</option>
+              <option value="2" class="text-black">2</option>
+              <option value="3" class="text-black">3</option>
+            </select>
+
+            <select
+              v-model="addExerciseData.categoryId"
+              :class="[addExerciseData.categoryId ? '' : 'text-neutral-400']"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200">
+              <option :value="undefined" disabled selected>دسته بندی</option>
+              <option value="1" class="text-black">1</option>
+              <option value="2" class="text-black">2</option>
+              <option value="3" class="text-black">3</option>
+            </select>
+
+            <textarea
               type="text"
-              v-model="addExerciseData.userName"
-              placeholder="نام کاربری"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
+              v-model="addExerciseData.description"
+              placeholder="عنوان حرکت (به انگلیسی)"
+              class="w-full h-28 resize-none p-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200"></textarea>
           </div>
         </div>
 
@@ -368,6 +412,9 @@ const viewExerciseData = ref({});
 const editExerciseData = ref({});
 const deleteExerciseData = ref({});
 
+// images
+const addExerciseImage = ref(null);
+
 // pagination
 const pagination = ref({
   page: 1,
@@ -378,9 +425,14 @@ const pagination = ref({
 // computed
 const validAddExercise = computed(() => {
   return (
-    addExerciseData.value.firstName &&
-    addExerciseData.value.lastName &&
-    addExerciseData.value.userName
+    addExerciseData.value.image1 &&
+    addExerciseData.value.name &&
+    addExerciseData.value.engName &&
+    addExerciseData.value.exerciseType &&
+    addExerciseData.value.exerciseType &&
+    addExerciseData.value.categoryId &&
+    addExerciseData.value.categoryId &&
+    addExerciseData.value.description
   );
 });
 const validEditExercise = computed(() => {
@@ -409,10 +461,14 @@ const getExercises = async () => {
     });
 };
 const addExercise = async () => {
+  if (!validAddExercise.value) return;
+
   addLoading.value = true;
 
   await nuxtApp.$axios
-    .post("/Coach/AddExercise", addExerciseData.value)
+    .post("/Exercise/CreateExercise", addExerciseData.value, {
+      headers: { "Content-Type": "multipart/form-data" },
+    })
     .then(() => {
       nuxtApp.$toast.success("عملیات با موفقیت انجام شد");
       pagination.value.page = 1;
@@ -449,6 +505,13 @@ const closeDialogs = () => {
   viewExerciseDialog.value = false;
   editExerciseDialog.value = false;
   deleteExerciseDialog.value = false;
+};
+const uploadAddImage = (event) => {
+  const FILE = event.target.files[0];
+
+  addExerciseData.value.image1 = FILE;
+
+  addExerciseImage.value = URL.createObjectURL(FILE);
 };
 
 // lifecycles
