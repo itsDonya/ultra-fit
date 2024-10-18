@@ -29,7 +29,17 @@
       </div>
     </div>
 
-    <v-table class="w-full">
+    <i-spinner-solid
+      v-if="fetchLoading"
+      class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+
+    <p
+      v-else-if="athletesList.length == 0"
+      class="my-6 mx-auto text-neutral-600">
+      در حال حاضر اطلاعاتی وجود ندارد
+    </p>
+
+    <v-table v-if="!fetchLoading && athletesList.length" class="w-full">
       <thead>
         <tr>
           <th class="text-[10px] md:text-sm lg:text-base">ردیف</th>
@@ -94,6 +104,7 @@
 
     <app-pagination
       v-bind="pagination"
+      v-if="!fetchLoading && athletesList.length"
       @update-page="updatePage($event)"></app-pagination>
 
     <!-- add athlete -->
@@ -221,6 +232,9 @@
 // variables
 const nuxtApp = useNuxtApp();
 
+// loadings
+const fetchLoading = ref(false);
+
 // dialogs
 const addAthleteDialog = ref(false);
 const editAthleteDialog = ref(false);
@@ -257,6 +271,8 @@ const validEditAthlete = computed(() => {
 
 // fetch
 const getAthletes = async () => {
+  fetchLoading.value = true;
+
   await nuxtApp.$axios
     .get(
       `/Coach/GetMyAthlete?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
@@ -265,7 +281,10 @@ const getAthletes = async () => {
       athletesList.value = response.data.result.records;
       pagination.value.totalRecord = response.data.result.totalRecord;
     })
-    .catch((error) => error && console.log("athletes error: ", error));
+    .catch((error) => error && console.log("athletes error: ", error))
+    .finally(() => {
+      fetchLoading.value = false;
+    });
 };
 const updatePage = (pageNumber) => {
   pagination.value.page = pageNumber;
