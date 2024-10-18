@@ -43,7 +43,7 @@
           "
           v-for="(item, i) in exerciseList"
           :key="i"
-          class="w-full h-16 p-1.5 flex items-center justify-between cursor-pointer">
+          class="w-full h-16 p-1.5 flex items-center justify-start gap-8 cursor-pointer">
           <div class="h-full flex items-center justify-start gap-4">
             <img
               @click="
@@ -70,7 +70,7 @@
               viewExerciseData = JSON.parse(JSON.stringify(item));
               viewExerciseDialog = true;
             "
-            class="w-44 flex flex-col items-center justify-center gap-0.5">
+            class="w-72 flex flex-col items-center justify-center gap-0.5">
             <p class="text-xs text-dark/60">{{ item.exerciseType }}</p>
             <p class="text-xs text-primary/80">{{ item.categoryId }}</p>
           </div>
@@ -85,9 +85,9 @@
           </p>
 
           <!-- action -->
-          <div class="flex items-center justify-end gap-0.5">
-            <!-- edit -->
-            <v-tooltip text="مشاهده" location="bottom">
+          <!-- <div class="flex items-center justify-end gap-0.5"> -->
+          <!-- edit -->
+          <!-- <v-tooltip text="مشاهده" location="bottom">
               <template v-slot:activator="{ props }">
                 <div
                   v-bind="{ ...props }"
@@ -100,10 +100,10 @@
                     class="text-secondary/80 group-hover:text-secondary transition-200"></i-eye-solid>
                 </div>
               </template>
-            </v-tooltip>
+            </v-tooltip> -->
 
-            <!-- edit -->
-            <v-tooltip text="ویرایش" location="bottom">
+          <!-- edit -->
+          <!-- <v-tooltip text="ویرایش" location="bottom">
               <template v-slot:activator="{ props }">
                 <div
                   v-bind="{ ...props }"
@@ -116,10 +116,10 @@
                     class="text-yellow-300/80 group-hover:text-yellow-300 transition-200"></i-pen-solid>
                 </div>
               </template>
-            </v-tooltip>
+            </v-tooltip> -->
 
-            <!-- delete -->
-            <v-tooltip text="حذف" location="bottom">
+          <!-- delete -->
+          <!-- <v-tooltip text="حذف" location="bottom">
               <template v-slot:activator="{ props }">
                 <div
                   v-bind="{ ...props }"
@@ -133,7 +133,7 @@
                 </div>
               </template>
             </v-tooltip>
-          </div>
+          </div> -->
         </li>
       </ul>
     </div>
@@ -144,7 +144,7 @@
       @update-page="updatePage($event)"></app-pagination>
 
     <!-- add exercise -->
-    <v-dialog v-model="addExerciseDialog" @after-leave="resetExerciseData">
+    <!-- <v-dialog v-model="addExerciseDialog" @after-leave="resetExerciseData">
       <div
         class="w-80 p-4 mx-auto bg-white rounded-xl-tw"
         @keydown.enter="addExercise">
@@ -192,7 +192,7 @@
           </v-btn>
         </div>
       </div>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- view exercise -->
     <v-dialog v-model="viewExerciseDialog" @after-leave="resetExerciseData">
@@ -266,7 +266,7 @@
     </v-dialog>
 
     <!-- edit exercise -->
-    <v-dialog v-model="editExerciseDialog" @after-leave="resetExerciseData">
+    <!-- <v-dialog v-model="editExerciseDialog" @after-leave="resetExerciseData">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
         <div
           class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
@@ -310,10 +310,10 @@
           </v-btn>
         </div>
       </div>
-    </v-dialog>
+    </v-dialog> -->
 
     <!-- delete exercise -->
-    <v-dialog v-model="deleteExerciseDialog" @after-leave="resetExerciseData">
+    <!-- <v-dialog v-model="deleteExerciseDialog" @after-leave="resetExerciseData">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
         <p class="my-4 text-center text-neutral-600">
           آیا از حذف
@@ -336,7 +336,7 @@
           </v-btn>
         </div>
       </div>
-    </v-dialog>
+    </v-dialog> -->
   </article>
 </template>
 
