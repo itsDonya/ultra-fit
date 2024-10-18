@@ -51,7 +51,7 @@
             {{ item.lastName }}
           </td>
           <td class="text-[10px] md:text-sm lg:text-base">
-            {{ item.username }}
+            {{ item.userName }}
           </td>
           <td class="flex items-center justify-end gap-2">
             <!-- edit -->
@@ -114,7 +114,7 @@
 
             <input
               type="text"
-              v-model="addAthleteData.username"
+              v-model="addAthleteData.userName"
               placeholder="نام کاربری"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
@@ -160,7 +160,7 @@
 
             <input
               type="text"
-              v-model="editAthleteData.username"
+              v-model="editAthleteData.userName"
               placeholder="نام کاربری"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
@@ -212,79 +212,45 @@
 </template>
 
 <script setup>
+// variables
+const nuxtApp = useNuxtApp();
+
 // dialogs
 const addAthleteDialog = ref(false);
 const editAthleteDialog = ref(false);
 const deleteAthleteDialog = ref(false);
 
-// add
-const addAthleteData = ref({});
-
-// edit
-const editAthleteData = ref({});
-
-// delete
-const deleteAthleteData = ref({});
-
 // data
-const athletesList = ref([
-  {
-    firstName: "John",
-    lastName: "Doe",
-    username: "JohnDoe",
-  },
-  {
-    firstName: "Jane",
-    lastName: "Smith",
-    username: "JaneSmith",
-  },
-  {
-    firstName: "Alice",
-    lastName: "Johnson",
-    username: "AliceJohnson",
-  },
-  {
-    firstName: "Bob",
-    lastName: "Brown",
-    username: "BobBrown",
-  },
-  {
-    firstName: "Charlie",
-    lastName: "Davis",
-    username: "CharlieDavis",
-  },
-  {
-    firstName: "David",
-    lastName: "Wilson",
-    username: "DavidWilson",
-  },
-  {
-    firstName: "Emily",
-    lastName: "Miller",
-    username: "EmilyMiller",
-  },
-  {
-    firstName: "Frank",
-    lastName: "Moore",
-    username: "FrankMoore",
-  },
-]);
+const athletesList = ref([]);
+const addAthleteData = ref({});
+const editAthleteData = ref({});
+const deleteAthleteData = ref({});
 
 // computed
 const validAddAthlete = computed(() => {
   return (
     addAthleteData.value.firstName &&
     addAthleteData.value.lastName &&
-    addAthleteData.value.username
+    addAthleteData.value.userName
   );
 });
 const validEditAthlete = computed(() => {
   return (
     editAthleteData.value.firstName &&
     editAthleteData.value.lastName &&
-    editAthleteData.value.username
+    editAthleteData.value.userName
   );
 });
+
+// fetch
+const getAthletes = async () => {
+  await nuxtApp.$axios
+    .get("/Coach/GetMyAthlete", { page: 1, pageSize: 10 })
+    .then((response) => {
+      athletesList.value = response.data.result.records;
+    })
+    .catch((error) => error && console.log("athletes error: ", error));
+};
 
 // methods
 const resetAthleteData = () => {
@@ -305,4 +271,9 @@ const closeDialogs = () => {
   editAthleteDialog.value = false;
   deleteAthleteDialog.value = false;
 };
+
+// lifecycles
+onMounted(() => {
+  getAthletes();
+});
 </script>
