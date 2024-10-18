@@ -1,35 +1,27 @@
 <template>
-  <article
-    class="w-full h-full flex flex-col items-start justify-between gap-4">
+  <article class="w-full flex flex-col items-start justify-between gap-4">
     <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
-
-        <div class="flex items-center justify-end gap-2">
-          <!-- search -->
-          <div
-            class="w-28 md:w-52 h-7 md:h-10 px-2.5 flex items-center justify-start gap-2 border rounded-lg">
-            <i-magnifying-glass class="text-neutral-300"></i-magnifying-glass>
-
-            <input
-              type="text"
-              placeholder="جستجوی حرکت"
-              class="w-full h-full text-[10px] md:text-sm text-neutral-700" />
-          </div>
-
-          <!-- add modal -->
-          <v-btn
-            rounded="lg"
-            color="primary"
-            variant="outlined"
-            @click="addExerciseDialog = true"
-            class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
-            <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
-            <span class="text-[10px] md:text-sm text-primary">افزودن</span>
-          </v-btn>
-        </div>
       </div>
+
+      <!-- my exercises -->
+      <nuxt-link to="/exercises/custom" class="w-full">
+        <div
+          class="relative w-full h-44 3xl:h-60 flex flex-center rounded-2xl overflow-hidden cursor-pointer group">
+          <p
+            class="text-2xl group-hover:text-3xl text-white font-bold transition-300 z-10">
+            حرکات من
+          </p>
+          <img
+            src="/img/push-up.jpg"
+            alt=""
+            class="absolute top-0 left-0 size-full object-cover" />
+          <span
+            class="absolute top-0 left-0 size-full bg-primary/60 group-hover:bg-primary/65 transition-200"></span>
+        </div>
+      </nuxt-link>
 
       <i-spinner-solid
         v-if="fetchLoading"
@@ -67,7 +59,7 @@
                 viewExerciseData = JSON.parse(JSON.stringify(item));
                 viewExerciseDialog = true;
               "
-              class="flex flex-col items-start justify-center gap-0.5">
+              class="w-72 flex flex-col items-start justify-center gap-0.5">
               <p class="text-dark">{{ item.name }}</p>
               <p class="text-xs text-primary/80">{{ item.engName }}</p>
             </div>
@@ -78,7 +70,7 @@
               viewExerciseData = JSON.parse(JSON.stringify(item));
               viewExerciseDialog = true;
             "
-            class="flex flex-col items-center justify-center gap-0.5">
+            class="w-44 flex flex-col items-center justify-center gap-0.5">
             <p class="text-xs text-dark/60">{{ item.exerciseType }}</p>
             <p class="text-xs text-primary/80">{{ item.categoryId }}</p>
           </div>
