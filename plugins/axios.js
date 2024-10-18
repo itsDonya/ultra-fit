@@ -31,7 +31,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   // Config axios interceptors
   axios.interceptors.response.use(
     (response) => {
-      console.log("response: ", response);
       return response;
     },
     function (error) {

@@ -53,6 +53,8 @@
           <td class="text-[10px] md:text-sm lg:text-base">
             {{ item.userName }}
           </td>
+
+          <!-- action -->
           <td class="flex items-center justify-end gap-2">
             <!-- edit -->
             <v-tooltip text="ویرایش" location="bottom">
@@ -89,6 +91,10 @@
         </tr>
       </tbody>
     </v-table>
+
+    <app-pagination
+      v-bind="pagination"
+      @update-page="updatePage($event)"></app-pagination>
 
     <!-- add athlete -->
     <v-dialog v-model="addAthleteDialog" @after-leave="resetAthleteData">
@@ -226,6 +232,13 @@ const addAthleteData = ref({});
 const editAthleteData = ref({});
 const deleteAthleteData = ref({});
 
+// pagination
+const pagination = ref({
+  page: 1,
+  pageSize: 8,
+  totalRecord: 0,
+});
+
 // computed
 const validAddAthlete = computed(() => {
   return (
@@ -245,11 +258,18 @@ const validEditAthlete = computed(() => {
 // fetch
 const getAthletes = async () => {
   await nuxtApp.$axios
-    .get("/Coach/GetMyAthlete", { page: 1, pageSize: 10 })
+    .get(
+      `/Coach/GetMyAthlete?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
+    )
     .then((response) => {
       athletesList.value = response.data.result.records;
+      pagination.value.totalRecord = response.data.result.totalRecord;
     })
     .catch((error) => error && console.log("athletes error: ", error));
+};
+const updatePage = (pageNumber) => {
+  pagination.value.page = pageNumber;
+  getAthletes();
 };
 
 // methods
