@@ -54,7 +54,7 @@
         <tbody>
           <tr v-for="(item, i) in athletesList" :key="i">
             <td class="text-[10px] md:text-sm lg:text-base">
-              {{ i + 1 }}
+              {{ (pagination.page - 1) * pagination.pageSize + 1 + i }}
             </td>
             <td class="text-[10px] md:text-sm lg:text-base">
               {{ item.firstName }}
@@ -304,11 +304,11 @@ const addAthlete = async () => {
     .post("/Coach/AddAthlete", addAthleteData.value)
     .then(() => {
       nuxtApp.$toast.success("عملیات با موفقیت انجام شد");
-      addLoading.value = true;
       resetAthleteData();
       getAthletes();
     })
-    .catch((error) => error && console.log("add error: ", error));
+    .catch((error) => error && console.log("add error: ", error))
+    .finally(() => (addLoading.value = false));
 };
 
 // methods
