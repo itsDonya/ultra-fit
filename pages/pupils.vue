@@ -124,43 +124,16 @@
             <!-- delete -->
             <v-tooltip text="حذف" location="bottom">
               <template v-slot:activator="{ props }">
-                <v-dialog>
-                  <template v-slot:activator="{ props: activatorProps }">
-                    <div
-                      v-bind="{ ...props, ...activatorProps }"
-                      @click="
-                        deleteAthleteData = JSON.parse(JSON.stringify(item))
-                      "
-                      class="size-5 md:size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                      <i-trash-can-regular
-                        class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
-                    </div>
-                  </template>
-
-                  <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-                    <p class="my-10 text-center text-neutral-600">
-                      آیا از حذف
-                      <span class="font-bold">
-                        {{ deleteAthleteData?.firstName || "" }}
-                        {{ deleteAthleteData?.lastName || "" }}
-                      </span>
-                      مطمئن هستید؟
-                    </p>
-
-                    <div class="w-full flex items-center justify-center gap-2">
-                      <button
-                        class="w-full h-11 bg-red-500 flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-                        <span class="text-sm text-white">حذف</span>
-                      </button>
-
-                      <button
-                        @click="resetAthleteData"
-                        class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-                        <span class="text-sm text-neutral-500">انصراف</span>
-                      </button>
-                    </div>
-                  </div>
-                </v-dialog>
+                <div
+                  v-bind="{ ...props }"
+                  @click="
+                    deleteAthleteData = JSON.parse(JSON.stringify(item));
+                    deleteAthleteDialog = true;
+                  "
+                  class="size-5 md:size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                  <i-trash-can-regular
+                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
+                </div>
               </template>
             </v-tooltip>
           </td>
@@ -213,12 +186,40 @@
         </div>
       </div>
     </v-dialog>
+
+    <!-- delete athlete -->
+    <v-dialog v-model="deleteAthleteDialog" @after-leave="resetAthleteData">
+      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
+        <p class="my-10 text-center text-neutral-600">
+          آیا از حذف
+          <span class="font-bold">
+            {{ deleteAthleteData?.firstName || "" }}
+            {{ deleteAthleteData?.lastName || "" }}
+          </span>
+          مطمئن هستید؟
+        </p>
+
+        <div class="w-full flex items-center justify-center gap-2">
+          <button
+            class="w-full h-11 bg-red-500 flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-white">حذف</span>
+          </button>
+
+          <button
+            @click="resetAthleteData"
+            class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-neutral-500">انصراف</span>
+          </button>
+        </div>
+      </div>
+    </v-dialog>
   </article>
 </template>
 
 <script setup>
 // dialogs
 const editAthleteDialog = ref(false);
+const deleteAthleteDialog = ref(false);
 
 // add
 const addAthleteData = ref({
@@ -299,11 +300,6 @@ const validEditAthlete = computed(() => {
 });
 
 // methods
-// const setAthleteData = (item) => {
-//   pupil.value.firstName = item.firstName;
-//   pupil.value.lastName = item.lastName;
-//   pupil.value.username = item.username;
-// };
 const resetAthleteData = () => {
   // dialogs
   closeDialogs();
@@ -319,11 +315,12 @@ const resetAthleteData = () => {
 };
 const closeDialogs = () => {
   editAthleteDialog.value = false;
+  deleteAthleteDialog.value = false;
 };
 
 // watchers
 watch(
-  () => editAthleteData.value,
-  (value) => console.log("test: ", value)
+  () => deleteAthleteData.value,
+  (value) => console.log("test [delete]: ", value)
 );
 </script>
