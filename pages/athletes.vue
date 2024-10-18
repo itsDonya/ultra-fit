@@ -224,7 +224,7 @@ const addAthleteData = ref({});
 const editAthleteData = ref({});
 
 // delete
-const deleteAthleteData = ref(null);
+const deleteAthleteData = ref({});
 
 // data
 const athletesList = ref([
@@ -298,7 +298,7 @@ const resetAthleteData = () => {
   editAthleteData.value = {};
 
   // delete data
-  deleteAthleteData.value = null;
+  deleteAthleteData.value = {};
 };
 const closeDialogs = () => {
   addAthleteDialog.value = false;

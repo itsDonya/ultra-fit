@@ -32,7 +32,8 @@ const sidebarLinks = ref([
   {
     icon: "dumbbell",
     title: "حرکات",
-    path: "/exercises",
+    // path: "/exercises",
+    path: "/coming-soon",
   },
   {
     icon: "calendar-lines",
@@ -43,7 +44,7 @@ const sidebarLinks = ref([
   {
     icon: "people-group",
     title: "شاگرد ها",
-    path: "/pupils",
+    path: "/athletes",
   },
   {
     icon: "salad",
