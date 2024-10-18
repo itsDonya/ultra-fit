@@ -191,7 +191,7 @@
       </div>
     </v-dialog>
 
-    <!-- add exercise -->
+    <!-- view exercise -->
     <v-dialog v-model="viewExerciseDialog" @after-leave="resetExerciseData">
       <div
         class="w-96 p-4 mx-auto bg-white flex flex-col items-center justify-center gap-4 rounded-xl-tw">
@@ -244,7 +244,9 @@
             <p class="text-xs 3xl:text-sm text-dark">
               تاریخ ایجاد:
               <span class="text-primary font-bold">{{
-                viewExerciseData.creatDateShamsi.split(" ")[0]
+                viewExerciseData.creatDateShamsi
+                  ? viewExerciseData.creatDateShamsi.split(" ")[0]
+                  : ""
               }}</span>
             </p>
           </li>
