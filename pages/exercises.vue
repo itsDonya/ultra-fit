@@ -4,7 +4,7 @@
     <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
-        <h2 class="md:text-xl text-neutral-700 font-bold">لیست شاگرد ها</h2>
+        <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
 
         <div class="flex items-center justify-end gap-2">
           <!-- search -->
@@ -14,7 +14,7 @@
 
             <input
               type="text"
-              placeholder="جستجوی شاگرد"
+              placeholder="جستجوی حرکت"
               class="w-full h-full text-[10px] md:text-sm text-neutral-700" />
           </div>
 
@@ -23,7 +23,7 @@
             rounded="lg"
             color="primary"
             variant="outlined"
-            @click="addAthleteDialog = true"
+            @click="addExerciseDialog = true"
             class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
             <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
             <span class="text-[10px] md:text-sm text-primary">افزودن</span>
@@ -36,46 +36,76 @@
         class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
 
       <p
-        v-else-if="athletesList.length == 0"
+        v-else-if="exerciseList.length == 0"
         class="my-6 mx-auto text-neutral-600">
         در حال حاضر اطلاعاتی وجود ندارد
       </p>
 
-      <v-table v-if="!fetchLoading && athletesList.length" class="w-full">
+      <v-table v-if="!fetchLoading && exerciseList.length" class="w-full">
         <thead>
           <tr>
             <th class="text-[10px] md:text-sm 3xl:text-base">ردیف</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">نام</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">نام خانوادگی</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">نام کاربری</th>
+            <th class="text-[10px] md:text-sm 3xl:text-base">تصویر</th>
+            <th class="text-[10px] md:text-sm 3xl:text-base">عنوان</th>
+            <th class="text-[10px] md:text-sm 3xl:text-base">نوع</th>
+            <th class="text-[10px] md:text-sm 3xl:text-base">دسته بندی</th>
             <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(item, i) in athletesList" :key="i">
+          <tr v-for="(item, i) in exerciseList" :key="i">
             <td class="text-[10px] md:text-sm 3xl:text-base">
               {{ (pagination.page - 1) * pagination.pageSize + 1 + i }}
             </td>
-            <td class="text-[10px] md:text-sm 3xl:text-base">
-              {{ item.firstName }}
+            <td>
+              <img
+                src="/img/image-placeholder.png"
+                class="size-9 rounded-md"
+                alt="" />
             </td>
+
+            <v-tooltip :text="item.engName" location="bottom">
+              <template v-slot:activator="{ props }">
+                <td class="text-[10px] md:text-sm 3xl:text-base">
+                  <span v-bind="props">{{ item.name }}</span>
+                </td>
+              </template>
+            </v-tooltip>
+
             <td class="text-[10px] md:text-sm 3xl:text-base">
-              {{ item.lastName }}
+              {{ item.exerciseType }}
             </td>
+
             <td class="text-[10px] md:text-sm 3xl:text-base">
-              {{ item.userName }}
+              {{ item.categoryId }}
             </td>
 
             <!-- action -->
-            <td class="flex items-center justify-end">
+            <td class="flex items-center justify-end gap-2">
+              <!-- edit -->
+              <v-tooltip text="مشاهده" location="bottom">
+                <template v-slot:activator="{ props }">
+                  <div
+                    v-bind="{ ...props }"
+                    @click="
+                      editExerciseData = JSON.parse(JSON.stringify(item));
+                      editExerciseDialog = true;
+                    "
+                    class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                    <i-eye-solid
+                      class="text-secondary/80 group-hover:text-secondary transition-200"></i-eye-solid>
+                  </div>
+                </template>
+              </v-tooltip>
+
               <!-- edit -->
               <v-tooltip text="ویرایش" location="bottom">
                 <template v-slot:activator="{ props }">
                   <div
                     v-bind="{ ...props }"
                     @click="
-                      editAthleteData = JSON.parse(JSON.stringify(item));
-                      editAthleteDialog = true;
+                      editExerciseData = JSON.parse(JSON.stringify(item));
+                      editExerciseDialog = true;
                     "
                     class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
                     <i-pen-solid
@@ -90,8 +120,8 @@
                   <div
                     v-bind="{ ...props }"
                     @click="
-                      deleteAthleteData = JSON.parse(JSON.stringify(item));
-                      deleteAthleteDialog = true;
+                      deleteExerciseData = JSON.parse(JSON.stringify(item));
+                      deleteExerciseDialog = true;
                     "
                     class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
                     <i-trash-can-regular
@@ -107,36 +137,34 @@
 
     <app-pagination
       v-bind="pagination"
-      v-if="!fetchLoading && athletesList.length"
+      v-if="!fetchLoading && exerciseList.length"
       @update-page="updatePage($event)"></app-pagination>
 
-    <!-- add athlete -->
-    <v-dialog v-model="addAthleteDialog" @after-leave="resetAthleteData">
+    <!-- add exercise -->
+    <v-dialog v-model="addExerciseDialog" @after-leave="resetExerciseData">
       <div
         class="w-80 p-4 mx-auto bg-white rounded-xl-tw"
-        @keydown.enter="addAthlete">
+        @keydown.enter="addExercise">
         <div
           class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-          <p class="text-sm text-neutral-600">
-            اطلاعات شاگرد جدید را وارد کنید
-          </p>
+          <p class="text-sm text-neutral-600">اطلاعات حرکت جدید را وارد کنید</p>
 
           <div class="w-full flex flex-col items-start justify-start gap-2.5">
             <input
               type="text"
               placeholder="نام"
-              v-model="addAthleteData.firstName"
+              v-model="addExerciseData.firstName"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
             <input
               type="text"
-              v-model="addAthleteData.lastName"
+              v-model="addExerciseData.lastName"
               placeholder="نام خانوادگی"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
             <input
               type="text"
-              v-model="addAthleteData.userName"
+              v-model="addExerciseData.userName"
               placeholder="نام کاربری"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
@@ -145,15 +173,15 @@
         <div class="w-full flex items-center justify-center gap-2">
           <v-btn
             color="primary"
-            @click="addAthlete"
+            @click="addExercise"
             :loading="addLoading"
-            :disabled="!validAddAthlete"
+            :disabled="!validAddExercise"
             class="w-1/2 !h-11 rounded-lg"
             >ثبت</v-btn
           >
 
           <v-btn
-            @click="resetAthleteData"
+            @click="resetExerciseData"
             variant="outlined"
             color="red"
             class="w-1/2 !h-11 rounded-lg">
@@ -163,31 +191,29 @@
       </div>
     </v-dialog>
 
-    <!-- edit athlete -->
-    <v-dialog v-model="editAthleteDialog" @after-leave="resetAthleteData">
+    <!-- edit exercise -->
+    <v-dialog v-model="editExerciseDialog" @after-leave="resetExerciseData">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
         <div
           class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-          <p class="text-sm text-neutral-600">
-            اطلاعات جدید شاگرد را وارد کنید
-          </p>
+          <p class="text-sm text-neutral-600">اطلاعات جدید حرکت را وارد کنید</p>
 
           <div class="w-full flex flex-col items-start justify-start gap-2.5">
             <input
               type="text"
               placeholder="نام"
-              v-model="editAthleteData.firstName"
+              v-model="editExerciseData.firstName"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
             <input
               type="text"
-              v-model="editAthleteData.lastName"
+              v-model="editExerciseData.lastName"
               placeholder="نام خانوادگی"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
             <input
               type="text"
-              v-model="editAthleteData.userName"
+              v-model="editExerciseData.userName"
               placeholder="نام کاربری"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
@@ -195,14 +221,14 @@
 
         <div class="w-full flex items-center justify-center gap-2">
           <v-btn
-            :disabled="!validEditAthlete"
+            :disabled="!validEditExercise"
             class="w-1/2 !h-11 rounded-lg"
             color="primary"
             >ثبت</v-btn
           >
 
           <v-btn
-            @click="resetAthleteData"
+            @click="resetExerciseData"
             variant="outlined"
             color="red"
             class="w-1/2 !h-11 rounded-lg">
@@ -212,14 +238,14 @@
       </div>
     </v-dialog>
 
-    <!-- delete athlete -->
-    <v-dialog v-model="deleteAthleteDialog" @after-leave="resetAthleteData">
+    <!-- delete exercise -->
+    <v-dialog v-model="deleteExerciseDialog" @after-leave="resetExerciseData">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
         <p class="my-4 text-center text-neutral-600">
           آیا از حذف
           <span class="font-bold">
-            {{ deleteAthleteData?.firstName || "" }}
-            {{ deleteAthleteData?.lastName || "" }}
+            {{ deleteExerciseData?.firstName || "" }}
+            {{ deleteExerciseData?.lastName || "" }}
           </span>
           مطمئن هستید؟
         </p>
@@ -228,7 +254,7 @@
           <v-btn class="w-1/2 !h-11 rounded-lg" color="red">حذف</v-btn>
 
           <v-btn
-            @click="resetAthleteData"
+            @click="resetExerciseData"
             variant="outlined"
             color="red"
             class="w-1/2 !h-11 rounded-lg">
@@ -249,15 +275,15 @@ const fetchLoading = ref(false);
 const addLoading = ref(false);
 
 // dialogs
-const addAthleteDialog = ref(false);
-const editAthleteDialog = ref(false);
-const deleteAthleteDialog = ref(false);
+const addExerciseDialog = ref(false);
+const editExerciseDialog = ref(false);
+const deleteExerciseDialog = ref(false);
 
 // data
-const athletesList = ref([]);
-const addAthleteData = ref({});
-const editAthleteData = ref({});
-const deleteAthleteData = ref({});
+const exerciseList = ref([]);
+const addExerciseData = ref({});
+const editExerciseData = ref({});
+const deleteExerciseData = ref({});
 
 // pagination
 const pagination = ref({
@@ -267,48 +293,48 @@ const pagination = ref({
 });
 
 // computed
-const validAddAthlete = computed(() => {
+const validAddExercise = computed(() => {
   return (
-    addAthleteData.value.firstName &&
-    addAthleteData.value.lastName &&
-    addAthleteData.value.userName
+    addExerciseData.value.firstName &&
+    addExerciseData.value.lastName &&
+    addExerciseData.value.userName
   );
 });
-const validEditAthlete = computed(() => {
+const validEditExercise = computed(() => {
   return (
-    editAthleteData.value.firstName &&
-    editAthleteData.value.lastName &&
-    editAthleteData.value.userName
+    editExerciseData.value.firstName &&
+    editExerciseData.value.lastName &&
+    editExerciseData.value.userName
   );
 });
 
 // fetch
-const getAthletes = async () => {
+const getExercises = async () => {
   fetchLoading.value = true;
 
   await nuxtApp.$axios
     .get(
-      `/Coach/GetMyAthlete?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
+      `/Exercise/GetPublicExercise?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
     )
     .then((response) => {
-      athletesList.value = response.data.result.records;
+      exerciseList.value = response.data.result.records;
       pagination.value.totalRecord = response.data.result.totalRecord;
     })
-    .catch((error) => error && console.log("athletes error: ", error))
+    .catch((error) => error && console.log("exercises error: ", error))
     .finally(() => {
       fetchLoading.value = false;
     });
 };
-const addAthlete = async () => {
+const addExercise = async () => {
   addLoading.value = true;
 
   await nuxtApp.$axios
-    .post("/Coach/AddAthlete", addAthleteData.value)
+    .post("/Coach/AddExercise", addExerciseData.value)
     .then(() => {
       nuxtApp.$toast.success("عملیات با موفقیت انجام شد");
       pagination.value.page = 1;
-      resetAthleteData();
-      getAthletes();
+      resetExerciseData();
+      getExercises();
     })
     .catch((error) => error && console.log("add error: ", error))
     .finally(() => (addLoading.value = false));
@@ -317,29 +343,29 @@ const addAthlete = async () => {
 // methods
 const updatePage = (pageNumber) => {
   pagination.value.page = pageNumber;
-  getAthletes();
+  getExercises();
 };
-const resetAthleteData = () => {
+const resetExerciseData = () => {
   // dialogs
   closeDialogs();
 
   // add data
-  addAthleteData.value = {};
+  addExerciseData.value = {};
 
   // edit data
-  editAthleteData.value = {};
+  editExerciseData.value = {};
 
   // delete data
-  deleteAthleteData.value = {};
+  deleteExerciseData.value = {};
 };
 const closeDialogs = () => {
-  addAthleteDialog.value = false;
-  editAthleteDialog.value = false;
-  deleteAthleteDialog.value = false;
+  addExerciseDialog.value = false;
+  editExerciseDialog.value = false;
+  deleteExerciseDialog.value = false;
 };
 
 // lifecycles
 onMounted(() => {
-  getAthletes();
+  getExercises();
 });
 </script>

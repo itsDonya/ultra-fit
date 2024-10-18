@@ -17,6 +17,9 @@ export default {
         light: "#a4d8fc",
         dark: "#1d1d1d",
       },
+      screens: {
+        "3xl": "1720px",
+      },
     },
   },
   plugins: [],
