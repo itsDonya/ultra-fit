@@ -44,6 +44,8 @@
 </template>
 
 <script setup>
+import { navigateTo } from "nuxt/app";
+
 definePageMeta({
   layout: "auth",
 });
@@ -71,7 +73,31 @@ const userLogin = async () => {
       ...data.value,
     })
     .then((res) => {
-      console.log(res);
+      if (res.data.errorCode == "WrongPassword") {
+        nuxtApp.$toast.error("گذرواژه صحیح نمی باشد");
+        data.value.password = null;
+      } else if (res.data.errorCode == "UserNotFound") {
+        nuxtApp.$toast.error("کاربری با این مشخصات وجود ندارد");
+        data.value.username = null;
+        data.value.password = null;
+      } else {
+        const TOKEN = res.data.result.token;
+
+        const today = new Date();
+        const nextMonth = new Date(today);
+        nextMonth.setDate(today.getDate() + 30);
+
+        const cookieTOKEN = useCookie("ULTRA_TK", {
+          maxAge: 2592000,
+          expires: nextMonth,
+        });
+
+        cookieTOKEN.value = TOKEN;
+
+        nuxtApp.$toast.success("با موفقیت وارد شدید");
+
+        navigateTo("/");
+      }
     })
     .catch((error) => {
       if (error) {
