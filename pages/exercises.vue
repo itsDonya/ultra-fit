@@ -88,8 +88,8 @@
                   <div
                     v-bind="{ ...props }"
                     @click="
-                      editExerciseData = JSON.parse(JSON.stringify(item));
-                      editExerciseDialog = true;
+                      viewExerciseData = JSON.parse(JSON.stringify(item));
+                      viewExerciseDialog = true;
                     "
                     class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
                     <i-eye-solid
@@ -191,6 +191,75 @@
       </div>
     </v-dialog>
 
+    <!-- add exercise -->
+    <v-dialog v-model="viewExerciseDialog" @after-leave="resetExerciseData">
+      <div
+        class="w-96 p-4 mx-auto bg-white flex flex-col items-center justify-center gap-4 rounded-xl-tw">
+        <!-- header -->
+        <div class="w-full flex items-center justify-between">
+          <!-- title -->
+          <p class="text-sm text-dark">
+            {{ viewExerciseData.name }}
+          </p>
+
+          <!-- close -->
+          <button
+            @click="resetExerciseData"
+            class="size-7 hover:bg-red-500/20 flex flex-center rounded-full transition-200 group">
+            <i-xmark-solid
+              class="mt-1 text-base text-neutral-400 group-hover:text-red-500 transition-200"></i-xmark-solid>
+          </button>
+        </div>
+
+        <!-- image -->
+        <img
+          src="/img/image-placeholder.png"
+          class="w-full h-56 object-cover rounded-lg"
+          alt="" />
+
+        <!-- details -->
+        <ul class="w-full flex flex-col items-start justify-start gap-2">
+          <!-- type -->
+          <li class="flex items-center justify-start gap-2">
+            <p class="text-xs 3xl:text-sm text-dark">
+              نوع حرکت:
+              <span class="text-primary font-bold">{{
+                viewExerciseData.exerciseType
+              }}</span>
+            </p>
+          </li>
+
+          <!-- category -->
+          <li class="flex items-center justify-start gap-2">
+            <p class="text-xs 3xl:text-sm text-dark">
+              دسته بندی:
+              <span class="text-primary font-bold">{{
+                viewExerciseData.categoryId
+              }}</span>
+            </p>
+          </li>
+
+          <!-- date -->
+          <li class="flex items-center justify-start gap-2">
+            <p class="text-xs 3xl:text-sm text-dark">
+              تاریخ ایجاد:
+              <span class="text-primary font-bold">{{
+                viewExerciseData.creatDateShamsi.split(" ")[0]
+              }}</span>
+            </p>
+          </li>
+
+          <!-- description -->
+          <li class="flex items-center justify-start gap-2">
+            <p class="text-xs 3xl:text-sm text-dark">
+              توضیحات:
+              <span class="font-bold">{{ viewExerciseData.description }}</span>
+            </p>
+          </li>
+        </ul>
+      </div>
+    </v-dialog>
+
     <!-- edit exercise -->
     <v-dialog v-model="editExerciseDialog" @after-leave="resetExerciseData">
       <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
@@ -276,12 +345,14 @@ const addLoading = ref(false);
 
 // dialogs
 const addExerciseDialog = ref(false);
+const viewExerciseDialog = ref(false);
 const editExerciseDialog = ref(false);
 const deleteExerciseDialog = ref(false);
 
 // data
 const exerciseList = ref([]);
 const addExerciseData = ref({});
+const viewExerciseData = ref({});
 const editExerciseData = ref({});
 const deleteExerciseData = ref({});
 
@@ -352,6 +423,9 @@ const resetExerciseData = () => {
   // add data
   addExerciseData.value = {};
 
+  // view data
+  viewExerciseData.value = {};
+
   // edit data
   editExerciseData.value = {};
 
@@ -360,6 +434,7 @@ const resetExerciseData = () => {
 };
 const closeDialogs = () => {
   addExerciseDialog.value = false;
+  viewExerciseDialog.value = false;
   editExerciseDialog.value = false;
   deleteExerciseDialog.value = false;
 };
