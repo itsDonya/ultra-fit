@@ -41,7 +41,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 
       // handle unauthorized error
       if (error?.status == 401) {
-        nuxtApp.$toast.warning("لطفا ابتدا وارد شوید");
+        nuxtApp.$toast.warning("لطفا ابتدا وارد حساب کاربری شوید");
         navigateTo("/login");
         return Promise.reject();
       }

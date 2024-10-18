@@ -14,11 +14,22 @@
           <span class="text-sm xl:text-base text-white">{{ item.title }}</span>
         </div>
       </nuxt-link>
+
+      <!-- logout -->
+      <div
+        @click="logout"
+        class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/10 rounded-lg transition-all duration-200">
+        <i-arrow-right-from-bracket
+          class="text-white"></i-arrow-right-from-bracket>
+        <span class="text-sm xl:text-base text-white">خروج از حساب</span>
+      </div>
     </nav>
   </aside>
 </template>
 
 <script setup>
+import { navigateTo } from "nuxt/app";
+
 // variables
 const isOpen = ref(false);
 const nuxtApp = useNuxtApp();
@@ -52,6 +63,16 @@ const sidebarLinks = ref([
     path: "/coming-soon",
   },
 ]);
+
+// methods
+const logout = () => {
+  const TOKEN = useCookie("ULTRA_TK");
+  TOKEN.value = null;
+
+  nuxtApp.$toast.success("با موفقیت از حساب کاربری خارج شدید");
+
+  navigateTo("/login");
+};
 
 // lifecycles
 onMounted(() => {
