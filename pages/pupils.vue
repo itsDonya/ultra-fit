@@ -17,66 +17,15 @@
         </div>
 
         <!-- add modal -->
-        <v-dialog>
-          <template v-slot:activator="{ props: activatorProps }">
-            <v-btn
-              rounded="lg"
-              color="primary"
-              variant="outlined"
-              v-bind="activatorProps"
-              @click="resetAthleteData"
-              class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
-              <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
-              <span class="text-[10px] md:text-sm text-primary">افزودن</span>
-            </v-btn>
-          </template>
-
-          <template v-slot:default="{ isActive }">
-            <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-              <div
-                class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-                <p class="text-sm text-neutral-600">
-                  اطلاعات شاگرد جدید را وارد کنید
-                </p>
-
-                <div
-                  class="w-full flex flex-col items-start justify-start gap-2.5">
-                  <input
-                    type="text"
-                    placeholder="نام"
-                    v-model="addAthleteData.firstName"
-                    class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-                  <input
-                    type="text"
-                    v-model="addAthleteData.lastName"
-                    placeholder="نام خانوادگی"
-                    class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-                  <input
-                    type="text"
-                    v-model="addAthleteData.username"
-                    placeholder="نام کاربری"
-                    class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-                </div>
-              </div>
-
-              <div class="w-full flex items-center justify-center gap-2">
-                <button
-                  :disabled="!validAddAthlete"
-                  class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-                  <span class="text-sm text-white">ثبت</span>
-                </button>
-
-                <button
-                  @click="isActive.value = false"
-                  class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
-                  <span class="text-sm text-neutral-500">انصراف</span>
-                </button>
-              </div>
-            </div>
-          </template>
-        </v-dialog>
+        <v-btn
+          rounded="lg"
+          color="primary"
+          variant="outlined"
+          @click="addAthleteDialog = true"
+          class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
+          <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
+          <span class="text-[10px] md:text-sm text-primary">افزودن</span>
+        </v-btn>
       </div>
     </div>
 
@@ -140,6 +89,52 @@
         </tr>
       </tbody>
     </v-table>
+
+    <!-- add athlete -->
+    <v-dialog v-model="addAthleteDialog" @after-leave="resetAthleteData">
+      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
+        <div
+          class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
+          <p class="text-sm text-neutral-600">
+            اطلاعات شاگرد جدید را وارد کنید
+          </p>
+
+          <div class="w-full flex flex-col items-start justify-start gap-2.5">
+            <input
+              type="text"
+              placeholder="نام"
+              v-model="addAthleteData.firstName"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
+
+            <input
+              type="text"
+              v-model="addAthleteData.lastName"
+              placeholder="نام خانوادگی"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
+
+            <input
+              type="text"
+              v-model="addAthleteData.username"
+              placeholder="نام کاربری"
+              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
+          </div>
+        </div>
+
+        <div class="w-full flex items-center justify-center gap-2">
+          <button
+            :disabled="!validAddAthlete"
+            class="w-full h-11 bg-primary flex flex-center rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-white">ثبت</span>
+          </button>
+
+          <button
+            @click="resetAthleteData"
+            class="w-full h-11 flex flex-center border rounded-lg hover:brightness-90 disabled:brightness-75 transition-200">
+            <span class="text-sm text-neutral-500">انصراف</span>
+          </button>
+        </div>
+      </div>
+    </v-dialog>
 
     <!-- edit athlete -->
     <v-dialog v-model="editAthleteDialog" @after-leave="resetAthleteData">
@@ -218,20 +213,12 @@
 
 <script setup>
 // dialogs
+const addAthleteDialog = ref(false);
 const editAthleteDialog = ref(false);
 const deleteAthleteDialog = ref(false);
 
 // add
-const addAthleteData = ref({
-  firstName: null,
-  lastName: null,
-  username: null,
-  reset: function () {
-    this.firstName = null;
-    this.lastName = null;
-    this.username = null;
-  },
-});
+const addAthleteData = ref({});
 
 // edit
 const editAthleteData = ref({});
@@ -305,7 +292,7 @@ const resetAthleteData = () => {
   closeDialogs();
 
   // add data
-  addAthleteData.value.reset();
+  addAthleteData.value = {};
 
   // edit data
   editAthleteData.value = {};
@@ -314,13 +301,8 @@ const resetAthleteData = () => {
   deleteAthleteData.value = null;
 };
 const closeDialogs = () => {
+  addAthleteDialog.value = false;
   editAthleteDialog.value = false;
   deleteAthleteDialog.value = false;
 };
-
-// watchers
-watch(
-  () => deleteAthleteData.value,
-  (value) => console.log("test [delete]: ", value)
-);
 </script>
