@@ -488,6 +488,9 @@ const resetExerciseData = () => {
   // dialogs
   closeDialogs();
 
+  // images
+  resetImages();
+
   // add data
   addExerciseData.value = {};
 
@@ -505,6 +508,9 @@ const closeDialogs = () => {
   viewExerciseDialog.value = false;
   editExerciseDialog.value = false;
   deleteExerciseDialog.value = false;
+};
+const resetImages = () => {
+  addExerciseImage.value = null;
 };
 const uploadAddImage = (event) => {
   const FILE = event.target.files[0];
