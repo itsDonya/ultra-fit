@@ -41,98 +41,109 @@
         در حال حاضر اطلاعاتی وجود ندارد
       </p>
 
-      <v-table v-if="!fetchLoading && exerciseList.length" class="w-full">
-        <thead>
-          <tr>
-            <th class="text-[10px] md:text-sm 3xl:text-base">ردیف</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">تصویر</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">عنوان</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">نوع</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">دسته بندی</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(item, i) in exerciseList" :key="i">
-            <td class="text-[10px] md:text-sm 3xl:text-base">
-              {{ (pagination.page - 1) * pagination.pageSize + 1 + i }}
-            </td>
-            <td>
-              <img
-                src="/img/image-placeholder.png"
-                class="size-9 rounded-md"
-                alt="" />
-            </td>
+      <ul
+        v-if="!fetchLoading && exerciseList.length"
+        class="w-full flex flex-col items-start justify-start gap-0 divide-y-[1px]">
+        <li
+          @click.self="
+            viewExerciseData = JSON.parse(JSON.stringify(item));
+            viewExerciseDialog = true;
+          "
+          v-for="(item, i) in exerciseList"
+          :key="i"
+          class="w-full h-16 p-1.5 flex items-center justify-between cursor-pointer">
+          <div class="h-full flex items-center justify-start gap-4">
+            <img
+              @click="
+                viewExerciseData = JSON.parse(JSON.stringify(item));
+                viewExerciseDialog = true;
+              "
+              src="/img/image-placeholder.png"
+              class="h-full aspect-square rounded-md"
+              alt="" />
 
-            <v-tooltip :text="item.engName" location="bottom">
+            <div
+              @click="
+                viewExerciseData = JSON.parse(JSON.stringify(item));
+                viewExerciseDialog = true;
+              "
+              class="flex flex-col items-start justify-center gap-0.5">
+              <p class="text-dark">{{ item.name }}</p>
+              <p class="text-xs text-primary/80">{{ item.engName }}</p>
+            </div>
+          </div>
+
+          <div
+            @click="
+              viewExerciseData = JSON.parse(JSON.stringify(item));
+              viewExerciseDialog = true;
+            "
+            class="flex flex-col items-center justify-center gap-0.5">
+            <p class="text-xs text-dark/60">{{ item.exerciseType }}</p>
+            <p class="text-xs text-primary/80">{{ item.categoryId }}</p>
+          </div>
+
+          <p
+            @click="
+              viewExerciseData = JSON.parse(JSON.stringify(item));
+              viewExerciseDialog = true;
+            "
+            class="w-64 text-xs text-neutral-500 line-clamp-2">
+            {{ item.description }}
+          </p>
+
+          <!-- action -->
+          <div class="flex items-center justify-end gap-0.5">
+            <!-- edit -->
+            <v-tooltip text="مشاهده" location="bottom">
               <template v-slot:activator="{ props }">
-                <td class="text-[10px] md:text-sm 3xl:text-base">
-                  <span v-bind="props">{{ item.name }}</span>
-                </td>
+                <div
+                  v-bind="{ ...props }"
+                  @click="
+                    viewExerciseData = JSON.parse(JSON.stringify(item));
+                    viewExerciseDialog = true;
+                  "
+                  class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                  <i-eye-solid
+                    class="text-secondary/80 group-hover:text-secondary transition-200"></i-eye-solid>
+                </div>
               </template>
             </v-tooltip>
 
-            <td class="text-[10px] md:text-sm 3xl:text-base">
-              {{ item.exerciseType }}
-            </td>
+            <!-- edit -->
+            <v-tooltip text="ویرایش" location="bottom">
+              <template v-slot:activator="{ props }">
+                <div
+                  v-bind="{ ...props }"
+                  @click="
+                    editExerciseData = JSON.parse(JSON.stringify(item));
+                    editExerciseDialog = true;
+                  "
+                  class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                  <i-pen-solid
+                    class="text-yellow-300/80 group-hover:text-yellow-300 transition-200"></i-pen-solid>
+                </div>
+              </template>
+            </v-tooltip>
 
-            <td class="text-[10px] md:text-sm 3xl:text-base">
-              {{ item.categoryId }}
-            </td>
-
-            <!-- action -->
-            <td class="flex items-center justify-end gap-2">
-              <!-- edit -->
-              <v-tooltip text="مشاهده" location="bottom">
-                <template v-slot:activator="{ props }">
-                  <div
-                    v-bind="{ ...props }"
-                    @click="
-                      viewExerciseData = JSON.parse(JSON.stringify(item));
-                      viewExerciseDialog = true;
-                    "
-                    class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                    <i-eye-solid
-                      class="text-secondary/80 group-hover:text-secondary transition-200"></i-eye-solid>
-                  </div>
-                </template>
-              </v-tooltip>
-
-              <!-- edit -->
-              <v-tooltip text="ویرایش" location="bottom">
-                <template v-slot:activator="{ props }">
-                  <div
-                    v-bind="{ ...props }"
-                    @click="
-                      editExerciseData = JSON.parse(JSON.stringify(item));
-                      editExerciseDialog = true;
-                    "
-                    class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                    <i-pen-solid
-                      class="text-yellow-300/80 group-hover:text-yellow-300 transition-200"></i-pen-solid>
-                  </div>
-                </template>
-              </v-tooltip>
-
-              <!-- delete -->
-              <v-tooltip text="حذف" location="bottom">
-                <template v-slot:activator="{ props }">
-                  <div
-                    v-bind="{ ...props }"
-                    @click="
-                      deleteExerciseData = JSON.parse(JSON.stringify(item));
-                      deleteExerciseDialog = true;
-                    "
-                    class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                    <i-trash-can-regular
-                      class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
-                  </div>
-                </template>
-              </v-tooltip>
-            </td>
-          </tr>
-        </tbody>
-      </v-table>
+            <!-- delete -->
+            <v-tooltip text="حذف" location="bottom">
+              <template v-slot:activator="{ props }">
+                <div
+                  v-bind="{ ...props }"
+                  @click="
+                    deleteExerciseData = JSON.parse(JSON.stringify(item));
+                    deleteExerciseDialog = true;
+                  "
+                  class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                  <i-trash-can-regular
+                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
+                </div>
+              </template>
+            </v-tooltip>
+          </div>
+        </li>
+      </ul>
     </div>
 
     <app-pagination
@@ -253,7 +264,7 @@
 
           <!-- description -->
           <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark">
+            <p class="text-xs 3xl:text-sm text-dark leading-5">
               توضیحات:
               <span class="font-bold">{{ viewExerciseData.description }}</span>
             </p>
@@ -361,7 +372,7 @@ const deleteExerciseData = ref({});
 // pagination
 const pagination = ref({
   page: 1,
-  pageSize: 8,
+  pageSize: 6,
   totalRecord: 0,
 });
 
