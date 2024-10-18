@@ -142,10 +142,11 @@
 
         <div class="w-full flex items-center justify-center gap-2">
           <v-btn
-            :disabled="!validAddAthlete"
-            :loading="addLoading"
-            class="w-1/2 !h-11 rounded-lg"
             color="primary"
+            @click="addAthlete"
+            :loading="addLoading"
+            :disabled="!validAddAthlete"
+            class="w-1/2 !h-11 rounded-lg"
             >ثبت</v-btn
           >
 
@@ -296,12 +297,25 @@ const getAthletes = async () => {
       fetchLoading.value = false;
     });
 };
+const addAthlete = async () => {
+  addLoading.value = true;
+
+  await nuxtApp.$axios
+    .post("/Coach/AddAthlete", addAthleteData.value)
+    .then(() => {
+      nuxtApp.$toast.success("عملیات با موفقیت انجام شد");
+      addLoading.value = true;
+      resetAthleteData();
+      getAthletes();
+    })
+    .catch((error) => error && console.log("add error: ", error));
+};
+
+// methods
 const updatePage = (pageNumber) => {
   pagination.value.page = pageNumber;
   getAthletes();
 };
-
-// methods
 const resetAthleteData = () => {
   // dialogs
   closeDialogs();
