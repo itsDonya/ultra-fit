@@ -18,7 +18,7 @@
       <!-- logout -->
       <div
         @click="logout"
-        class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/10 rounded-lg transition-all duration-200">
+        class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer">
         <i-arrow-right-from-bracket
           class="text-white"></i-arrow-right-from-bracket>
         <span class="text-sm xl:text-base text-white">خروج از حساب</span>
@@ -68,6 +68,9 @@ const sidebarLinks = ref([
 const logout = () => {
   const TOKEN = useCookie("ULTRA_TK");
   TOKEN.value = null;
+
+  const USERNAME = useCookie("ULTRA_USER");
+  USERNAME.value = null;
 
   nuxtApp.$toast.success("با موفقیت از حساب کاربری خارج شدید");
 

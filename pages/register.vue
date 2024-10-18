@@ -135,6 +135,7 @@ const userRegister = async () => {
         data.value.username = null;
       } else {
         const TOKEN = res.data.result.token;
+        const USERNAME = res.data.result.username;
 
         const today = new Date();
         const nextMonth = new Date(today);
@@ -144,8 +145,13 @@ const userRegister = async () => {
           maxAge: 2592000,
           expires: nextMonth,
         });
-
         cookieTOKEN.value = TOKEN;
+
+        const cookieUSERNAME = useCookie("ULTRA_USER", {
+          maxAge: 2592000,
+          expires: nextMonth,
+        });
+        cookieUSERNAME.value = USERNAME;
 
         nuxtApp.$toast.success("ثبت نام با موفقیت انجام شد؛ خوش آمدید");
 

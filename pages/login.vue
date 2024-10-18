@@ -82,6 +82,7 @@ const userLogin = async () => {
         data.value.password = null;
       } else {
         const TOKEN = res.data.result.token;
+        const USERNAME = res.data.result.username;
 
         const today = new Date();
         const nextMonth = new Date(today);
@@ -91,8 +92,13 @@ const userLogin = async () => {
           maxAge: 2592000,
           expires: nextMonth,
         });
-
         cookieTOKEN.value = TOKEN;
+
+        const cookieUSERNAME = useCookie("ULTRA_USER", {
+          maxAge: 2592000,
+          expires: nextMonth,
+        });
+        cookieUSERNAME.value = USERNAME;
 
         nuxtApp.$toast.success("با موفقیت وارد شدید");
 
