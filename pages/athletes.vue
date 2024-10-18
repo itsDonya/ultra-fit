@@ -1,106 +1,109 @@
 <template>
-  <article class="w-full flex flex-col items-start justify-start gap-4">
-    <div class="w-full flex items-center justify-between">
-      <!-- title -->
-      <h2 class="md:text-xl text-neutral-700 font-bold">لیست شاگرد ها</h2>
+  <article
+    class="w-full h-full flex flex-col items-start justify-between gap-4">
+    <div class="w-full flex flex-col items-start justify-start gap-4">
+      <div class="w-full flex items-center justify-between">
+        <!-- title -->
+        <h2 class="md:text-xl text-neutral-700 font-bold">لیست شاگرد ها</h2>
 
-      <div class="flex items-center justify-end gap-2">
-        <!-- search -->
-        <div
-          class="w-28 md:w-52 h-7 md:h-10 px-2.5 flex items-center justify-start gap-2 border rounded-lg">
-          <i-magnifying-glass class="text-neutral-300"></i-magnifying-glass>
+        <div class="flex items-center justify-end gap-2">
+          <!-- search -->
+          <div
+            class="w-28 md:w-52 h-7 md:h-10 px-2.5 flex items-center justify-start gap-2 border rounded-lg">
+            <i-magnifying-glass class="text-neutral-300"></i-magnifying-glass>
 
-          <input
-            type="text"
-            placeholder="جستجوی شاگرد"
-            class="w-full h-full text-[10px] md:text-sm text-neutral-700" />
+            <input
+              type="text"
+              placeholder="جستجوی شاگرد"
+              class="w-full h-full text-[10px] md:text-sm text-neutral-700" />
+          </div>
+
+          <!-- add modal -->
+          <v-btn
+            rounded="lg"
+            color="primary"
+            variant="outlined"
+            @click="addAthleteDialog = true"
+            class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
+            <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
+            <span class="text-[10px] md:text-sm text-primary">افزودن</span>
+          </v-btn>
         </div>
-
-        <!-- add modal -->
-        <v-btn
-          rounded="lg"
-          color="primary"
-          variant="outlined"
-          @click="addAthleteDialog = true"
-          class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
-          <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
-          <span class="text-[10px] md:text-sm text-primary">افزودن</span>
-        </v-btn>
       </div>
+
+      <i-spinner-solid
+        v-if="fetchLoading"
+        class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+
+      <p
+        v-else-if="athletesList.length == 0"
+        class="my-6 mx-auto text-neutral-600">
+        در حال حاضر اطلاعاتی وجود ندارد
+      </p>
+
+      <v-table v-if="!fetchLoading && athletesList.length" class="w-full">
+        <thead>
+          <tr>
+            <th class="text-[10px] md:text-sm lg:text-base">ردیف</th>
+            <th class="text-[10px] md:text-sm lg:text-base">نام</th>
+            <th class="text-[10px] md:text-sm lg:text-base">نام خانوادگی</th>
+            <th class="text-[10px] md:text-sm lg:text-base">نام کاربری</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item, i) in athletesList" :key="i">
+            <td class="text-[10px] md:text-sm lg:text-base">
+              {{ i + 1 }}
+            </td>
+            <td class="text-[10px] md:text-sm lg:text-base">
+              {{ item.firstName }}
+            </td>
+            <td class="text-[10px] md:text-sm lg:text-base">
+              {{ item.lastName }}
+            </td>
+            <td class="text-[10px] md:text-sm lg:text-base">
+              {{ item.userName }}
+            </td>
+
+            <!-- action -->
+            <td class="flex items-center justify-end gap-2">
+              <!-- edit -->
+              <v-tooltip text="ویرایش" location="bottom">
+                <template v-slot:activator="{ props }">
+                  <div
+                    v-bind="{ ...props }"
+                    @click="
+                      editAthleteData = JSON.parse(JSON.stringify(item));
+                      editAthleteDialog = true;
+                    "
+                    class="size-5 md:size-9 text-sm lg:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                    <i-pen-solid
+                      class="text-yellow-300/80 group-hover:text-yellow-300 transition-200"></i-pen-solid>
+                  </div>
+                </template>
+              </v-tooltip>
+
+              <!-- delete -->
+              <v-tooltip text="حذف" location="bottom">
+                <template v-slot:activator="{ props }">
+                  <div
+                    v-bind="{ ...props }"
+                    @click="
+                      deleteAthleteData = JSON.parse(JSON.stringify(item));
+                      deleteAthleteDialog = true;
+                    "
+                    class="size-5 md:size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
+                    <i-trash-can-regular
+                      class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
+                  </div>
+                </template>
+              </v-tooltip>
+            </td>
+          </tr>
+        </tbody>
+      </v-table>
     </div>
-
-    <i-spinner-solid
-      v-if="fetchLoading"
-      class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
-
-    <p
-      v-else-if="athletesList.length == 0"
-      class="my-6 mx-auto text-neutral-600">
-      در حال حاضر اطلاعاتی وجود ندارد
-    </p>
-
-    <v-table v-if="!fetchLoading && athletesList.length" class="w-full">
-      <thead>
-        <tr>
-          <th class="text-[10px] md:text-sm lg:text-base">ردیف</th>
-          <th class="text-[10px] md:text-sm lg:text-base">نام</th>
-          <th class="text-[10px] md:text-sm lg:text-base">نام خانوادگی</th>
-          <th class="text-[10px] md:text-sm lg:text-base">نام کاربری</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(item, i) in athletesList" :key="i">
-          <td class="text-[10px] md:text-sm lg:text-base">
-            {{ i + 1 }}
-          </td>
-          <td class="text-[10px] md:text-sm lg:text-base">
-            {{ item.firstName }}
-          </td>
-          <td class="text-[10px] md:text-sm lg:text-base">
-            {{ item.lastName }}
-          </td>
-          <td class="text-[10px] md:text-sm lg:text-base">
-            {{ item.userName }}
-          </td>
-
-          <!-- action -->
-          <td class="flex items-center justify-end gap-2">
-            <!-- edit -->
-            <v-tooltip text="ویرایش" location="bottom">
-              <template v-slot:activator="{ props }">
-                <div
-                  v-bind="{ ...props }"
-                  @click="
-                    editAthleteData = JSON.parse(JSON.stringify(item));
-                    editAthleteDialog = true;
-                  "
-                  class="size-5 md:size-9 text-sm lg:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                  <i-pen-solid
-                    class="text-yellow-300/80 group-hover:text-yellow-300 transition-200"></i-pen-solid>
-                </div>
-              </template>
-            </v-tooltip>
-
-            <!-- delete -->
-            <v-tooltip text="حذف" location="bottom">
-              <template v-slot:activator="{ props }">
-                <div
-                  v-bind="{ ...props }"
-                  @click="
-                    deleteAthleteData = JSON.parse(JSON.stringify(item));
-                    deleteAthleteDialog = true;
-                  "
-                  class="size-5 md:size-9 text-sm lg:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                  <i-trash-can-regular
-                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
-                </div>
-              </template>
-            </v-tooltip>
-          </td>
-        </tr>
-      </tbody>
-    </v-table>
 
     <app-pagination
       v-bind="pagination"
