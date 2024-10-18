@@ -46,7 +46,7 @@ export default defineNuxtPlugin((nuxtApp) => {
         return Promise.reject();
       }
 
-      Promise.reject(error);
+      return Promise.reject(error);
     }
   );
 });
