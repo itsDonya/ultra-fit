@@ -4,8 +4,8 @@
 @import "./variables.scss";
 
 @font-face {
-  font-family: estedad;
-  src: url("../fonts/estedad/Estedad-Regular.woff2");
+  font-family: vazir;
+  src: url("../fonts/vazir/Vazir-Regular.woff2");
   font-weight: normal;
 }
 
@@ -23,7 +23,7 @@
   }
 
   body {
-    font-family: estedad;
+    font-family: vazir;
   }
 
   input,
@@ -232,7 +232,7 @@ textarea {
 
 .Vue-Toastification__toast-body {
   width: 100%;
-  font-family: estedad !important;
+  font-family: vazir !important;
   text-align: center;
   font-size: 15px !important;
 }
