@@ -48,8 +48,7 @@ const sidebarLinks = ref([
   {
     icon: "calendar-lines",
     title: "برنامه ها",
-    // path: "/programs",
-    path: "/coming-soon",
+    path: "/workouts",
   },
   {
     icon: "people-group",

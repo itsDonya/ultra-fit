@@ -3,7 +3,7 @@
     <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
-        <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
+        <h2 class="md:text-xl text-neutral-700 font-bold">لیست برنامه ها</h2>
       </div>
 
       <!-- my exercises -->
@@ -12,10 +12,10 @@
           class="relative w-full h-44 3xl:h-60 flex flex-center rounded-2xl overflow-hidden cursor-pointer group">
           <p
             class="text-2xl group-hover:text-3xl text-white font-bold transition-300 z-10">
-            حرکات من
+            برنامه های من
           </p>
           <img
-            src="/img/push-up.jpg"
+            src="/img/lunge.jpg"
             alt=""
             class="absolute top-0 left-0 size-full object-cover" />
           <span

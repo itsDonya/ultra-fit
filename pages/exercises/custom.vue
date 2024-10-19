@@ -166,7 +166,7 @@
                   ? ' shadow-lg'
                   : 'border-2 border-primary/20 border-dashed',
               ]"
-              class="w-full h-44 flex flex-center gap-2 rounded-lg overflow-hidden">
+              class="w-full h-44 flex flex-center gap-2 rounded-lg overflow-hidden cursor-pointer">
               <img
                 v-if="addExerciseImage"
                 :src="addExerciseImage"
