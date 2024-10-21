@@ -370,9 +370,7 @@ const getExercises = async () => {
   fetchLoading.value = true;
 
   await nuxtApp.$axios
-    .get(
-      `/Exercise/GetPublicExercise?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
-    )
+    .post(`/Exercise/GetPublicExercise`, pagination.value)
     .then((response) => {
       exerciseList.value = response.data.result.records;
       pagination.value.totalRecord = response.data.result.totalRecord;
