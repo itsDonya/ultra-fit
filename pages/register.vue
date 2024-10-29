@@ -25,7 +25,7 @@
       <!-- user name -->
       <input
         type="text"
-        placeholder="نام کاربری"
+        placeholder="شماره موبایل"
         v-model="data.username"
         class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200" />
 
