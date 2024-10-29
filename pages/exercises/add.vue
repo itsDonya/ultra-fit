@@ -98,11 +98,12 @@
           :class="[addExerciseData.exerciseType ? '' : 'text-neutral-400']"
           class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200">
           <option :value="undefined" disabled selected>نوع حرکت</option>
-          <option value="IsDumbbellMovement" class="text-black">دمبل</option>
-          <option value="IsbarbellMovement" class="text-black">هالتر</option>
-          <option value="IsCable" class="text-black">سیم کش</option>
-          <option value="IsMachine" class="text-black">دستگاه</option>
-          <option value="None" class="text-black">هیچکدام</option>
+          <option
+            v-for="item in typesList"
+            :value="item.value"
+            class="text-black">
+            {{ item.title }}
+          </option>
         </select>
 
         <select
@@ -150,39 +151,22 @@
 
 <script setup>
 import { navigateTo } from "nuxt/app";
+import { typesList } from "@/utils/types";
 
 // variables
 const categories = ref([]);
-const nuxtApp = useNuxtApp();
+const { $axios, $toast } = useNuxtApp();
 
 // loadings
-const fetchLoading = ref(false);
 const addLoading = ref(false);
 
-// dialogs
-const addExerciseDialog = ref(false);
-const viewExerciseDialog = ref(false);
-const editExerciseDialog = ref(false);
-const deleteExerciseDialog = ref(false);
-
 // data
-const exerciseList = ref([]);
 const addExerciseData = ref({});
-const viewExerciseData = ref({});
-const editExerciseData = ref({});
-const deleteExerciseData = ref({});
 
 // images
 const image1 = ref(null);
 const image2 = ref(null);
 const logo = ref(null);
-
-// pagination
-const pagination = ref({
-  page: 1,
-  pageSize: 6,
-  totalRecord: 0,
-});
 
 // computed
 const validAddExercise = computed(() => {
@@ -197,51 +181,28 @@ const validAddExercise = computed(() => {
     addExerciseData.value.description
   );
 });
-const validEditExercise = computed(() => {
-  return (
-    editExerciseData.value.firstName &&
-    editExerciseData.value.lastName &&
-    editExerciseData.value.userName
-  );
-});
 
 // fetch
 const getCategories = async () => {
-  await nuxtApp.$axios
+  await $axios
     .post(`/Category/GetAll`)
     .then((response) => {
       categories.value = response.data.result.records;
     })
     .catch((error) => error && console.log("categories error: ", error));
 };
-const getExercises = async () => {
-  fetchLoading.value = true;
-
-  await nuxtApp.$axios
-    .post(`/Exercise/GetCoachExercise`, pagination.value)
-    .then((response) => {
-      exerciseList.value = response.data.result.records;
-      pagination.value.totalRecord = response.data.result.totalRecord;
-    })
-    .catch((error) => error && console.log("exercises error: ", error))
-    .finally(() => {
-      fetchLoading.value = false;
-    });
-};
 const addExercise = async () => {
   if (!validAddExercise.value) return;
 
   addLoading.value = true;
 
-  await nuxtApp.$axios
+  await $axios
     .post("/Exercise/CreateExercise", addExerciseData.value, {
       headers: { "Content-Type": "multipart/form-data" },
     })
     .then(() => {
-      nuxtApp.$toast.success("حرکت با موفقیت ایجاد شد");
-      pagination.value.page = 1;
+      $toast.success("حرکت با موفقیت ایجاد شد");
       resetExerciseData();
-      getExercises();
       navigateTo("/exercises/mine");
     })
     .catch((error) => error && console.log("add error: ", error))
@@ -249,34 +210,12 @@ const addExercise = async () => {
 };
 
 // methods
-const updatePage = (pageNumber) => {
-  pagination.value.page = pageNumber;
-  getExercises();
-};
 const resetExerciseData = () => {
-  // dialogs
-  closeDialogs();
-
   // images
   resetImages();
 
   // add data
   addExerciseData.value = {};
-
-  // view data
-  viewExerciseData.value = {};
-
-  // edit data
-  editExerciseData.value = {};
-
-  // delete data
-  deleteExerciseData.value = {};
-};
-const closeDialogs = () => {
-  addExerciseDialog.value = false;
-  viewExerciseDialog.value = false;
-  editExerciseDialog.value = false;
-  deleteExerciseDialog.value = false;
 };
 const resetImages = () => {
   image1.value = null;
@@ -288,15 +227,15 @@ const uploadAddImage = (event, which) => {
     case 1:
       addExerciseData.value.image1 = FILE;
       image1.value = URL.createObjectURL(FILE);
-      return;
+      break;
     case 2:
       addExerciseData.value.image2 = FILE;
       image2.value = URL.createObjectURL(FILE);
-      return;
+      break;
     case 3:
       addExerciseData.value.logo = FILE;
       logo.value = URL.createObjectURL(FILE);
-      return;
+      break;
   }
 };
 

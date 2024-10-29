@@ -78,8 +78,10 @@
               viewExerciseDialog = true;
             "
             class="w-72 flex flex-col items-center justify-center gap-0.5">
-            <p class="text-xs text-dark/60">{{ item.exerciseType }}</p>
-            <p class="text-xs text-primary/80">{{ item.categoryId }}</p>
+            <p class="text-xs text-dark/60">
+              {{ findType(item.exerciseType) }}
+            </p>
+            <p class="text-xs text-primary/80">{{ item.category.name }}</p>
           </div>
 
           <p
@@ -288,7 +290,7 @@
             <p class="text-xs 3xl:text-sm text-dark">
               دسته بندی:
               <span class="text-primary font-bold">{{
-                viewExerciseData.categoryId
+                viewExerciseData.category.name
               }}</span>
             </p>
           </li>
@@ -392,6 +394,8 @@
 </template>
 
 <script setup>
+import { findType } from "@/utils/types";
+
 // variables
 const nuxtApp = useNuxtApp();
 
