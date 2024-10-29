@@ -7,7 +7,7 @@
       </div>
 
       <!-- my exercises -->
-      <nuxt-link to="/exercises/custom" class="w-full">
+      <nuxt-link to="/exercises/mine" class="w-full">
         <div
           class="relative w-full h-44 3xl:h-60 flex flex-center rounded-2xl overflow-hidden cursor-pointer group">
           <p

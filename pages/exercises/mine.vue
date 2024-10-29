@@ -22,7 +22,7 @@
             rounded="lg"
             color="primary"
             variant="outlined"
-            @click="addExerciseDialog = true"
+            to="/exercises/add"
             class="px-2.5 md:px-3.5 h-7 md:h-10 flex flex-center hover:bg-primary/5 transition-200">
             <i-plus-solid class="ml-1 text-sm text-primary"></i-plus-solid>
             <span class="text-[10px] md:text-sm text-primary">افزودن</span>
