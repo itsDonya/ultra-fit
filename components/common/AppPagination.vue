@@ -82,7 +82,7 @@ const props = defineProps({
   },
   pageSize: {
     type: Number,
-    default: 6,
+    default: 10,
   },
 });
 

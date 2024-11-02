@@ -1,5 +1,5 @@
 <template>
-  <article class="w-full flex flex-col items-start justify-between gap-4">
+  <article class="w-full flex flex-col items-start justify-between gap-8">
     <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
@@ -16,37 +16,39 @@
         در حال حاضر اطلاعاتی وجود ندارد
       </p>
 
+      <!-- <ul
+        v-if="!fetchLoading && exerciseList.length"
+        class="w-full flex flex-col items-start justify-start gap-0 divide-y-[1px]"> -->
       <ul
         v-if="!fetchLoading && exerciseList.length"
-        class="w-full flex flex-col items-start justify-start gap-0 divide-y-[1px]">
+        class="w-full grid grid-cols-5 grid-rows-2 items-start justify-start gap-x-14 gap-y-4">
         <li
-          @click="
-            viewExerciseData = JSON.parse(JSON.stringify(item));
-            viewExerciseDialog = true;
-          "
+          @click="router.push(`/exercises/${item.id}`)"
           v-for="(item, i) in exerciseList"
           :key="i"
-          class="w-full h-16 p-1.5 flex items-center justify-start gap-8 cursor-pointer">
-          <div class="h-full flex items-center justify-start gap-4">
-            <img
-              src="/img/image-placeholder.png"
-              class="h-full aspect-square rounded-md"
-              alt="" />
+          class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer">
+          <img
+            src="/img/image-placeholder.png"
+            class="w-full aspect-square object-cover origin-center rounded-md"
+            alt="" />
 
-            <div class="w-72 flex flex-col items-start justify-center gap-0.5">
-              <p class="text-dark">{{ item.name }}</p>
-              <p class="text-xs text-primary/80">{{ item.engName }}</p>
-            </div>
+          <div class="w-full flex flex-col items-start gap-0.5">
+            <p class="text-dark line-clamp-1">{{ item.name }}</p>
+            <p class="text-xs text-primary/80 line-clamp-1">
+              {{ item.engName }}
+            </p>
           </div>
 
-          <div class="w-72 flex flex-col items-center justify-center gap-0.5">
-            <p class="text-xs text-dark/60">{{ item.exerciseType }}</p>
-            <p class="text-xs text-primary/80">{{ item.categoryId }}</p>
-          </div>
+          <!-- <div class="w-full flex flex-col items-center justify-center gap-0.5">
+            <p class="text-xs text-dark/60">
+              {{ findType(item.exerciseType) }}
+            </p>
+            <p class="text-xs text-primary/80">{{ item.category.name }}</p>
+          </div> -->
 
-          <p class="w-64 text-xs text-neutral-500 line-clamp-2">
+          <!-- <p class="w-full text-xs text-neutral-500 line-clamp-2">
             {{ item.description }}
-          </p>
+          </p> -->
 
           <!-- action -->
           <!-- <div class="flex items-center justify-end gap-0.5"> -->
@@ -306,6 +308,7 @@
 
 <script setup>
 // variables
+const router = useRouter();
 const nuxtApp = useNuxtApp();
 
 // loadings
@@ -328,7 +331,7 @@ const deleteExerciseData = ref({});
 // pagination
 const pagination = ref({
   page: 1,
-  pageSize: 6,
+  pageSize: 10,
   totalRecord: 0,
 });
 
