@@ -1,5 +1,5 @@
 <template>
-  <article class="w-full flex flex-col items-start justify-between gap-8">
+  <article class="w-full flex flex-col items-start justify-start gap-8">
     <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
@@ -10,69 +10,76 @@
             - {{ exerciseData.engName }}</span
           >
         </h2>
+
+        <!-- backward -->
+        <v-btn
+          @click="router.push('/exercises')"
+          color="primary"
+          variant="outlined"
+          rounded="lg">
+          <span>بازگشت</span>
+          <i-arrow-left class="mr-2 mt-0.5 text-xs text-primary"></i-arrow-left>
+        </v-btn>
       </div>
 
-      <div
-        class="w-full p-4 mx-auto bg-white flex flex-col items-center justify-center gap-4 rounded-xl-tw">
-        <p class="w-full text-start">تصاویر</p>
+      <div class="w-full flex items-center justify-start gap-8">
+        <!-- category -->
+        <p class="text-sm 3xl:text-base text-dark/80">
+          دسته بندی:
+          <span class="font-bold"> ---- دسته بندی رو نمیفرستی ---- </span>
+        </p>
 
-        <!-- images -->
-        <div class="w-full flex items-center justify-start gap-8">
-          <!-- logo -->
-          <client-only>
-            <div v-viewer class="w-full">
-              <img
-                src="/img/image-placeholder.png"
-                class="w-full h-56 object-cover rounded-lg"
-                alt="" />
-            </div>
-          </client-only>
+        <!-- type -->
+        <p class="text-sm 3xl:text-base text-dark">
+          نوع حرکت:
+          <span class="text-primary font-bold">
+            {{ findType(exerciseData.exerciseType) }}
+          </span>
+        </p>
+      </div>
 
-          <!-- image 1 -->
-          <client-only>
-            <div v-viewer class="w-full">
-              <img
-                src="/img/image-placeholder.png"
-                class="w-full h-56 object-cover rounded-lg"
-                alt="" />
-            </div>
-          </client-only>
+      <!-- images -->
+      <div class="w-full mt-6 flex items-center justify-start gap-8">
+        <!-- logo -->
+        <client-only>
+          <div v-viewer class="w-full">
+            <img
+              src="/img/image-placeholder.png"
+              class="w-full h-56 object-cover rounded-lg cursor-pointer"
+              :alt="exerciseData.name" />
+          </div>
+        </client-only>
 
-          <!-- image 2 -->
-          <client-only>
-            <div v-viewer class="w-full">
-              <img
-                src="/img/image-placeholder.png"
-                class="w-full h-56 object-cover rounded-lg"
-                alt="" />
-            </div>
-          </client-only>
-        </div>
+        <!-- image 1 -->
+        <client-only>
+          <div v-viewer class="w-full">
+            <img
+              src="/img/image-placeholder.png"
+              class="w-full h-56 object-cover rounded-lg cursor-pointer"
+              :alt="exerciseData.name" />
+          </div>
+        </client-only>
 
-        <!-- details -->
-        <ul class="w-full flex flex-col items-start justify-start gap-2">
-          <!-- type -->
-          <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark">
-              نوع حرکت:
-              <span class="text-primary font-bold">{{
-                exerciseData.exerciseType
-              }}</span>
-            </p>
-          </li>
+        <!-- image 2 -->
+        <client-only>
+          <div v-viewer class="w-full">
+            <img
+              src="/img/image-placeholder.png"
+              class="w-full h-56 object-cover rounded-lg cursor-pointer"
+              :alt="exerciseData.name" />
+          </div>
+        </client-only>
+      </div>
 
-          <!-- category -->
-          <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark">
-              دسته بندی:
-              <span class="text-primary font-bold">
-                ---- دسته بندی رو نمیفرستی ----
-              </span>
-            </p>
-          </li>
+      <!-- description -->
+      <p class="mt-4 pb-20 text-dark whitespace-pre-line">
+        {{ exerciseData.description }}
+      </p>
 
-          <!-- date -->
-          <li class="flex items-center justify-start gap-2">
+      <!-- details -->
+      <!-- <ul class="w-full flex flex-col items-start justify-start gap-2"> -->
+      <!-- date -->
+      <!-- <li class="flex items-center justify-start gap-2">
             <p class="text-xs 3xl:text-sm text-dark">
               تاریخ ایجاد:
               <span class="text-primary font-bold">{{
@@ -81,17 +88,16 @@
                   : ""
               }}</span>
             </p>
-          </li>
+          </li> -->
 
-          <!-- description -->
-          <li class="flex items-center justify-start gap-2">
+      <!-- description -->
+      <!-- <li class="flex items-center justify-start gap-2">
             <p class="text-xs 3xl:text-sm text-dark leading-5">
               توضیحات:
               <span class="font-bold">{{ exerciseData.description }}</span>
             </p>
           </li>
-        </ul>
-      </div>
+        </ul> -->
 
       <!-- <i-spinner-solid
           v-if="fetchLoading"
@@ -129,6 +135,8 @@
 </template>
 
 <script setup>
+import { findType } from "../../utils/types";
+
 // variables
 const route = useRoute();
 const router = useRouter();
