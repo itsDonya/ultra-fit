@@ -87,6 +87,10 @@ const sidebarLinks = ref([
         title: "برنامه‌های عمومی",
         path: "/workouts",
       },
+      {
+        title: "برنامه‌های من",
+        path: "/workouts/mine",
+      },
     ],
   },
   {
