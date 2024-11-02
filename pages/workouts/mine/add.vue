@@ -84,7 +84,10 @@
               border
               rounded="lg"
               elevation="0"
-              :disabled="disabledCards.includes(i)"
+              :disabled="
+                disabledCards.includes(i) ||
+                (!disabledCards.includes(i - 1) && i !== 1)
+              "
               class="w-full flex flex-col items-start justify-start gap-2"
               v-for="i in sessionsCount"
             >
@@ -121,7 +124,41 @@
         </template>
 
         <template v-slot:item.3>
-          <p>sdlfkj</p>
+          <v-card
+            border
+            rounded="lg"
+            elevation="0"
+            :disabled="disabledCards.includes(i)"
+            class="w-full flex flex-col items-start justify-start gap-2"
+            v-for="i in sessionsCount"
+          >
+            <!-- header -->
+            <div
+              class="w-full h-14 px-4 bg-black/5 flex items-center justify-start"
+            >
+              <p class="text-lg text-dark">جلسه‌ی {{ persianCount[i - 1] }}</p>
+            </div>
+
+            <!-- category -->
+            <div class="w-full p-4 flex items-center justify-start gap-2">
+              <v-select
+                multiple
+                hide-details
+                color="secondary"
+                variant="outlined"
+                label="دسته بندی"
+                :items="categories"
+                v-model="sessions[i - 1].categorys"
+              ></v-select>
+
+              <v-btn
+                color="primary"
+                @click="disableCard(i)"
+                class="w-20 h-12 text-base rounded-lg"
+                >ثبت</v-btn
+              >
+            </div>
+          </v-card>
         </template>
       </v-stepper>
     </div>
