@@ -13,58 +13,59 @@
         :items="['ایجاد برنامه', 'افزودن جلسات', 'افزودن حرکات']"
       >
         <template v-slot:item.1>
-          <div
-            class="w-full py-2 flex flex-col items-start justify-start gap-5"
-          >
-            <!-- name -->
-            <v-text-field
-              hide-details
-              color="primary"
-              variant="outlined"
-              label="عنوان برنامه"
-              v-model="workoutData.name"
-            >
-            </v-text-field>
+          <div class="w-full py-2 flex items-center justify-center">
+            <!-- fields -->
+            <div class="flex flex-col items-start justify-center gap-5">
+              <!-- name -->
+              <v-text-field
+                hide-details
+                color="primary"
+                variant="outlined"
+                label="عنوان برنامه"
+                v-model="workoutData.name"
+              >
+              </v-text-field>
 
-            <!-- sessions -->
-            <v-text-field
-              hide-details
-              type="number"
-              color="primary"
-              variant="outlined"
-              label="تعداد جلسات در هفته"
-              v-model.number="workoutData.sessionsPerWeek"
-            ></v-text-field>
+              <!-- sessions -->
+              <v-text-field
+                hide-details
+                type="number"
+                color="primary"
+                variant="outlined"
+                label="تعداد جلسات در هفته"
+                v-model.number="workoutData.sessionsPerWeek"
+              ></v-text-field>
 
-            <!-- duration -->
-            <v-text-field
-              hide-details
-              type="number"
-              color="primary"
-              label="مدت زمان"
-              variant="outlined"
-              v-model="workoutData.duration"
-            ></v-text-field>
+              <!-- duration -->
+              <v-text-field
+                hide-details
+                type="number"
+                color="primary"
+                label="مدت زمان"
+                variant="outlined"
+                v-model="workoutData.duration"
+              ></v-text-field>
 
-            <!-- description -->
-            <v-textarea
-              hide-details
-              color="primary"
-              label="توضیحات"
-              variant="outlined"
-              class="h-48 max-h-48"
-              v-model="workoutData.description"
-            >
-            </v-textarea>
+              <!-- description -->
+              <v-textarea
+                hide-details
+                color="primary"
+                label="توضیحات"
+                variant="outlined"
+                class="h-48 max-h-48"
+                v-model="workoutData.description"
+              >
+              </v-textarea>
 
-            <v-btn
-              color="primary"
-              @click="addWorkout"
-              :loading="addLoading"
-              :disabled="!validWorkout"
-              class="w-96 !h-11 -mt-16 rounded-lg"
-              >ثبت</v-btn
-            >
+              <v-btn
+                color="primary"
+                @click="addWorkout"
+                :loading="addLoading"
+                :disabled="!validWorkout"
+                class="w-96 !h-11 -mt-16 rounded-lg"
+                >ثبت</v-btn
+              >
+            </div>
           </div>
         </template>
 
@@ -146,6 +147,7 @@ const addLoading = ref(false);
 const sessions = ref([]);
 const headerId = ref(null);
 const workoutData = ref({});
+const sessionsWithWorkouts = ref([]);
 
 // images
 const logo = ref(null);
@@ -202,13 +204,46 @@ const addWorkout = async () => {
 };
 
 // methods
-const disableCard = (i) => {
+const disableCard = async (i) => {
   // check if categories are empty
   const index = i - 1;
   if (!sessions.value[index].categorys.length) {
     $toast.error("لطفاً دسته بندی مورد نظر را انتخاب کنید");
   } else {
-    disabledCards.value.push(i);
+    // disabledCards.value.push(i);
+
+    await $axios
+      .post("/Coach/AddSession", sessions.value[index])
+      .then((response) => {
+        headerId.value = response.data.result;
+        $toast.success("جلسه با موفقیت ایجاد شد");
+
+        const newSessionId = response.data.result;
+        sessionsWithWorkouts.value.push({
+          sessionId: newSessionId,
+          exerciseId: null,
+          exercise: null,
+          set: null,
+          repeat: null,
+          rest: 0,
+          description: null,
+          exerciseId2: 0,
+          exercise2: null,
+          set2: 0,
+          repeat2: null,
+          rest2: 0,
+          description2: null,
+          exerciseId3: 0,
+          exercise3: null,
+          set3: 0,
+          repeat3: null,
+          rest3: 0,
+          description3: null,
+        });
+
+        disabledCards.value.push(i);
+      })
+      .catch((error) => error && console.log("add session error: ", error));
   }
 };
 const resetWorkoutData = () => {
@@ -256,7 +291,7 @@ watch(
   { deep: true }
 );
 watch(
-  () => sessions.value,
+  () => sessionsWithWorkouts.value,
   (value) => {
     console.log("session changed: ", value);
   },
