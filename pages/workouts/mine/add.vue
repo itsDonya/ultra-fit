@@ -70,9 +70,10 @@
 
         <template v-slot:item.2>
           <v-alert
-            text="برای رفتن به مرحله‌ی بعد، برای هر جلسه دسته بندی مورد نظر را انتخاب و روی دکمه‌ی ثبت کلیک کنید"
             type="info"
             variant="tonal"
+            class="mb-2"
+            text="برای رفتن به مرحله‌ی بعد، برای هر جلسه دسته بندی مورد نظر را انتخاب و روی دکمه‌ی ثبت کلیک کنید"
           ></v-alert>
 
           <div
@@ -116,6 +117,10 @@
               </div>
             </v-card>
           </div>
+        </template>
+
+        <template v-slot:item.3>
+          <p>sdlfkj</p>
         </template>
       </v-stepper>
     </div>
@@ -198,8 +203,13 @@ const addWorkout = async () => {
 
 // methods
 const disableCard = (i) => {
-  const index = i;
-  disabledCards.value.push(index);
+  // check if categories are empty
+  const index = i - 1;
+  if (!sessions.value[index].categorys.length) {
+    $toast.error("لطفاً دسته بندی مورد نظر را انتخاب کنید");
+  } else {
+    disabledCards.value.push(i);
+  }
 };
 const resetWorkoutData = () => {
   // images
@@ -236,6 +246,15 @@ onMounted(() => {
 });
 
 // watchers
+watch(
+  () => disabledCards.value,
+  (value) => {
+    if (value.length == sessions.value.length) {
+      step.value = 3;
+    }
+  },
+  { deep: true }
+);
 watch(
   () => sessions.value,
   (value) => {
