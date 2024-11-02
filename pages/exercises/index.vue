@@ -8,18 +8,14 @@
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
 
         <!-- filters -->
-        <div class="w-full flex items-center justify-end gap-4">
+        <div class="flex items-center justify-end gap-4">
           <!-- search -->
-          <div
-            class="w-28 md:w-52 h-7 md:h-10 px-2.5 flex items-center justify-start gap-2 border rounded-lg">
-            <i-magnifying-glass class="text-neutral-300"></i-magnifying-glass>
-
-            <input
-              type="text"
-              v-model="filters.search"
-              placeholder="جستجوی حرکت"
-              class="w-full h-full text-[10px] md:text-sm text-neutral-700" />
-          </div>
+          <v-text-field
+            clearable
+            color="secondary"
+            variant="outlined"
+            label="جستجوی حرکت"
+            v-model="filters.search"></v-text-field>
         </div>
       </div>
 
@@ -123,3 +119,15 @@ watch(
   { deep: true }
 );
 </script>
+
+<style>
+.v-input {
+  @apply w-44 max-w-44;
+}
+.v-field__input {
+  @apply min-h-10 h-10;
+}
+.v-field-label {
+  @apply text-sm;
+}
+</style>
