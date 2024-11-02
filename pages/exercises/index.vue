@@ -2,19 +2,22 @@
   <article
     class="w-full md:h-full flex flex-col items-start justify-between gap-8 pb-24 md:pb-4">
     <div
-      class="w-full p-4 lg:p-0 flex flex-col items-start justify-start gap-4">
-      <div class="w-full flex items-center justify-between">
+      class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4">
+      <div
+        class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
         <!-- title -->
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
 
         <!-- filters -->
-        <div class="flex items-center justify-end gap-2">
+        <div
+          class="w-full md:w-auto -mb-6s flex items-center justify-end gap-2">
           <!-- search -->
           <v-text-field
             clearable
+            label="جستجو"
             color="secondary"
             variant="outlined"
-            label="جستجوی حرکت"
+            hide-details
             v-model="filters.search"></v-text-field>
 
           <!-- category -->
@@ -23,6 +26,7 @@
             color="secondary"
             label="دسته بندی"
             variant="outlined"
+            hide-details
             :items="categories"
             :loading="categoriesLoading"
             v-model="filters.categoryId"></v-select>
@@ -33,6 +37,7 @@
             color="secondary"
             label="نوع حرکت"
             variant="outlined"
+            hide-details
             :items="typesList"
             :loading="categoriesLoading"
             v-model="filters.exerciseType"></v-select>
@@ -168,15 +173,15 @@ watch(
 
 <style>
 .v-input {
-  @apply w-44 max-w-44;
+  @apply w-full md:w-44 md:max-w-44;
 }
 .v-field__input {
   @apply min-h-10 h-10;
 }
 .v-field-label {
-  @apply text-sm;
+  @apply text-[10px] md:text-sm;
 }
 .v-select__selection {
-  @apply -mt-1.5 text-sm;
+  @apply -mt-1.5 text-xs md:text-sm;
 }
 </style>
