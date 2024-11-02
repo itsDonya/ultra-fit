@@ -19,22 +19,34 @@
         <!-- images -->
         <div class="w-full flex items-center justify-start gap-8">
           <!-- logo -->
-          <img
-            src="/img/image-placeholder.png"
-            class="w-full h-56 object-cover rounded-lg"
-            alt="" />
+          <client-only>
+            <div v-viewer class="w-full">
+              <img
+                src="/img/image-placeholder.png"
+                class="w-full h-56 object-cover rounded-lg"
+                alt="" />
+            </div>
+          </client-only>
 
           <!-- image 1 -->
-          <img
-            src="/img/image-placeholder.png"
-            class="w-full h-56 object-cover rounded-lg"
-            alt="" />
+          <client-only>
+            <div v-viewer class="w-full">
+              <img
+                src="/img/image-placeholder.png"
+                class="w-full h-56 object-cover rounded-lg"
+                alt="" />
+            </div>
+          </client-only>
 
           <!-- image 2 -->
-          <img
-            src="/img/image-placeholder.png"
-            class="w-full h-56 object-cover rounded-lg"
-            alt="" />
+          <client-only>
+            <div v-viewer class="w-full">
+              <img
+                src="/img/image-placeholder.png"
+                class="w-full h-56 object-cover rounded-lg"
+                alt="" />
+            </div>
+          </client-only>
         </div>
 
         <!-- details -->
