@@ -1,13 +1,15 @@
 <template>
   <v-btn
-    :to="''"
+    :to="loading ? '' : username ? '' : '/login'"
     color="#ffffff"
     variant="outlined"
     :class="[username ? '' : 'px-2.5 xl:px-4']"
-    class="px-2.5 xl:px-4hover:bg-white/10 gap-1 xl:gap-2 rounded-md">
+    class="px-2.5 xl:px-4hover:bg-white/10 gap-1 xl:gap-2 rounded-md"
+  >
     <i-spinner-solid
       v-if="loading"
-      class="text-white animate-spin"></i-spinner-solid>
+      class="text-white animate-spin"
+    ></i-spinner-solid>
 
     <span v-else-if="username" class="mr-2 text-xs xl:text-sm text-white">
       {{ username }}
