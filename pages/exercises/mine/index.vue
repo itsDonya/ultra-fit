@@ -14,19 +14,19 @@
           <!-- search -->
           <v-text-field
             clearable
+            hide-details
             label="جستجو"
             color="secondary"
             variant="outlined"
-            hide-details
             v-model="filters.search"></v-text-field>
 
           <!-- category -->
           <v-select
             clearable
+            hide-details
             color="secondary"
             label="دسته بندی"
             variant="outlined"
-            hide-details
             :items="categories"
             :loading="categoriesLoading"
             v-model="filters.categoryId"></v-select>
@@ -34,18 +34,13 @@
           <!-- type -->
           <v-select
             clearable
-            color="secondary"
-            label="نوع حرکت"
-            variant="outlined"
             hide-details
+            label="نوع حرکت"
+            color="secondary"
+            variant="outlined"
             :items="typesList"
             :loading="categoriesLoading"
             v-model="filters.exerciseType"></v-select>
-
-          <v-btn to="/exercises/add" color="primary" class="h-10 rounded-lg">
-            <span>افزودن</span>
-            <i-plus-solid class="text-white mr-2 mt-0.5"></i-plus-solid>
-          </v-btn>
         </div>
       </div>
 
