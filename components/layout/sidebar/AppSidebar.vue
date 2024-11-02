@@ -1,29 +1,45 @@
 <template>
   <aside
     :class="[`${isOpen ? 'min-w-2/5 w-2/5 p-2' : ' min-w-0 w-0 max-w-0 p-0'}`]"
-    class="absolute top-0 right-0 lg:static h-full lg:min-w-52 lg:w-52 lg:max-w-52 lg:p-2 transition-all duration-300 overflow-hidden z-10">
-    <nav class="w-full flex flex-col items-start justify-start gap-1">
-      <nuxt-link
-        class="w-full"
-        :key="i"
-        v-for="(item, i) in sidebarLinks"
-        :to="item.path">
-        <div
-          class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/10 rounded-lg transition-all duration-200">
-          <component :is="`i-${item.icon}`" class="text-white"></component>
-          <span class="text-sm xl:text-base text-white">{{ item.title }}</span>
-        </div>
-      </nuxt-link>
+    class="absolute top-0 right-0 lg:static h-full lg:min-w-56 lg:w-56 lg:max-w-56 lg:p-2 transition-all duration-300 overflow-hidden z-10">
+    <v-list v-model:opened="open">
+      <template v-for="(item, i) in sidebarLinks">
+        <v-list-group v-if="item.children" :value="item.value" class="p-0">
+          <template v-slot:activator="{ props }">
+            <v-list-item v-bind="props" class="p-0">
+              <div class="w-full" :key="i" :to="item.path">
+                <div
+                  class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+                  <component
+                    :is="`i-${item.icon}`"
+                    class="text-white"></component>
+                  <span class="text-sm text-white">{{ item.title }}</span>
+                </div>
+              </div>
+            </v-list-item>
+          </template>
 
-      <!-- logout -->
-      <div
-        @click="logout"
-        class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 hover:bg-white/10 rounded-lg transition-all duration-200 cursor-pointer">
-        <i-arrow-right-from-bracket
-          class="text-white"></i-arrow-right-from-bracket>
-        <span class="text-sm xl:text-base text-white">خروج از حساب</span>
-      </div>
-    </nav>
+          <v-list-item v-for="(child, j) in item.children" :key="j">
+            <nuxt-link class="w-full" :to="item.path">
+              <div
+                class="w-full h-11 xl:h-12 px-4 flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+                <span class="text-sm text-white">{{ child.title }}</span>
+              </div>
+            </nuxt-link>
+          </v-list-item>
+        </v-list-group>
+
+        <v-list-item v-else class="p-0">
+          <nuxt-link class="w-full" :key="i" :to="item.path">
+            <div
+              class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+              <component :is="`i-${item.icon}`" class="text-white"></component>
+              <span class="text-sm text-white">{{ item.title }}</span>
+            </div>
+          </nuxt-link>
+        </v-list-item>
+      </template>
+    </v-list>
   </aside>
 </template>
 
@@ -31,34 +47,48 @@
 import { navigateTo } from "nuxt/app";
 
 // variables
+const open = ref([]);
 const isOpen = ref(false);
 const nuxtApp = useNuxtApp();
 const sidebarLinks = ref([
   {
+    value: "Dashboard",
     icon: "chart-line",
     title: "داشبورد",
-    // path: "/dashboard",
     path: "/coming-soon",
   },
   {
+    value: "Exercises",
     icon: "dumbbell",
     title: "حرکات",
-    path: "/exercises",
+
+    children: [
+      {
+        title: "حرکات عمومی",
+        path: "/exercises",
+      },
+      {
+        title: "حرکات من",
+        path: "/exercises/mine",
+      },
+    ],
   },
   {
+    value: "Workouts",
     icon: "calendar-lines",
     title: "برنامه ها",
     path: "/workouts",
   },
   {
+    value: "Athletes",
     icon: "people-group",
     title: "شاگرد ها",
     path: "/athletes",
   },
   {
+    value: "Diet",
     icon: "salad",
     title: "رژیم ها",
-    // path: "/diets",
     path: "/coming-soon",
   },
 ]);
@@ -82,7 +112,17 @@ onMounted(() => {
 });
 </script>
 
+<style>
+.mdi-chevron-down::before,
+.mdi-chevron-up::before {
+  color: white;
+}
+</style>
+
 <style scoped>
+.v-list {
+  background-color: inherit;
+}
 @media (max-width: 1024px) {
   aside {
     background-color: #080369;
