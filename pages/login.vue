@@ -10,21 +10,24 @@
     <v-window v-model="activeTab" class="w-full">
       <v-window-item value="mobile" class="w-full">
         <div
-          class="w-full flex flex-col items-center justify-start gap-1.5 sm:gap-3">
+          class="w-full flex flex-col items-center justify-start gap-1.5 sm:gap-3"
+        >
           <!-- username -->
           <input
             type="text"
             maxlength="11"
             placeholder="شماره موبایل"
             v-model="data.username"
-            class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200" />
+            class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200"
+          />
 
           <!-- password -->
           <input
             type="password"
             placeholder="رمز عبور"
             v-model="data.password"
-            class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200" />
+            class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200"
+          />
 
           <!-- button -->
           <v-btn
@@ -32,7 +35,8 @@
             :loading="loading"
             :disabled="!validData || loading"
             @click.prevent="userLogin"
-            class="w-full h-9 sm:h-12 mt-4 rounded-lg sm:rounded-xl">
+            class="w-full h-9 sm:h-12 mt-4 rounded-lg sm:rounded-xl"
+          >
             <span class="text-xs sm:text-base">ورود</span>
           </v-btn>
         </div>
@@ -40,7 +44,8 @@
 
       <v-window-item value="otp" class="w-full">
         <div
-          class="w-full flex flex-col items-center justify-start gap-1.5 sm:gap-3">
+          class="w-full flex flex-col items-center justify-start gap-1.5 sm:gap-3"
+        >
           <v-window v-model="otpLevel" class="w-full">
             <!-- mobile -->
             <v-window-item value="mobile" class="w-full">
@@ -49,7 +54,8 @@
                 maxlength="11"
                 placeholder="شماره موبایل"
                 v-model="data.username"
-                class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200" />
+                class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200"
+              />
 
               <!-- button -->
               <v-btn
@@ -57,7 +63,8 @@
                 :loading="loading"
                 :disabled="!data.username || data.username.length != 11"
                 @click.prevent="sendOtp"
-                class="w-full h-9 sm:h-12 mt-4 rounded-lg sm:rounded-xl">
+                class="w-full h-9 sm:h-12 mt-4 rounded-lg sm:rounded-xl"
+              >
                 <span class="text-xs sm:text-base">ارسال کد یکبار مصرف</span>
               </v-btn>
             </v-window-item>
@@ -68,7 +75,8 @@
                 type="text"
                 placeholder="کد پیامک شده"
                 v-model="otpCode"
-                class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200" />
+                class="w-full h-9 sm:h-12 p-2 sm:p-4 text-xs sm:text-base text-white bg-neutral-200/20 border border-white/20 placeholder:text-white/40 focus:border-secondary rounded-lg sm:rounded-xl-tw transition-all duration-200"
+              />
 
               <!-- button -->
               <v-btn
@@ -76,7 +84,8 @@
                 :loading="loading"
                 :disabled="!otpCode || otpCode.length != 4"
                 @click.prevent="verifyOtp"
-                class="w-full h-9 sm:h-12 mt-4 rounded-lg sm:rounded-xl">
+                class="w-full h-9 sm:h-12 mt-4 rounded-lg sm:rounded-xl"
+              >
                 <span class="text-xs sm:text-base">ورود به حساب</span>
               </v-btn>
             </v-window-item>
