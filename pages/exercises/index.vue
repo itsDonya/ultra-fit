@@ -26,6 +26,16 @@
             :items="categories"
             :loading="categoriesLoading"
             v-model="filters.categoryId"></v-select>
+
+          <!-- type -->
+          <v-select
+            clearable
+            color="secondary"
+            label="نوع حرکت"
+            variant="outlined"
+            :items="typesList"
+            :loading="categoriesLoading"
+            v-model="filters.exerciseType"></v-select>
         </div>
       </div>
 
@@ -70,6 +80,8 @@
 </template>
 
 <script setup>
+import { typesList } from "@/utils/types";
+
 // variables
 const router = useRouter();
 const nuxtApp = useNuxtApp();
@@ -84,6 +96,7 @@ const exerciseList = ref([]);
 const filters = ref({
   search: null,
   categoryId: null,
+  exerciseType: null,
 });
 
 // pagination
