@@ -25,21 +25,49 @@
         </v-btn>
       </div>
 
-      <div
-        class="w-full flex flex-col md:flex-row items-start md:items-center justify-start gap-1.5 md:gap-8">
-        <!-- category -->
-        <p class="text-xs md:text-sm 3xl:text-base text-dark/80">
-          دسته بندی:
-          <span class="font-bold"> ---- دسته بندی رو نمیفرستی ---- </span>
-        </p>
+      <div class="w-full flex items-center justify-between">
+        <div
+          class="w-full flex flex-col md:flex-row items-start md:items-center justify-start gap-1.5 md:gap-8">
+          <!-- category -->
+          <p class="text-xs md:text-sm 3xl:text-base text-dark/80">
+            دسته بندی:
+            <span class="font-bold"> ---- دسته بندی رو نمیفرستی ---- </span>
+          </p>
 
-        <!-- type -->
-        <p class="text-xs md:text-sm 3xl:text-base text-dark">
-          نوع حرکت:
-          <span class="text-primary font-bold">
-            {{ findType(exerciseData.exerciseType) }}
-          </span>
-        </p>
+          <!-- type -->
+          <p class="text-xs md:text-sm 3xl:text-base text-dark">
+            نوع حرکت:
+            <span class="text-primary font-bold">
+              {{ findType(exerciseData.exerciseType) }}
+            </span>
+          </p>
+        </div>
+
+        <!-- actions -->
+        <div class="flex items-center justify-end gap-2">
+          <!-- edit -->
+          <v-btn
+            @click="router.go(-1)"
+            class="h-8 md:h-9"
+            color="#eab308"
+            variant="outlined"
+            rounded="lg">
+            <span class="text-xs md:text-sm">ویرایش</span>
+            <i-pen-solid class="mr-2 text-yellow-500"></i-pen-solid>
+          </v-btn>
+
+          <!-- delete -->
+          <v-btn
+            @click="openDeleteDialog"
+            class="h-8 md:h-9"
+            color="red"
+            variant="outlined"
+            rounded="lg">
+            <span class="text-xs md:text-sm">حذف</span>
+            <i-trash-can-regular
+              class="mr-2 text-red-500"></i-trash-can-regular>
+          </v-btn>
+        </div>
       </div>
 
       <!-- images -->
@@ -82,6 +110,33 @@
         {{ exerciseData.description }}
       </p>
     </div>
+
+    <v-dialog v-model="deleteDialog">
+      <div
+        class="w-96 p-5 m-auto bg-white flex flex-col items-start justify-center gap-4 rounded-xl-tw shadow-lg">
+        <p class="text-dark">آیا از حذف این حرکت اطمینان دارید؟</p>
+
+        <div class="w-full flex items-center justify-center gap-2">
+          <v-btn
+            :loading="deleteLoading"
+            color="red"
+            rounded="lg"
+            variant="flat"
+            class="w-1/2 h-10"
+            @click="deleteExercise"
+            >حذف</v-btn
+          >
+          <v-btn
+            class="w-1/2 h-10"
+            color="red"
+            variant="outlined"
+            rounded="lg"
+            @click="deleteDialog = false"
+            >انصراف</v-btn
+          >
+        </div>
+      </div>
+    </v-dialog>
   </article>
 </template>
 
@@ -93,8 +148,12 @@ const route = useRoute();
 const router = useRouter();
 const { $axios, $toast } = useNuxtApp();
 
+// dialogs
+const deleteDialog = ref(false);
+
 // loadings
 const fetchLoading = ref(false);
+const deleteLoading = ref(false);
 
 // data
 const exerciseData = ref({});
@@ -108,39 +167,41 @@ const getExerciseData = async (id) => {
     .then((response) => {
       console.log("data: ", response.data.result);
       exerciseData.value = response.data.result;
+
+      const errorCode = response.data.errorCode;
+      if (errorCode && errorCode == "ExerciseNotFound") {
+        $toast.warning("موردی با این شناسه یافت نشد");
+        router.push("/exercises/mine");
+      }
     })
-    .catch((error) => error && console.log("exercises error: ", error))
+    .catch((error) => {
+      error && console.log("exercises error: ", error);
+    })
     .finally(() => {
       fetchLoading.value = false;
     });
 };
+const deleteExercise = async () => {
+  console.log("id:::: ", route.params.id);
+  deleteLoading.value = true;
+
+  await $axios
+    .delete(`/Exercise/DeleteCoachExercise`, {
+      id: route.params.id,
+    })
+    .then((response) => {
+      console.log("data: ", response.data.result);
+      router.push("/exercises/mine");
+    })
+    .catch((error) => error && console.log("delete exercise error: ", error))
+    .finally(() => {
+      deleteLoading.value = false;
+    });
+};
 
 // methods
-const updatePage = (pageNumber) => {
-  pagination.value.page = pageNumber;
-  getExercises();
-};
-const resetExerciseData = () => {
-  // dialogs
-  closeDialogs();
-
-  // add data
-  addExerciseData.value = {};
-
-  // view data
-  exerciseData.value = {};
-
-  // edit data
-  editExerciseData.value = {};
-
-  // delete data
-  deleteExerciseData.value = {};
-};
-const closeDialogs = () => {
-  addExerciseDialog.value = false;
-  viewExerciseDialog.value = false;
-  editExerciseDialog.value = false;
-  deleteExerciseDialog.value = false;
+const openDeleteDialog = () => {
+  deleteDialog.value = true;
 };
 
 // lifecycles
@@ -148,8 +209,8 @@ onMounted(() => {
   const exerciseId = route.params.id;
 
   if (!exerciseId) {
-    $toast.error("ابتدا یک حرکت جهت مشاهده‌ی جزئیات انتخاب کنید");
-    router.push("/exercises");
+    $toast.warning("ابتدا یک حرکت جهت مشاهده‌ی جزئیات انتخاب کنید");
+    router.push("/exercises/mine");
   } else {
     getExerciseData(exerciseId);
   }
