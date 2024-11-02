@@ -6,6 +6,21 @@
       <div class="w-full flex items-center justify-between">
         <!-- title -->
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
+
+        <!-- filters -->
+        <div class="w-full flex items-center justify-end gap-4">
+          <!-- search -->
+          <div
+            class="w-28 md:w-52 h-7 md:h-10 px-2.5 flex items-center justify-start gap-2 border rounded-lg">
+            <i-magnifying-glass class="text-neutral-300"></i-magnifying-glass>
+
+            <input
+              type="text"
+              v-model="filters.search"
+              placeholder="جستجوی حرکت"
+              class="w-full h-full text-[10px] md:text-sm text-neutral-700" />
+          </div>
+        </div>
       </div>
 
       <i-spinner-solid
@@ -55,20 +70,12 @@ const nuxtApp = useNuxtApp();
 
 // loadings
 const fetchLoading = ref(false);
-const addLoading = ref(false);
-
-// dialogs
-const addExerciseDialog = ref(false);
-const viewExerciseDialog = ref(false);
-const editExerciseDialog = ref(false);
-const deleteExerciseDialog = ref(false);
 
 // data
 const exerciseList = ref([]);
-const addExerciseData = ref({});
-const viewExerciseData = ref({});
-const editExerciseData = ref({});
-const deleteExerciseData = ref({});
+const filters = ref({
+  search: null,
+});
 
 // pagination
 const pagination = ref({
@@ -77,28 +84,15 @@ const pagination = ref({
   totalRecord: 0,
 });
 
-// computed
-const validAddExercise = computed(() => {
-  return (
-    addExerciseData.value.firstName &&
-    addExerciseData.value.lastName &&
-    addExerciseData.value.userName
-  );
-});
-const validEditExercise = computed(() => {
-  return (
-    editExerciseData.value.firstName &&
-    editExerciseData.value.lastName &&
-    editExerciseData.value.userName
-  );
-});
-
 // fetch
 const getExercises = async () => {
   fetchLoading.value = true;
 
   await nuxtApp.$axios
-    .post(`/Exercise/GetPublicExercise`, pagination.value)
+    .post(`/Exercise/GetPublicExercise`, {
+      ...pagination.value,
+      ...filters.value,
+    })
     .then((response) => {
       exerciseList.value = response.data.result.records;
       pagination.value.totalRecord = response.data.result.totalRecord;
@@ -108,51 +102,24 @@ const getExercises = async () => {
       fetchLoading.value = false;
     });
 };
-const addExercise = async () => {
-  addLoading.value = true;
-
-  await nuxtApp.$axios
-    .post("/Coach/AddExercise", addExerciseData.value)
-    .then(() => {
-      nuxtApp.$toast.success("عملیات با موفقیت انجام شد");
-      pagination.value.page = 1;
-      resetExerciseData();
-      getExercises();
-    })
-    .catch((error) => error && console.log("add error: ", error))
-    .finally(() => (addLoading.value = false));
-};
 
 // methods
 const updatePage = (pageNumber) => {
   pagination.value.page = pageNumber;
   getExercises();
 };
-const resetExerciseData = () => {
-  // dialogs
-  closeDialogs();
-
-  // add data
-  addExerciseData.value = {};
-
-  // view data
-  viewExerciseData.value = {};
-
-  // edit data
-  editExerciseData.value = {};
-
-  // delete data
-  deleteExerciseData.value = {};
-};
-const closeDialogs = () => {
-  addExerciseDialog.value = false;
-  viewExerciseDialog.value = false;
-  editExerciseDialog.value = false;
-  deleteExerciseDialog.value = false;
-};
 
 // lifecycles
 onMounted(() => {
   getExercises();
 });
+
+// watchers
+watch(
+  () => filters.value,
+  () => {
+    getExercises();
+  },
+  { deep: true }
+);
 </script>
