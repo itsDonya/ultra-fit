@@ -8,7 +8,7 @@
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
 
         <!-- filters -->
-        <div class="flex items-center justify-end gap-4">
+        <div class="flex items-center justify-end gap-2">
           <!-- search -->
           <v-text-field
             clearable
@@ -16,6 +16,16 @@
             variant="outlined"
             label="جستجوی حرکت"
             v-model="filters.search"></v-text-field>
+
+          <!-- category -->
+          <v-select
+            clearable
+            color="secondary"
+            label="دسته بندی"
+            variant="outlined"
+            :items="categories"
+            :loading="categoriesLoading"
+            v-model="filters.categoryId"></v-select>
         </div>
       </div>
 
@@ -66,11 +76,14 @@ const nuxtApp = useNuxtApp();
 
 // loadings
 const fetchLoading = ref(false);
+const categoriesLoading = ref(false);
 
 // data
+const categories = ref([]);
 const exerciseList = ref([]);
 const filters = ref({
   search: null,
+  categoryId: null,
 });
 
 // pagination
@@ -98,6 +111,25 @@ const getExercises = async () => {
       fetchLoading.value = false;
     });
 };
+const getCategories = async () => {
+  categoriesLoading.value = true;
+
+  await nuxtApp.$axios
+    .post(`/Category/GetAll`, {})
+    .then((response) => {
+      categories.value = response.data.result.records.map((item) => {
+        return {
+          ...item,
+          value: item.id,
+          title: item.name,
+        };
+      });
+    })
+    .catch((error) => error && console.log("categories error: ", error))
+    .finally(() => {
+      categoriesLoading.value = false;
+    });
+};
 
 // methods
 const updatePage = (pageNumber) => {
@@ -107,6 +139,7 @@ const updatePage = (pageNumber) => {
 
 // lifecycles
 onMounted(() => {
+  getCategories();
   getExercises();
 });
 
@@ -129,5 +162,8 @@ watch(
 }
 .v-field-label {
   @apply text-sm;
+}
+.v-select__selection {
+  @apply -mt-1.5 text-sm;
 }
 </style>
