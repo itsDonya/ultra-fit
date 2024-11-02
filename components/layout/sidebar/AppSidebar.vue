@@ -1,6 +1,6 @@
 <template>
   <aside
-    :class="[`${isOpen ? 'min-w-2/5 w-2/5 p-2' : ' min-w-0 w-0 max-w-0 p-0'}`]"
+    :class="[`${isOpen ? 'min-w-4/5 w-4/5 p-2' : ' min-w-0 w-0 max-w-0 p-0'}`]"
     class="absolute top-0 right-0 lg:static h-full lg:min-w-56 lg:w-56 lg:max-w-56 lg:p-2 transition-all duration-300 overflow-hidden z-10">
     <v-list v-model:opened="open">
       <template v-for="(item, i) in sidebarLinks">
@@ -121,7 +121,7 @@ onMounted(() => {
 
 <style scoped>
 .v-list {
-  background-color: inherit;
+  background-color: transparent;
 }
 @media (max-width: 1024px) {
   aside {
