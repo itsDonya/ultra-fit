@@ -124,41 +124,94 @@
         </template>
 
         <template v-slot:item.3>
-          <v-card
-            border
-            rounded="lg"
-            elevation="0"
-            :disabled="disabledCards.includes(i)"
-            class="w-full flex flex-col items-start justify-start gap-2"
-            v-for="i in sessionsCount"
+          <div
+            class="w-full py-2 flex flex-col items-start justify-start gap-4"
           >
-            <!-- header -->
-            <div
-              class="w-full h-14 px-4 bg-black/5 flex items-center justify-start"
+            <v-card
+              border
+              rounded="lg"
+              elevation="0"
+              :disabled="disabledCards.includes(i)"
+              class="w-full flex flex-col items-start justify-start gap-2"
+              v-for="i in sessionsWithWorkouts.length"
             >
-              <p class="text-lg text-dark">جلسه‌ی {{ persianCount[i - 1] }}</p>
-            </div>
-
-            <!-- category -->
-            <div class="w-full p-4 flex items-center justify-start gap-2">
-              <v-select
-                multiple
-                hide-details
-                color="secondary"
-                variant="outlined"
-                label="دسته بندی"
-                :items="categories"
-                v-model="sessions[i - 1].categorys"
-              ></v-select>
-
-              <v-btn
-                color="primary"
-                @click="disableCard(i)"
-                class="w-20 h-12 text-base rounded-lg"
-                >ثبت</v-btn
+              <!-- header -->
+              <div
+                class="w-full h-14 px-4 bg-black/5 flex items-center justify-start"
               >
-            </div>
-          </v-card>
+                <p class="text-lg text-dark">
+                  جلسه‌ی {{ persianCount[i - 1] }}
+                </p>
+              </div>
+
+              <!-- category -->
+              <div class="w-full p-4 grid grid-cols-4 gap-2">
+                <v-select
+                  hide-details
+                  color="secondary"
+                  class="w-full"
+                  variant="outlined"
+                  label="حرکت"
+                  :items="exercises"
+                  v-model="sessionsWithWorkouts[i - 1].exerciseId"
+                ></v-select>
+
+                <v-text-field
+                  type="number"
+                  hide-details
+                  color="secondary"
+                  class="w-full"
+                  variant="outlined"
+                  label="ست"
+                  v-model="sessionsWithWorkouts[i - 1].set"
+                ></v-text-field>
+
+                <v-text-field
+                  type="number"
+                  hide-details
+                  color="secondary"
+                  class="w-full"
+                  variant="outlined"
+                  label="تکرار"
+                  v-model="sessionsWithWorkouts[i - 1].repeat"
+                ></v-text-field>
+
+                <v-text-field
+                  type="number"
+                  hide-details
+                  color="secondary"
+                  class="w-full"
+                  variant="outlined"
+                  label="استراحت"
+                  v-model="sessionsWithWorkouts[i - 1].rest"
+                ></v-text-field>
+
+                <v-textarea
+                  type="number"
+                  hide-details
+                  color="secondary"
+                  class="min-w-full w-full h-44 col-span-4"
+                  variant="outlined"
+                  label="توضیحات"
+                  v-model="sessionsWithWorkouts[i - 1].description"
+                ></v-textarea>
+
+                <v-btn
+                  color="primary"
+                  @click="addExercise(i)"
+                  class="w-full h-12 -mt-14 rounded-lg col-span-4"
+                  >افزودن</v-btn
+                >
+
+                <!-- <v-btn
+                  color="primary"
+                  @click="disableCard(i)"
+                  class="w-20 h-12 text-base rounded-lg"
+                  >ثبت</v-btn
+                > -->
+              </div>
+            </v-card>
+          </div>
         </template>
       </v-stepper>
     </div>
@@ -171,6 +224,7 @@ import { typesList } from "@/utils/types";
 
 // variables
 const step = ref(1);
+const exercises = ref([]);
 const categories = ref([]);
 const sessionsCount = ref(0);
 const disabledCards = ref([]);
@@ -217,6 +271,21 @@ const getCategories = async () => {
     .catch((error) => error && console.log("categories error: ", error));
 };
 
+const getExercises = async () => {
+  await $axios
+    .post(`/Exercise/GetPublicExercise`)
+    .then((response) => {
+      exercises.value = response.data.result.records.map((item) => {
+        return {
+          ...item,
+          title: item.name,
+          value: item.id,
+        };
+      });
+    })
+    .catch((error) => error && console.log("categories error: ", error));
+};
+
 const addWorkout = async () => {
   if (!validWorkout.value) return;
 
@@ -240,7 +309,21 @@ const addWorkout = async () => {
     .finally(() => (addLoading.value = false));
 };
 
+const addExercise = async (i) => {
+  await $axios
+    .post("/Coach/AddSessionExercise", sessionsWithWorkouts.value[i - 1])
+    .then((response) => {
+      $toast.success("حرکت با موفقیت افزوده شد");
+      disableCardNoLimits(i);
+    })
+    .catch((error) => error && console.log("add error: ", error))
+    .finally(() => (addLoading.value = false));
+};
+
 // methods
+const disableCardNoLimits = (i) => {
+  disabledCards.value.push(i);
+};
 const disableCard = async (i) => {
   // check if categories are empty
   const index = i - 1;
@@ -262,19 +345,19 @@ const disableCard = async (i) => {
           exercise: null,
           set: null,
           repeat: null,
-          rest: 0,
+          rest: null,
           description: null,
-          exerciseId2: 0,
+          exerciseId2: null,
           exercise2: null,
-          set2: 0,
+          set2: null,
           repeat2: null,
-          rest2: 0,
+          rest2: null,
           description2: null,
-          exerciseId3: 0,
+          exerciseId3: null,
           exercise3: null,
-          set3: 0,
+          set3: null,
           repeat3: null,
-          rest3: 0,
+          rest3: null,
           description3: null,
         });
 
@@ -314,6 +397,7 @@ const uploadAddImage = (event, which) => {
 
 // lifecycles
 onMounted(() => {
+  getExercises();
   getCategories();
 });
 
@@ -323,14 +407,8 @@ watch(
   (value) => {
     if (value.length == sessions.value.length) {
       step.value = 3;
+      disabledCards.value = [];
     }
-  },
-  { deep: true }
-);
-watch(
-  () => sessionsWithWorkouts.value,
-  (value) => {
-    console.log("session changed: ", value);
   },
   { deep: true }
 );
