@@ -1,432 +1,187 @@
 <template>
-  <article class="w-full flex flex-col items-start justify-between gap-4">
-    <div class="w-full flex flex-col items-start justify-start gap-4">
-      <div class="w-full flex items-center justify-between">
+  <article
+    class="w-full md:h-full flex flex-col items-start justify-between gap-8 pb-24 md:pb-4">
+    <div
+      class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4">
+      <div
+        class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
         <!-- title -->
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست برنامه ها</h2>
-      </div>
 
-      <!-- my exercises -->
-      <nuxt-link to="/exercises/custom" class="w-full">
-        <div
-          class="relative w-full h-44 3xl:h-60 flex flex-center rounded-2xl overflow-hidden cursor-pointer group">
-          <p
-            class="text-2xl group-hover:text-3xl text-white font-bold transition-300 z-10">
-            برنامه های من
-          </p>
-          <img
-            src="/img/lunge.jpg"
-            alt=""
-            class="absolute top-0 left-0 size-full object-cover" />
-          <span
-            class="absolute top-0 left-0 size-full bg-primary/60 group-hover:bg-primary/65 transition-200"></span>
-        </div>
-      </nuxt-link>
+        <!-- filters -->
+        <!-- <div
+          class="w-full md:w-auto -mb-6s flex items-center justify-end gap-2"> -->
+        <!-- search -->
+        <!-- <v-text-field
+            clearable
+            label="جستجو"
+            color="secondary"
+            variant="outlined"
+            hide-details
+            v-model="filters.search"></v-text-field> -->
+
+        <!-- category -->
+        <!-- <v-select
+            clearable
+            color="secondary"
+            label="دسته بندی"
+            variant="outlined"
+            hide-details
+            :items="categories"
+            :loading="categoriesLoading"
+            v-model="filters.categoryId"></v-select> -->
+
+        <!-- type -->
+        <!-- <v-select
+            clearable
+            color="secondary"
+            label="نوع حرکت"
+            variant="outlined"
+            hide-details
+            :items="typesList"
+            :loading="categoriesLoading"
+            v-model="filters.exerciseType"></v-select> -->
+        <!-- </div> -->
+      </div>
 
       <i-spinner-solid
         v-if="fetchLoading"
         class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
 
       <p
-        v-else-if="exerciseList.length == 0"
+        v-else-if="workoutsList.length == 0"
         class="my-6 mx-auto text-neutral-600">
         در حال حاضر اطلاعاتی وجود ندارد
       </p>
 
       <ul
-        v-if="!fetchLoading && exerciseList.length"
-        class="w-full flex flex-col items-start justify-start gap-0 divide-y-[1px]">
+        v-if="!fetchLoading && workoutsList.length"
+        class="w-full grid grid-cols-2 md:grid-cols-5 grid-rows-5 md:grid-rows-2 items-start justify-start gap-x-6 md:gap-x-2 lg:gap-x-6 xl:gap-x-14 gap-y-6 md:gap-y-2 lg:gap-y-4">
         <li
-          @click="
-            viewExerciseData = JSON.parse(JSON.stringify(item));
-            viewExerciseDialog = true;
-          "
-          v-for="(item, i) in exerciseList"
+          @click="router.push(`/workouts/${item.id}`)"
+          v-for="(item, i) in workoutsList"
           :key="i"
-          class="w-full h-16 p-1.5 flex items-center justify-start gap-8 cursor-pointer">
-          <div class="h-full flex items-center justify-start gap-4">
-            <img
-              src="/img/image-placeholder.png"
-              class="h-full aspect-square rounded-md"
-              alt="" />
+          class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer">
+          <img
+            src="/img/image-placeholder.png"
+            class="w-full aspect-square object-cover origin-center rounded-md"
+            alt="" />
 
-            <div class="w-72 flex flex-col items-start justify-center gap-0.5">
-              <p class="text-dark">{{ item.name }}</p>
-              <p class="text-xs text-primary/80">{{ item.engName }}</p>
-            </div>
+          <div class="w-full flex flex-col items-start gap-0.5">
+            <p class="text-dark line-clamp-1">{{ item.name }}</p>
+            <p class="text-xs text-primary/80 line-clamp-1">
+              {{ item.description }}
+            </p>
           </div>
-
-          <div class="w-72 flex flex-col items-center justify-center gap-0.5">
-            <p class="text-xs text-dark/60">{{ item.exerciseType }}</p>
-            <p class="text-xs text-primary/80">{{ item.categoryId }}</p>
-          </div>
-
-          <p class="w-64 text-xs text-neutral-500 line-clamp-2">
-            {{ item.description }}
-          </p>
-
-          <!-- action -->
-          <!-- <div class="flex items-center justify-end gap-0.5"> -->
-          <!-- edit -->
-          <!-- <v-tooltip text="مشاهده" location="bottom">
-              <template v-slot:activator="{ props }">
-                <div
-                  v-bind="{ ...props }"
-                  @click="
-                    viewExerciseData = JSON.parse(JSON.stringify(item));
-                    viewExerciseDialog = true;
-                  "
-                  class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                  <i-eye-solid
-                    class="text-secondary/80 group-hover:text-secondary transition-200"></i-eye-solid>
-                </div>
-              </template>
-            </v-tooltip> -->
-
-          <!-- edit -->
-          <!-- <v-tooltip text="ویرایش" location="bottom">
-              <template v-slot:activator="{ props }">
-                <div
-                  v-bind="{ ...props }"
-                  @click="
-                    editExerciseData = JSON.parse(JSON.stringify(item));
-                    editExerciseDialog = true;
-                  "
-                  class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-yellow-300/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                  <i-pen-solid
-                    class="text-yellow-300/80 group-hover:text-yellow-300 transition-200"></i-pen-solid>
-                </div>
-              </template>
-            </v-tooltip> -->
-
-          <!-- delete -->
-          <!-- <v-tooltip text="حذف" location="bottom">
-              <template v-slot:activator="{ props }">
-                <div
-                  v-bind="{ ...props }"
-                  @click="
-                    deleteExerciseData = JSON.parse(JSON.stringify(item));
-                    deleteExerciseDialog = true;
-                  "
-                  class="size-5 md:size-9 text-sm 3xl:text-base hover:bg-red-500/10 flex flex-center rounded-full transition-200 cursor-pointer group">
-                  <i-trash-can-regular
-                    class="text-red-500/80 group-hover:text-red-500 transition-200"></i-trash-can-regular>
-                </div>
-              </template>
-            </v-tooltip>
-          </div> -->
         </li>
       </ul>
     </div>
 
     <app-pagination
       v-bind="pagination"
-      v-if="!fetchLoading && exerciseList.length"
+      v-if="!fetchLoading && workoutsList.length"
       @update-page="updatePage($event)"></app-pagination>
-
-    <!-- add exercise -->
-    <!-- <v-dialog v-model="addExerciseDialog" @after-leave="resetExerciseData">
-      <div
-        class="w-80 p-4 mx-auto bg-white rounded-xl-tw"
-        >
-        <div
-          class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-          <p class="text-sm text-neutral-600">اطلاعات حرکت جدید را وارد کنید</p>
-
-          <div class="w-full flex flex-col items-start justify-start gap-2.5">
-            <input
-              type="text"
-              placeholder="نام"
-              v-model="addExerciseData.firstName"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-            <input
-              type="text"
-              v-model="addExerciseData.lastName"
-              placeholder="نام خانوادگی"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-            <input
-              type="text"
-              v-model="addExerciseData.userName"
-              placeholder="نام کاربری"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-          </div>
-        </div>
-
-        <div class="w-full flex items-center justify-center gap-2">
-          <v-btn
-            color="primary"
-            @click="addExercise"
-            :loading="addLoading"
-            :disabled="!validAddExercise"
-            class="w-1/2 !h-11 rounded-lg"
-            >ثبت</v-btn
-          >
-
-          <v-btn
-            @click="resetExerciseData"
-            variant="outlined"
-            color="red"
-            class="w-1/2 !h-11 rounded-lg">
-            انصراف
-          </v-btn>
-        </div>
-      </div>
-    </v-dialog> -->
-
-    <!-- view exercise -->
-    <v-dialog v-model="viewExerciseDialog" @after-leave="resetExerciseData">
-      <div
-        class="w-96 p-4 mx-auto bg-white flex flex-col items-center justify-center gap-4 rounded-xl-tw">
-        <!-- header -->
-        <div class="w-full flex items-center justify-between">
-          <!-- title -->
-          <p class="text-sm text-dark">
-            {{ viewExerciseData.name }}
-          </p>
-
-          <!-- close -->
-          <button
-            @click="resetExerciseData"
-            class="size-7 hover:bg-red-500/20 flex flex-center rounded-full transition-200 group">
-            <i-xmark-solid
-              class="mt-1 text-base text-neutral-400 group-hover:text-red-500 transition-200"></i-xmark-solid>
-          </button>
-        </div>
-
-        <!-- image -->
-        <img
-          src="/img/image-placeholder.png"
-          class="w-full h-56 object-cover rounded-lg"
-          alt="" />
-
-        <!-- details -->
-        <ul class="w-full flex flex-col items-start justify-start gap-2">
-          <!-- type -->
-          <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark">
-              نوع حرکت:
-              <span class="text-primary font-bold">{{
-                viewExerciseData.exerciseType
-              }}</span>
-            </p>
-          </li>
-
-          <!-- category -->
-          <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark">
-              دسته بندی:
-              <span class="text-primary font-bold">{{
-                viewExerciseData.categoryId
-              }}</span>
-            </p>
-          </li>
-
-          <!-- date -->
-          <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark">
-              تاریخ ایجاد:
-              <span class="text-primary font-bold">{{
-                viewExerciseData.creatDateShamsi
-                  ? viewExerciseData.creatDateShamsi.split(" ")[0]
-                  : ""
-              }}</span>
-            </p>
-          </li>
-
-          <!-- description -->
-          <li class="flex items-center justify-start gap-2">
-            <p class="text-xs 3xl:text-sm text-dark leading-5">
-              توضیحات:
-              <span class="font-bold">{{ viewExerciseData.description }}</span>
-            </p>
-          </li>
-        </ul>
-      </div>
-    </v-dialog>
-
-    <!-- edit exercise -->
-    <!-- <v-dialog v-model="editExerciseDialog" @after-leave="resetExerciseData">
-      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-        <div
-          class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
-          <p class="text-sm text-neutral-600">اطلاعات جدید حرکت را وارد کنید</p>
-
-          <div class="w-full flex flex-col items-start justify-start gap-2.5">
-            <input
-              type="text"
-              placeholder="نام"
-              v-model="editExerciseData.firstName"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-            <input
-              type="text"
-              v-model="editExerciseData.lastName"
-              placeholder="نام خانوادگی"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-
-            <input
-              type="text"
-              v-model="editExerciseData.userName"
-              placeholder="نام کاربری"
-              class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
-          </div>
-        </div>
-
-        <div class="w-full flex items-center justify-center gap-2">
-          <v-btn
-            :disabled="!validEditExercise"
-            class="w-1/2 !h-11 rounded-lg"
-            color="primary"
-            >ثبت</v-btn
-          >
-
-          <v-btn
-            @click="resetExerciseData"
-            variant="outlined"
-            color="red"
-            class="w-1/2 !h-11 rounded-lg">
-            انصراف
-          </v-btn>
-        </div>
-      </div>
-    </v-dialog> -->
-
-    <!-- delete exercise -->
-    <!-- <v-dialog v-model="deleteExerciseDialog" @after-leave="resetExerciseData">
-      <div class="w-80 p-4 mx-auto bg-white rounded-xl-tw">
-        <p class="my-4 text-center text-neutral-600">
-          آیا از حذف
-          <span class="font-bold">
-            {{ deleteExerciseData?.firstName || "" }}
-            {{ deleteExerciseData?.lastName || "" }}
-          </span>
-          مطمئن هستید؟
-        </p>
-
-        <div class="w-full flex items-center justify-center gap-2">
-          <v-btn class="w-1/2 !h-11 rounded-lg" color="red">حذف</v-btn>
-
-          <v-btn
-            @click="resetExerciseData"
-            variant="outlined"
-            color="red"
-            class="w-1/2 !h-11 rounded-lg">
-            انصراف
-          </v-btn>
-        </div>
-      </div>
-    </v-dialog> -->
   </article>
 </template>
 
 <script setup>
+import { typesList } from "@/utils/types";
+
 // variables
+const router = useRouter();
 const nuxtApp = useNuxtApp();
 
 // loadings
 const fetchLoading = ref(false);
-const addLoading = ref(false);
-
-// dialogs
-const addExerciseDialog = ref(false);
-const viewExerciseDialog = ref(false);
-const editExerciseDialog = ref(false);
-const deleteExerciseDialog = ref(false);
+const categoriesLoading = ref(false);
 
 // data
-const exerciseList = ref([]);
-const addExerciseData = ref({});
-const viewExerciseData = ref({});
-const editExerciseData = ref({});
-const deleteExerciseData = ref({});
+const categories = ref([]);
+const workoutsList = ref([]);
+const filters = ref({
+  search: null,
+  categoryId: null,
+  exerciseType: null,
+});
 
 // pagination
 const pagination = ref({
   page: 1,
-  pageSize: 6,
+  pageSize: 10,
   totalRecord: 0,
 });
 
-// computed
-const validAddExercise = computed(() => {
-  return (
-    addExerciseData.value.firstName &&
-    addExerciseData.value.lastName &&
-    addExerciseData.value.userName
-  );
-});
-const validEditExercise = computed(() => {
-  return (
-    editExerciseData.value.firstName &&
-    editExerciseData.value.lastName &&
-    editExerciseData.value.userName
-  );
-});
-
 // fetch
-const getExercises = async () => {
+const getWorkouts = async () => {
   fetchLoading.value = true;
 
   await nuxtApp.$axios
     .get(
-      `/Exercise/GetPublicExercise?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
+      `/Coach/GetPublicWorkouts?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
     )
     .then((response) => {
-      exerciseList.value = response.data.result.records;
+      console.log("workouts response: ", response.data.result);
+      workoutsList.value = response.data.result.records;
       pagination.value.totalRecord = response.data.result.totalRecord;
     })
-    .catch((error) => error && console.log("exercises error: ", error))
+    .catch((error) => error && console.log("workouts error: ", error))
     .finally(() => {
       fetchLoading.value = false;
     });
 };
-const addExercise = async () => {
-  addLoading.value = true;
+const getCategories = async () => {
+  categoriesLoading.value = true;
 
   await nuxtApp.$axios
-    .post("/Coach/AddExercise", addExerciseData.value)
-    .then(() => {
-      nuxtApp.$toast.success("عملیات با موفقیت انجام شد");
-      pagination.value.page = 1;
-      resetExerciseData();
-      getExercises();
+    .post(`/Category/GetAll`, {})
+    .then((response) => {
+      categories.value = response.data.result.records.map((item) => {
+        return {
+          ...item,
+          value: item.id,
+          title: item.name,
+        };
+      });
     })
-    .catch((error) => error && console.log("add error: ", error))
-    .finally(() => (addLoading.value = false));
+    .catch((error) => error && console.log("categories error: ", error))
+    .finally(() => {
+      categoriesLoading.value = false;
+    });
 };
 
 // methods
 const updatePage = (pageNumber) => {
   pagination.value.page = pageNumber;
-  getExercises();
-};
-const resetExerciseData = () => {
-  // dialogs
-  closeDialogs();
-
-  // add data
-  addExerciseData.value = {};
-
-  // view data
-  viewExerciseData.value = {};
-
-  // edit data
-  editExerciseData.value = {};
-
-  // delete data
-  deleteExerciseData.value = {};
-};
-const closeDialogs = () => {
-  addExerciseDialog.value = false;
-  viewExerciseDialog.value = false;
-  editExerciseDialog.value = false;
-  deleteExerciseDialog.value = false;
+  getWorkouts();
 };
 
 // lifecycles
 onMounted(() => {
-  getExercises();
+  getCategories();
+  getWorkouts();
 });
+
+// watchers
+watch(
+  () => filters.value,
+  () => {
+    getWorkouts();
+  },
+  { deep: true }
+);
 </script>
+
+<style>
+.v-input {
+  @apply w-full md:w-44 md:max-w-44;
+}
+.v-field__input {
+  @apply min-h-10 h-10;
+}
+.v-field-label {
+  @apply text-[10px] md:text-sm;
+}
+.v-select__selection {
+  @apply -mt-1.5 text-xs md:text-sm;
+}
+</style>

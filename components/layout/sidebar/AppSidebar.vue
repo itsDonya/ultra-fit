@@ -81,7 +81,13 @@ const sidebarLinks = ref([
     value: "Workouts",
     icon: "calendar-lines",
     title: "برنامه ها",
-    path: "/workouts",
+
+    children: [
+      {
+        title: "برنامه‌های عمومی",
+        path: "/workouts",
+      },
+    ],
   },
   {
     value: "Athletes",
