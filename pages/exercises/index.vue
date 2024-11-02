@@ -6,23 +6,6 @@
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
       </div>
 
-      <!-- my exercises -->
-      <nuxt-link to="/exercises/mine" class="w-full">
-        <div
-          class="relative w-full h-44 3xl:h-60 flex flex-center rounded-2xl overflow-hidden cursor-pointer group">
-          <p
-            class="text-2xl group-hover:text-3xl text-white font-bold transition-300 z-10">
-            حرکات من
-          </p>
-          <img
-            src="/img/push-up.jpg"
-            alt=""
-            class="absolute top-0 left-0 size-full object-cover" />
-          <span
-            class="absolute top-0 left-0 size-full bg-primary/60 group-hover:bg-primary/65 transition-200"></span>
-        </div>
-      </nuxt-link>
-
       <i-spinner-solid
         v-if="fetchLoading"
         class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
