@@ -104,7 +104,7 @@ const getExerciseData = async (id) => {
   fetchLoading.value = true;
 
   await $axios
-    .get(`/Exercise/GetPublicExerciseById?id=${id}`)
+    .get(`/Exercise/GetCoachExerciseById?id=${id}`)
     .then((response) => {
       console.log("data: ", response.data.result);
       exerciseData.value = response.data.result;
