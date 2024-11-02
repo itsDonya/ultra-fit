@@ -1,7 +1,5 @@
 <template>
-  <form
-    @keydown.enter="userRegister"
-    class="w-full flex flex-col items-center justify-center gap-4 sm:gap-8">
+  <form class="w-full flex flex-col items-center justify-center gap-4 sm:gap-8">
     <h1 class="sm:text-xl text-neutral-200">ایجاد حساب کاربری</h1>
 
     <div

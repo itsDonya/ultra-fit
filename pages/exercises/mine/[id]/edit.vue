@@ -1,7 +1,7 @@
 <template>
   <div class="w-full mx-auto bg-white rounded-xl-tw">
     <div class="w-full h-full flex flex-col items-start justify-start gap-4">
-      <p class="text-neutral-600 font-bold">افزودن حرکت جدید</p>
+      <p class="text-neutral-600 font-bold">ویرایش حرکت</p>
 
       <div class="w-full flex flex-col items-start justify-start gap-4">
         <div class="w-full flex items-center justify-center gap-4">
@@ -82,18 +82,18 @@
         <input
           type="text"
           placeholder="عنوان حرکت"
-          v-model="addExerciseData.name"
+          v-model="exerciseData.name"
           class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
         <input
           type="text"
-          v-model="addExerciseData.engName"
+          v-model="exerciseData.engName"
           placeholder="عنوان حرکت (به انگلیسی)"
           class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
 
         <select
-          v-model="addExerciseData.exerciseType"
-          :class="[addExerciseData.exerciseType ? '' : 'text-neutral-400']"
+          v-model="exerciseData.exerciseType"
+          :class="[exerciseData.exerciseType ? '' : 'text-neutral-400']"
           class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200">
           <option :value="undefined" disabled selected>نوع حرکت</option>
           <option
@@ -105,8 +105,8 @@
         </select>
 
         <select
-          v-model="addExerciseData.categoryId"
-          :class="[addExerciseData.categoryId ? '' : 'text-neutral-400']"
+          v-model="exerciseData.categoryId"
+          :class="[exerciseData.categoryId ? '' : 'text-neutral-400']"
           class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200">
           <option :value="undefined" disabled selected>دسته بندی</option>
           <option
@@ -120,7 +120,7 @@
 
         <textarea
           type="text"
-          v-model="addExerciseData.description"
+          v-model="exerciseData.description"
           placeholder="توضیحات حرکت"
           class="w-full h-28 resize-none p-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200"></textarea>
       </div>
@@ -129,20 +129,20 @@
     <div class="w-44 flex items-center justify-center gap-2">
       <v-btn
         color="primary"
-        @click="addExercise"
-        :loading="addLoading"
-        :disabled="!validAddExercise"
+        @click="editExercise"
+        :loading="editLoading"
+        :disabled="!validData"
         class="w-full !h-11 mt-4 rounded-lg"
         >ثبت</v-btn
       >
 
       <!-- <v-btn
-        @click="resetExerciseData"
-        variant="outlined"
-        color="red"
-        class="w-1/2 !h-11 rounded-lg">
-        انصراف
-      </v-btn> -->
+          @click="resetExerciseData"
+          variant="outlined"
+          color="red"
+          class="w-1/2 !h-11 rounded-lg">
+          انصراف
+        </v-btn> -->
     </div>
   </div>
 </template>
@@ -152,14 +152,17 @@ import { navigateTo } from "nuxt/app";
 import { typesList } from "@/utils/types";
 
 // variables
-const categories = ref([]);
+const route = useRoute();
+const router = useRouter();
 const { $axios, $toast } = useNuxtApp();
 
 // loadings
-const addLoading = ref(false);
+const editLoading = ref(false);
+const fetchLoading = ref(false);
 
 // data
-const addExerciseData = ref({});
+const categories = ref([]);
+const exerciseData = ref({});
 
 // images
 const image1 = ref(null);
@@ -167,16 +170,16 @@ const image2 = ref(null);
 const logo = ref(null);
 
 // computed
-const validAddExercise = computed(() => {
+const validData = computed(() => {
   return (
-    addExerciseData.value.image1 &&
-    addExerciseData.value.image2 &&
-    addExerciseData.value.logo &&
-    addExerciseData.value.name &&
-    addExerciseData.value.engName &&
-    addExerciseData.value.exerciseType &&
-    addExerciseData.value.categoryId &&
-    addExerciseData.value.description
+    exerciseData.value.image1 &&
+    exerciseData.value.image2 &&
+    exerciseData.value.logo &&
+    exerciseData.value.name &&
+    exerciseData.value.engName &&
+    exerciseData.value.exerciseType &&
+    exerciseData.value.categoryId &&
+    exerciseData.value.description
   );
 });
 
@@ -189,22 +192,44 @@ const getCategories = async () => {
     })
     .catch((error) => error && console.log("categories error: ", error));
 };
-const addExercise = async () => {
-  if (!validAddExercise.value) return;
-
-  addLoading.value = true;
+const getExerciseData = async (id) => {
+  fetchLoading.value = true;
 
   await $axios
-    .post("/Exercise/CreateExercise", addExerciseData.value, {
+    .get(`/Exercise/GetCoachExerciseById?id=${id}`)
+    .then((response) => {
+      console.log("data: ", response.data.result);
+      exerciseData.value = response.data.result;
+
+      const errorCode = response.data.errorCode;
+      if (errorCode && errorCode == "ExerciseNotFound") {
+        $toast.warning("موردی با این شناسه یافت نشد");
+        router.push("/exercises/mine");
+      }
+    })
+    .catch((error) => {
+      error && console.log("exercises error: ", error);
+    })
+    .finally(() => {
+      fetchLoading.value = false;
+    });
+};
+const editExercise = async () => {
+  if (!validData.value) return;
+
+  editLoading.value = true;
+
+  await $axios
+    .post("/Exercise/CreateExercise", exerciseData.value, {
       headers: { "Content-Type": "multipart/form-data" },
     })
     .then(() => {
-      $toast.success("حرکت با موفقیت ایجاد شد");
+      $toast.success("حرکت با موفقیت ویرایش شد");
       resetExerciseData();
       navigateTo("/exercises/mine");
     })
     .catch((error) => error && console.log("add error: ", error))
-    .finally(() => (addLoading.value = false));
+    .finally(() => (editLoading.value = false));
 };
 
 // methods
@@ -213,7 +238,7 @@ const resetExerciseData = () => {
   resetImages();
 
   // add data
-  addExerciseData.value = {};
+  exerciseData.value = {};
 };
 const resetImages = () => {
   image1.value = null;
@@ -223,15 +248,15 @@ const uploadAddImage = (event, which) => {
 
   switch (which) {
     case 1:
-      addExerciseData.value.image1 = FILE;
+      exerciseData.value.image1 = FILE;
       image1.value = URL.createObjectURL(FILE);
       break;
     case 2:
-      addExerciseData.value.image2 = FILE;
+      exerciseData.value.image2 = FILE;
       image2.value = URL.createObjectURL(FILE);
       break;
     case 3:
-      addExerciseData.value.logo = FILE;
+      exerciseData.value.logo = FILE;
       logo.value = URL.createObjectURL(FILE);
       break;
   }
@@ -240,5 +265,14 @@ const uploadAddImage = (event, which) => {
 // lifecycles
 onMounted(() => {
   getCategories();
+
+  const exerciseId = route.params.id;
+
+  if (!exerciseId) {
+    $toast.warning("ابتدا یک حرکت جهت مشاهده‌ی جزئیات انتخاب کنید");
+    router.push("/exercises/mine");
+  } else {
+    getExerciseData(exerciseId);
+  }
 });
 </script>

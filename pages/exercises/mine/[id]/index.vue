@@ -47,7 +47,7 @@
         <div class="flex items-center justify-end gap-2">
           <!-- edit -->
           <v-btn
-            @click="router.go(-1)"
+            @click="router.push(`/exercises/mine/${route.params.id}/edit`)"
             class="h-8 md:h-9"
             color="#eab308"
             variant="outlined"
@@ -182,15 +182,16 @@ const getExerciseData = async (id) => {
     });
 };
 const deleteExercise = async () => {
-  console.log("id:::: ", route.params.id);
+  console.log("id:::: ", Number(route.params.id));
   deleteLoading.value = true;
 
   await $axios
     .delete(`/Exercise/DeleteCoachExercise`, {
-      id: route.params.id,
+      id: Number(route.params.id),
     })
     .then((response) => {
       console.log("data: ", response.data.result);
+      $toast.success("عملیات با موفقیت انجام شد");
       router.push("/exercises/mine");
     })
     .catch((error) => error && console.log("delete exercise error: ", error))

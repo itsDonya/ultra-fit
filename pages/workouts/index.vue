@@ -128,7 +128,7 @@
     <!-- <v-dialog v-model="addExerciseDialog" @after-leave="resetExerciseData">
       <div
         class="w-80 p-4 mx-auto bg-white rounded-xl-tw"
-        @keydown.enter="addExercise">
+        >
         <div
           class="w-full h-full flex flex-col items-start justify-start gap-4 py-2">
           <p class="text-sm text-neutral-600">اطلاعات حرکت جدید را وارد کنید</p>
