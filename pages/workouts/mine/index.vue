@@ -122,7 +122,6 @@ const getExercises = async () => {
       `/Coach/GetAllWorkouts?page=${pagination.value.page}&pageSize=${pagination.value.pageSize}`
     )
     .then((response) => {
-      console.log("workouts response: ", response);
       workoutsList.value = response.data.result.records;
       pagination.value.totalRecord = response.data.result.totalRecord;
     })

@@ -91,6 +91,10 @@ const sidebarLinks = ref([
         title: "برنامه‌های من",
         path: "/workouts/mine",
       },
+      {
+        title: "ایجاد برنامه",
+        path: "/workouts/mine/add",
+      },
     ],
   },
   {
