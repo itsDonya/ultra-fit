@@ -26,6 +26,13 @@
     font-family: vazir;
   }
 
+  ::-webkit-scrollbar {
+    @apply w-1;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-secondary;
+  }
+
   input,
   button,
   select,
