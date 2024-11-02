@@ -15,6 +15,7 @@ export default defineNuxtConfig({
   plugins: [
     "~/plugins/mitt.js",
     "~/plugins/axios.js",
+    "~/plugins/viewer.client.js",
     "~/plugins/toastification.js",
   ],
   modules: ["nuxt-svgo"],
