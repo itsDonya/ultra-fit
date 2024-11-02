@@ -20,7 +20,7 @@
           </template>
 
           <v-list-item v-for="(child, j) in item.children" :key="j">
-            <nuxt-link class="w-full" :to="item.path">
+            <nuxt-link class="w-full" :to="child.path">
               <div
                 class="w-full h-11 xl:h-12 px-4 flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
                 <span class="text-sm text-white">{{ child.title }}</span>
