@@ -27,6 +27,7 @@ export default defineNuxtConfig({
     public: {
       baseUrl:
         process.env.NUXT_PUBLIC_BASE_URL || "http://192.168.20.236:5000/api/",
+      imageCdn: "http://192.168.20.236:5000/Files/",
     },
   },
   components: [

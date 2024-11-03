@@ -1,11 +1,13 @@
 <template>
   <article class="w-full flex flex-col items-start justify-start gap-8">
     <div
-      class="w-full p-4 lg:p-0 flex flex-col items-start justify-start gap-4">
+      class="w-full p-4 lg:p-0 flex flex-col items-start justify-start gap-4"
+    >
       <div class="w-full flex items-center justify-between">
         <!-- title -->
         <h2
-          class="md:text-xl text-neutral-700 flex items-center justify-start gap-2">
+          class="md:text-xl text-neutral-700 flex items-center justify-start gap-2"
+        >
           <span class="font-bold">{{ exerciseData.name }}</span>
           <span class="font-normal text-primary/80">
             - {{ exerciseData.engName }}</span
@@ -18,19 +20,22 @@
           class="h-8 md:h-9"
           color="primary"
           variant="outlined"
-          rounded="lg">
+          rounded="lg"
+        >
           <span class="text-xs md:text-sm">بازگشت</span>
           <i-arrow-left
-            class="mr-2 mt-0.5 text-[10px] md:text-xs text-primary"></i-arrow-left>
+            class="mr-2 mt-0.5 text-[10px] md:text-xs text-primary"
+          ></i-arrow-left>
         </v-btn>
       </div>
 
       <div
-        class="w-full flex flex-col md:flex-row items-start md:items-center justify-start gap-1.5 md:gap-8">
+        class="w-full flex flex-col md:flex-row items-start md:items-center justify-start gap-1.5 md:gap-8"
+      >
         <!-- category -->
         <p class="text-xs md:text-sm 3xl:text-base text-dark/80">
           دسته بندی:
-          <span class="font-bold"> ---- دسته بندی رو نمیفرستی ---- </span>
+          <span class="font-bold">{{ exerciseData.category?.name }}</span>
         </p>
 
         <!-- type -->
@@ -44,41 +49,35 @@
 
       <!-- images -->
       <div
-        class="w-full mt-2 md:mt-6 flex flex-cols items-center justify-start gap-4 md:gap-8">
-        <!-- logo -->
-        <client-only>
-          <div v-viewer class="w-full">
-            <img
-              src="/img/image-placeholder.png"
-              class="w-full h-32 md:h-56 object-cover rounded-lg cursor-pointer"
-              :alt="exerciseData.name" />
-          </div>
-        </client-only>
-
+        class="w-full mt-2 md:mt-6 flex flex-cols items-center justify-start gap-4 md:gap-8"
+      >
         <!-- image 1 -->
         <client-only>
-          <div v-viewer class="w-full">
+          <div v-viewer>
             <img
-              src="/img/image-placeholder.png"
-              class="w-full h-32 md:h-56 object-cover rounded-lg cursor-pointer"
-              :alt="exerciseData.name" />
+              :src="$config.public.imageCdn + exerciseData.image1"
+              class="h-32 md:h-72 object-covers object-contain rounded-lg cursor-pointer"
+              :alt="exerciseData.name"
+            />
           </div>
         </client-only>
 
         <!-- image 2 -->
         <client-only>
-          <div v-viewer class="w-full">
+          <div v-viewer>
             <img
-              src="/img/image-placeholder.png"
-              class="w-full h-32 md:h-56 object-cover rounded-lg cursor-pointer"
-              :alt="exerciseData.name" />
+              :src="$config.public.imageCdn + exerciseData.image2"
+              class="h-32 md:h-72 object-covers object-contain rounded-lg cursor-pointer"
+              :alt="exerciseData.name"
+            />
           </div>
         </client-only>
       </div>
 
       <!-- description -->
       <p
-        class="mt-2 md:mt-4 pb-20 text-sm md:text-base text-dark whitespace-pre-line">
+        class="mt-2 md:mt-4 pb-20 text-sm md:text-base text-dark whitespace-pre-line"
+      >
         {{ exerciseData.description }}
       </p>
     </div>

@@ -82,23 +82,12 @@
       <div
         class="w-full mt-2 md:mt-6 flex flex-cols items-center justify-start gap-4 md:gap-8"
       >
-        <!-- logo -->
-        <client-only>
-          <div v-viewer class="w-full">
-            <img
-              src="/img/image-placeholder.png"
-              class="w-full h-32 md:h-56 object-cover rounded-lg cursor-pointer"
-              :alt="exerciseData.name"
-            />
-          </div>
-        </client-only>
-
         <!-- image 1 -->
         <client-only>
-          <div v-viewer class="w-full">
+          <div v-viewer>
             <img
-              src="/img/image-placeholder.png"
-              class="w-full h-32 md:h-56 object-cover rounded-lg cursor-pointer"
+              :src="$config.public.imageCdn + exerciseData.image1"
+              class="h-32 md:h-72 object-contain rounded-lg cursor-pointer"
               :alt="exerciseData.name"
             />
           </div>
@@ -106,10 +95,10 @@
 
         <!-- image 2 -->
         <client-only>
-          <div v-viewer class="w-full">
+          <div v-viewer>
             <img
-              src="/img/image-placeholder.png"
-              class="w-full h-32 md:h-56 object-cover rounded-lg cursor-pointer"
+              :src="$config.public.imageCdn + exerciseData.image2"
+              class="h-32 md:h-72 object-contain rounded-lg cursor-pointer"
               :alt="exerciseData.name"
             />
           </div>

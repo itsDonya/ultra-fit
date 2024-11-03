@@ -15,10 +15,13 @@
         <template v-slot:item.1>
           <div class="w-full py-2 flex items-center justify-center">
             <!-- fields -->
-            <div class="flex flex-col items-start justify-center gap-5">
+            <div
+              class="w-96 !min-w-96 flex flex-col items-start justify-center gap-5"
+            >
               <!-- name -->
               <v-text-field
                 hide-details
+                class="w-full"
                 color="primary"
                 variant="outlined"
                 label="عنوان برنامه"
@@ -29,6 +32,7 @@
               <!-- sessions -->
               <v-text-field
                 hide-details
+                class="w-full"
                 type="number"
                 color="primary"
                 variant="outlined"
@@ -39,6 +43,7 @@
               <!-- duration -->
               <v-text-field
                 hide-details
+                class="w-full"
                 type="number"
                 color="primary"
                 label="مدت زمان"
@@ -52,7 +57,7 @@
                 color="primary"
                 label="توضیحات"
                 variant="outlined"
-                class="h-48 max-h-48"
+                class="w-full h-48 max-h-48"
                 v-model="workoutData.description"
               >
               </v-textarea>
@@ -416,10 +421,10 @@ watch(
 
 <style>
 .v-input {
-  @apply w-96 max-w-96;
+  @apply !min-w-96 !w-96 !max-w-96;
 }
 .v-field__input {
-  @apply min-h-12 h-12;
+  @apply !min-h-12 h-12;
 }
 .v-field-label {
   @apply text-[10px] md:text-sm;

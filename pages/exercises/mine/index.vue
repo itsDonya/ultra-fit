@@ -74,7 +74,7 @@
           class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer"
         >
           <img
-            src="/img/image-placeholder.png"
+            :src="$config.public.imageCdn + item.logo"
             class="w-full aspect-square object-cover origin-center rounded-md"
             alt=""
           />
