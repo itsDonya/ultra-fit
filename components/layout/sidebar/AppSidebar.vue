@@ -1,45 +1,56 @@
 <template>
   <aside
     :class="[`${isOpen ? 'min-w-4/5 w-4/5 p-2' : ' min-w-0 w-0 max-w-0 p-0'}`]"
-    class="absolute top-0 right-0 lg:static h-full lg:min-w-56 lg:w-56 lg:max-w-56 lg:p-2 transition-all duration-300 overflow-hidden z-10">
-    <v-list v-model:opened="open">
+    class="absolute top-0 right-0 lg:static h-full lg:min-w-56 lg:w-56 lg:max-w-56 lg:p-2 transition-all duration-300 overflow-hidden z-10"
+  >
+    <v-expansion-panels>
       <template v-for="(item, i) in sidebarLinks">
-        <v-list-group v-if="item.children" :value="item.value" class="p-0">
-          <template v-slot:activator="{ props }">
-            <v-list-item v-bind="props" class="p-0">
-              <div class="w-full" :key="i" :to="item.path">
+        <v-expansion-panel v-if="item.children" elevation="0">
+          <v-expansion-panel-title class="p-0">
+            <v-list-item class="p-0">
+              <div :key="i" :to="item.path">
                 <div
-                  class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+                  class="h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200"
+                >
                   <component
                     :is="`i-${item.icon}`"
-                    class="text-white"></component>
+                    class="text-white"
+                  ></component>
                   <span class="text-sm text-white">{{ item.title }}</span>
                 </div>
               </div>
             </v-list-item>
-          </template>
+          </v-expansion-panel-title>
 
-          <v-list-item v-for="(child, j) in item.children" :key="j">
-            <nuxt-link class="w-full" :to="child.path">
-              <div
-                class="w-full h-11 xl:h-12 px-4 flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
-                <span class="text-sm text-white">{{ child.title }}</span>
-              </div>
-            </nuxt-link>
-          </v-list-item>
-        </v-list-group>
+          <v-expansion-panel-text>
+            <v-list-item
+              v-for="(child, j) in item.children"
+              :key="j"
+              class="w-full"
+            >
+              <nuxt-link class="w-full" :to="child.path">
+                <div
+                  class="w-full h-11 xl:h-12 px-4 flex items-center justify-start gap-3 rounded-lg transition-all duration-200"
+                >
+                  <span class="text-sm text-white">{{ child.title }}</span>
+                </div>
+              </nuxt-link>
+            </v-list-item>
+          </v-expansion-panel-text>
+        </v-expansion-panel>
 
-        <v-list-item v-else class="p-0">
+        <v-list-item v-else class="w-full p-0">
           <nuxt-link class="w-full" :key="i" :to="item.path">
             <div
-              class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+              class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200"
+            >
               <component :is="`i-${item.icon}`" class="text-white"></component>
               <span class="text-sm text-white">{{ item.title }}</span>
             </div>
           </nuxt-link>
         </v-list-item>
       </template>
-    </v-list>
+    </v-expansion-panels>
   </aside>
 </template>
 
@@ -53,7 +64,7 @@ const nuxtApp = useNuxtApp();
 const sidebarLinks = ref([
   {
     value: "Dashboard",
-    icon: "chart-line",
+    icon: "dashboard",
     title: "داشبورد",
     path: "/coming-soon",
   },
@@ -138,7 +149,8 @@ onMounted(() => {
 </style>
 
 <style scoped>
-.v-list {
+.v-list,
+.v-expansion-panel {
   background-color: transparent;
 }
 @media (max-width: 1024px) {
