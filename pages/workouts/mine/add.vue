@@ -1,95 +1,85 @@
 <template>
-  <div class="w-full h-full mx-auto pb-16 rounded-xl-tw">
-    <div class="w-full h-full flex flex-col items-start justify-start gap-5">
-      <p class="text-neutral-600 font-bold">افزودن برنامه‌ی جدید</p>
+  <div
+    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto">
+    <v-window v-model="step" class="m-auto">
+      <v-window-item>
+        <div
+          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-5">
+          <!-- warning -->
+          <v-alert
+            type="info"
+            class="mb-2"
+            rounded="lg"
+            variant="tonal"
+            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"></v-alert>
 
-      <v-window v-model="step" class="m-auto">
-        <v-window-item>
-          <div
-            class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-5"
+          <!-- athlete -->
+          <v-select
+            chips
+            multiple
+            clearable
+            hide-details
+            color="primary"
+            :items="athletes"
+            variant="outlined"
+            label="انتخاب شاگرد"
+            :loading="athletesLoading"
+            v-model="workoutData.athleteIds"
+            @click:clear="workoutData.athleteIds = []">
+          </v-select>
+
+          <!-- name -->
+          <v-text-field
+            hide-details
+            color="primary"
+            variant="outlined"
+            label="عنوان برنامه"
+            v-model="workoutData.name">
+          </v-text-field>
+
+          <!-- sessions -->
+          <v-text-field
+            :error="sessionsError"
+            :hide-details="!sessionsError"
+            :error-messages="sessionsError"
+            type="number"
+            color="primary"
+            variant="outlined"
+            label="تعداد جلسات در هفته"
+            v-model.number="workoutData.sessionsPerWeek"></v-text-field>
+
+          <!-- duration -->
+          <v-text-field
+            type="number"
+            color="primary"
+            label="طول دوره"
+            variant="outlined"
+            :error="durationError"
+            :hide-details="!durationError"
+            :error-messages="durationError"
+            v-model="workoutData.duration"></v-text-field>
+
+          <!-- description -->
+          <v-textarea
+            rows="3"
+            hide-details
+            color="primary"
+            label="توضیحات"
+            variant="outlined"
+            v-model="workoutData.description">
+          </v-textarea>
+
+          <v-btn
+            color="primary"
+            @click="addWorkout"
+            :loading="addLoading"
+            :disabled="!validWorkout"
+            class="w-[540px] !h-11 rounded-lg"
+            >ثبت</v-btn
           >
-            <!-- warning -->
-            <v-alert
-              type="info"
-              class="mb-2"
-              rounded="lg"
-              variant="tonal"
-              text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"
-            ></v-alert>
-
-            <!-- athlete -->
-            <v-select
-              chips
-              multiple
-              clearable
-              hide-details
-              color="primary"
-              :items="athletes"
-              variant="outlined"
-              label="انتخاب شاگرد"
-              :loading="athletesLoading"
-              v-model="workoutData.athleteIds"
-              @click:clear="workoutData.athleteIds = []"
-            >
-            </v-select>
-
-            <!-- <p>{{ athletes[0] }}</p> -->
-
-            <!-- name -->
-            <v-text-field
-              hide-details
-              color="primary"
-              variant="outlined"
-              label="عنوان برنامه"
-              v-model="workoutData.name"
-            >
-            </v-text-field>
-
-            <!-- sessions -->
-            <v-text-field
-              :error="sessionsError"
-              :error-messages="sessionsError"
-              :hide-details="!sessionsError"
-              type="number"
-              color="primary"
-              variant="outlined"
-              label="تعداد جلسات در هفته"
-              v-model.number="workoutData.sessionsPerWeek"
-            ></v-text-field>
-
-            <!-- duration -->
-            <v-text-field
-              hide-details
-              type="number"
-              color="primary"
-              label="مدت زمان"
-              variant="outlined"
-              v-model="workoutData.duration"
-            ></v-text-field>
-
-            <!-- description -->
-            <v-textarea
-              rows="3"
-              hide-details
-              color="primary"
-              label="توضیحات"
-              variant="outlined"
-              v-model="workoutData.description"
-            >
-            </v-textarea>
-
-            <v-btn
-              color="primary"
-              @click="addWorkout"
-              :loading="addLoading"
-              :disabled="!validWorkout"
-              class="w-[540px] !h-11 rounded-lg"
-              >ثبت</v-btn
-            >
-          </div>
-        </v-window-item>
-      </v-window>
-    </div>
+        </div>
+      </v-window-item>
+    </v-window>
   </div>
 </template>
 
@@ -115,6 +105,7 @@ const workoutData = ref({
 
 // errors
 const sessionsError = ref(null);
+const durationError = ref(null);
 
 // validations
 const validWorkout = computed(() => {
@@ -136,10 +127,23 @@ const checkSessions = () => {
     sessionsError.value = null;
   }
 };
+const checkDuration = () => {
+  if (workoutData.value.duration > 30) {
+    stopped.value = true;
+    durationError.value = "طول دوره نمی‌تواند بیشتر از 30 روز باشد";
+  } else if (workoutData.value.duration < 1) {
+    stopped.value = true;
+    durationError.value = "طول دوره نمی‌تواند کمتر از 1 روز باشد";
+  } else {
+    stopped.value = false;
+    durationError.value = null;
+  }
+};
 
 // methods
 const addWorkout = async () => {
   checkSessions();
+  checkDuration();
 
   if (stopped.value) {
     return;

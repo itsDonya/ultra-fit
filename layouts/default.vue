@@ -3,12 +3,12 @@
     class="default-layout relative max-h-screen h-screen bg-gradient-to-tl from-blue-900 via-primary to-blue-800 flex flex-col items-start justify-start gap-0 overflow-hidden">
     <app-header></app-header>
 
-    <div class="relative w-full h-full flex items-start justify-start gap-0">
-      <app-sidebar></app-sidebar>
+    <div class="relative w-full flex items-start justify-start gap-">
+      <!-- <app-sidebar></app-sidebar> -->
 
       <main
         :class="[`${isOpen ? 'rounded-tr-3xl' : 'rounded-none'}`]"
-        class="w-full h-full max-h-full gap-2 p-2 lg:p-6 bg-white lg:rounded-tr-3xl overflow-auto">
+        class="w-full max-h-[94%] bg-white lg:rounded-tr-">
         <slot></slot>
       </main>
     </div>
