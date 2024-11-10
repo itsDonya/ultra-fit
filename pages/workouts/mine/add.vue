@@ -4,7 +4,7 @@
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-5">
+          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
           <!-- warning -->
           <v-alert
             type="info"
@@ -16,7 +16,6 @@
           <!-- athlete -->
           <v-select
             chips
-            multiple
             clearable
             hide-details
             color="primary"
@@ -24,8 +23,8 @@
             variant="outlined"
             label="انتخاب شاگرد"
             :loading="athletesLoading"
-            v-model="workoutData.athleteIds"
-            @click:clear="workoutData.athleteIds = []">
+            v-model="workoutData.athleteId"
+            @click:clear="workoutData.athleteId = null">
           </v-select>
 
           <!-- name -->
@@ -61,7 +60,7 @@
 
           <!-- description -->
           <v-textarea
-            rows="3"
+            rows="4"
             hide-details
             color="primary"
             label="توضیحات"
@@ -73,9 +72,33 @@
             color="primary"
             @click="addWorkout"
             :loading="addLoading"
-            :disabled="!validWorkout"
+            :disabled="!validWorkout || addLoading"
             class="w-[540px] !h-11 rounded-lg"
             >ثبت</v-btn
+          >
+        </div>
+      </v-window-item>
+
+      <v-window-item>
+        <div
+          class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4">
+          <v-expansion-panels rounded="lg" elevation="1" bg-color="#eeeeee80">
+            <v-expansion-panel
+              v-for="(session, i) in workoutData.sessionsPerWeek">
+              <v-expansion-panel-title>{{
+                persianSessions[i]
+              }}</v-expansion-panel-title>
+            </v-expansion-panel>
+          </v-expansion-panels>
+
+          <v-btn
+            block
+            color="primary"
+            @click="addWorkout"
+            :loading="addLoading"
+            :disabled="!validWorkout || addLoading"
+            class="!h-11 rounded-lg"
+            >ثبت و ایجاد برنامه</v-btn
           >
         </div>
       </v-window-item>
@@ -85,7 +108,7 @@
 
 <script setup>
 // variables
-const step = ref(0);
+const step = ref(1);
 const stopped = ref(false);
 const { $toast, $axios } = useNuxtApp();
 
@@ -95,17 +118,29 @@ const athletesLoading = ref(false);
 
 // data
 const athletes = ref([]);
+const workoutId = ref(62);
 const workoutData = ref({
-  name: null,
-  duration: null,
-  athleteIds: [],
-  description: null,
-  sessionsPerWeek: null,
+  name: "برنامه تستی",
+  duration: 20,
+  athleteId: 37,
+  description: "توضیحات تستی",
+  sessionsPerWeek: 2,
 });
 
 // errors
 const sessionsError = ref(null);
 const durationError = ref(null);
+
+// static
+const persianSessions = ref([
+  "جلسه اول",
+  "جلسه دوم",
+  "جلسه سوم",
+  "جلسه چهار",
+  "جلسه پنجم",
+  "جلسه ششم",
+  "جلسه هفتم",
+]);
 
 // validations
 const validWorkout = computed(() => {
@@ -142,14 +177,29 @@ const checkDuration = () => {
 
 // methods
 const addWorkout = async () => {
+  addLoading.vlue = true;
+
   checkSessions();
   checkDuration();
 
   if (stopped.value) {
+    addLoading.vlue = false;
     return;
   }
 
-  alert("test: working");
+  addLoading.vlue = true;
+
+  await $axios
+    .post("/Coach/CreateHeader", workoutData.value)
+    .then((response) => {
+      step.value = 1;
+      workoutId.value = response.data.result;
+      addLoading.vlue = false;
+    })
+    .catch((error) => {
+      error && $toast.error(error.message);
+      addLoading.vlue = false;
+    });
 };
 
 // fetch
@@ -180,7 +230,10 @@ onMounted(() => {
 
 <style>
 .v-input {
-  @apply !min-w-full !w-full !text-4xl;
+  @apply !min-w-full !w-full;
+}
+.v-input input {
+  @apply !min-w-full !w-full;
 }
 .v-field__input:not(textarea) {
   @apply !min-h-14 h-14;
