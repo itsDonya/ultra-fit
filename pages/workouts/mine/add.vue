@@ -82,12 +82,20 @@
       <v-window-item>
         <div
           class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4">
-          <v-expansion-panels rounded="lg" elevation="1" bg-color="#eeeeee80">
+          <v-expansion-panels
+            v-model="panels"
+            rounded="lg"
+            elevation="1"
+            bg-color="#eeeeee80">
             <v-expansion-panel
               v-for="(session, i) in workoutData.sessionsPerWeek">
+              <!-- title -->
               <v-expansion-panel-title>{{
                 persianSessions[i]
               }}</v-expansion-panel-title>
+
+              <!-- body -->
+              <v-expansion-panel-text></v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
 
@@ -109,16 +117,19 @@
 <script setup>
 // variables
 const step = ref(1);
+const panels = ref([]);
 const stopped = ref(false);
 const { $toast, $axios } = useNuxtApp();
 
 // loadings
 const addLoading = ref(false);
 const athletesLoading = ref(false);
+const categoriesLoading = ref(false);
 
 // data
 const athletes = ref([]);
 const workoutId = ref(62);
+const categories = ref([]);
 const workoutData = ref({
   name: "برنامه تستی",
   duration: 20,
@@ -221,10 +232,29 @@ const getAthletes = async () => {
       athletesLoading.value = false;
     });
 };
+const getCategories = async () => {
+  categoriesLoading.value = true;
+
+  await $axios
+    .post(`/Category/GetAll`)
+    .then((response) => {
+      categories.value = response.data.result.records.map((item) => {
+        return {
+          title: `${item.firstName} ${item.lastName}`,
+          value: item.id,
+        };
+      });
+    })
+    .catch((error) => error && $toast.error(error.message))
+    .finally(() => {
+      categoriesLoading.value = false;
+    });
+};
 
 // lifecycles
 onMounted(() => {
   getAthletes();
+  getCategories();
 });
 </script>
 
