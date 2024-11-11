@@ -184,17 +184,4 @@ watch(
 );
 </script>
 
-<style>
-.v-input {
-  @apply w-full md:w-44 md:max-w-44;
-}
-.v-field__input {
-  @apply min-h-10 h-10;
-}
-.v-field-label {
-  @apply text-[10px] md:text-sm;
-}
-.v-select__selection {
-  @apply -mt-1.5 text-xs md:text-sm;
-}
-</style>
+<style></style>

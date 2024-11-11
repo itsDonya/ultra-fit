@@ -1,17 +1,20 @@
 <template>
   <div
-    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto">
+    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto"
+  >
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
+          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4"
+        >
           <!-- warning -->
           <v-alert
             type="info"
             class="mb-2"
             rounded="lg"
             variant="tonal"
-            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"></v-alert>
+            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"
+          ></v-alert>
 
           <!-- athlete -->
           <v-select
@@ -24,7 +27,8 @@
             label="انتخاب شاگرد"
             :loading="athletesLoading"
             v-model="workoutData.athleteId"
-            @click:clear="workoutData.athleteId = null">
+            @click:clear="workoutData.athleteId = null"
+          >
           </v-select>
 
           <!-- name -->
@@ -33,7 +37,8 @@
             color="primary"
             variant="outlined"
             label="عنوان برنامه"
-            v-model="workoutData.name">
+            v-model="workoutData.name"
+          >
           </v-text-field>
 
           <!-- sessions -->
@@ -45,7 +50,8 @@
             color="primary"
             variant="outlined"
             label="تعداد جلسات در هفته"
-            v-model.number="workoutData.sessionsPerWeek"></v-text-field>
+            v-model.number="workoutData.sessionsPerWeek"
+          ></v-text-field>
 
           <!-- duration -->
           <v-text-field
@@ -56,7 +62,8 @@
             :error="durationError"
             :hide-details="!durationError"
             :error-messages="durationError"
-            v-model="workoutData.duration"></v-text-field>
+            v-model="workoutData.duration"
+          ></v-text-field>
 
           <!-- description -->
           <v-textarea
@@ -65,7 +72,8 @@
             color="primary"
             label="توضیحات"
             variant="outlined"
-            v-model="workoutData.description">
+            v-model="workoutData.description"
+          >
           </v-textarea>
 
           <v-btn
@@ -81,14 +89,17 @@
 
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4">
+          class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4"
+        >
           <v-expansion-panels
             v-model="panels"
             rounded="lg"
             elevation="1"
-            bg-color="#eeeeee80">
+            bg-color="#eeeeee80"
+          >
             <v-expansion-panel
-              v-for="(session, i) in workoutData.sessionsPerWeek">
+              v-for="(session, i) in workoutData.sessionsPerWeek"
+            >
               <!-- title -->
               <v-expansion-panel-title>{{
                 persianSessions[i]
@@ -116,7 +127,7 @@
 
 <script setup>
 // variables
-const step = ref(1);
+const step = ref(0);
 const panels = ref([]);
 const stopped = ref(false);
 const { $toast, $axios } = useNuxtApp();

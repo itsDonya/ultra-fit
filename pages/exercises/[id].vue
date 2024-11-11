@@ -1,7 +1,7 @@
 <template>
   <article class="w-full flex flex-col items-start justify-start gap-8">
     <div
-      class="w-full p-4 lg:p-0 flex flex-col items-start justify-start gap-4"
+      class="w-full p-4 lg:p-6 flex flex-col items-start justify-start gap-4"
     >
       <div class="w-full flex items-center justify-between">
         <!-- title -->
@@ -78,6 +78,99 @@
       <p
         class="mt-2 md:mt-4 pb-20 text-sm md:text-base text-dark whitespace-pre-line"
       >
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
+        {{ exerciseData.description }}
         {{ exerciseData.description }}
       </p>
     </div>

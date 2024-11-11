@@ -1,10 +1,13 @@
 <template>
   <article
-    class="w-full md:h-full flex flex-col items-start justify-between gap-8 pb-24 md:pb-4">
+    class="w-full md:h-full flex flex-col items-start justify-between gap-8 pb-24 md:pb-4"
+  >
     <div
-      class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4">
+      class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4"
+    >
       <div
-        class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
+        class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0"
+      >
         <!-- title -->
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست برنامه ها</h2>
 
@@ -46,26 +49,31 @@
 
       <i-spinner-solid
         v-if="fetchLoading"
-        class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+        class="mx-auto my-8 text-2xl text-primary animate-spin"
+      ></i-spinner-solid>
 
       <p
         v-else-if="workoutsList.length == 0"
-        class="my-6 mx-auto text-neutral-600">
+        class="my-6 mx-auto text-neutral-600"
+      >
         در حال حاضر اطلاعاتی وجود ندارد
       </p>
 
       <ul
         v-if="!fetchLoading && workoutsList.length"
-        class="w-full grid grid-cols-2 md:grid-cols-5 grid-rows-5 md:grid-rows-2 items-start justify-start gap-x-6 md:gap-x-2 lg:gap-x-6 xl:gap-x-14 gap-y-6 md:gap-y-2 lg:gap-y-4">
+        class="w-full grid grid-cols-2 md:grid-cols-5 grid-rows-5 md:grid-rows-2 items-start justify-start gap-x-6 md:gap-x-2 lg:gap-x-6 xl:gap-x-14 gap-y-6 md:gap-y-2 lg:gap-y-4"
+      >
         <li
           @click="router.push(`/workouts/${item.id}`)"
           v-for="(item, i) in workoutsList"
           :key="i"
-          class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer">
+          class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer"
+        >
           <img
             src="/img/image-placeholder.png"
             class="w-full aspect-square object-cover origin-center rounded-md"
-            alt="" />
+            alt=""
+          />
 
           <div class="w-full flex flex-col items-start gap-0.5">
             <p class="text-dark line-clamp-1">{{ item.name }}</p>
@@ -80,7 +88,8 @@
     <app-pagination
       v-bind="pagination"
       v-if="!fetchLoading && workoutsList.length"
-      @update-page="updatePage($event)"></app-pagination>
+      @update-page="updatePage($event)"
+    ></app-pagination>
   </article>
 </template>
 
@@ -171,17 +180,4 @@ watch(
 );
 </script>
 
-<style>
-.v-input {
-  @apply w-full md:w-44 md:max-w-44;
-}
-.v-field__input {
-  @apply min-h-10 h-10;
-}
-.v-field-label {
-  @apply text-[10px] md:text-sm;
-}
-.v-select__selection {
-  @apply -mt-1.5 text-xs md:text-sm;
-}
-</style>
+<style></style>
