@@ -1,17 +1,20 @@
 <template>
   <div
-    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto">
+    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto"
+  >
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
+          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4"
+        >
           <!-- warning -->
           <v-alert
             type="info"
             class="mb-2"
             rounded="lg"
             variant="tonal"
-            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"></v-alert>
+            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"
+          ></v-alert>
 
           <!-- athlete -->
           <v-select
@@ -24,7 +27,8 @@
             label="انتخاب شاگرد"
             :loading="athletesLoading"
             v-model="workoutData.athleteId"
-            @click:clear="workoutData.athleteId = null">
+            @click:clear="workoutData.athleteId = null"
+          >
           </v-select>
 
           <!-- name -->
@@ -33,7 +37,8 @@
             color="primary"
             variant="outlined"
             label="عنوان برنامه"
-            v-model="workoutData.name">
+            v-model="workoutData.name"
+          >
           </v-text-field>
 
           <!-- sessions -->
@@ -45,7 +50,8 @@
             color="primary"
             variant="outlined"
             label="تعداد جلسات در هفته"
-            v-model.number="workoutData.sessionsPerWeek"></v-text-field>
+            v-model.number="workoutData.sessionsPerWeek"
+          ></v-text-field>
 
           <!-- duration -->
           <v-text-field
@@ -56,7 +62,8 @@
             :error="!!durationError"
             :hide-details="!durationError"
             :error-messages="durationError"
-            v-model="workoutData.duration"></v-text-field>
+            v-model="workoutData.duration"
+          ></v-text-field>
 
           <!-- description -->
           <v-textarea
@@ -65,7 +72,8 @@
             color="primary"
             label="توضیحات"
             variant="outlined"
-            v-model="workoutData.description">
+            v-model="workoutData.description"
+          >
           </v-textarea>
 
           <v-btn
@@ -81,14 +89,18 @@
 
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4">
+          class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4"
+        >
           <v-expansion-panels
             v-model="panels"
             rounded="lg"
             elevation="1"
-            bg-color="#eeeeee80">
+            variant="outlined"
+            bg-color="#eeeeee60"
+          >
             <v-expansion-panel
-              v-for="(session, i) in workoutData.sessionsPerWeek">
+              v-for="(session, i) in workoutData.sessionsPerWeek"
+            >
               <!-- title -->
               <v-expansion-panel-title>{{
                 persianSessions[i]
@@ -97,10 +109,12 @@
               <!-- body -->
               <v-expansion-panel-text>
                 <div
-                  class="w-full flex flex-col items-center justify-start gap-4">
+                  class="w-full flex flex-col items-center justify-start gap-4"
+                >
                   <!-- field -->
                   <div
-                    class="category-input w-full p-4 flex items-center justify-start gap-2">
+                    class="category-input p-4 flex items-center justify-start gap-2"
+                  >
                     <v-select
                       multiple
                       hide-details
@@ -108,12 +122,17 @@
                       variant="outlined"
                       label="دسته بندی"
                       :items="categories"
-                      v-model="sessions[i].categorys"></v-select>
+                      v-model="sessions[i].categorys"
+                    ></v-select>
                     <v-btn
+                      variant="outlined"
                       color="primary"
-                      class="w-20 h-12 text-base rounded-lg"
-                      >ثبت</v-btn
+                      class="h-10 text-base rounded-lg"
                     >
+                      <i-check-solid
+                        class="text-primary text-lg"
+                      ></i-check-solid>
+                    </v-btn>
                   </div>
                 </div>
               </v-expansion-panel-text>
