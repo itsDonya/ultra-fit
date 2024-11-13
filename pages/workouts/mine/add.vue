@@ -96,8 +96,8 @@
               <!-- body -->
               <v-expansion-panel-text>
                 <div
-                  class="w-full flex flex-col items-center justify-start gap-4">
-                  <!-- field -->
+                  class="w-full flex flex-col items-center justify-start gap-2">
+                  <!-- category -->
                   <div
                     class="category-input w-full p-4 flex items-center justify-start gap-2">
                     <v-select
@@ -122,6 +122,11 @@
                       </v-btn>
                     </div>
                   </div>
+
+                  <span
+                    class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
+
+                  <p>dd</p>
                 </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
