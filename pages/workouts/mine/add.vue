@@ -1,20 +1,17 @@
 <template>
   <div
-    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto"
-  >
+    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto">
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4"
-        >
+          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
           <!-- warning -->
           <v-alert
             type="info"
             class="mb-2"
             rounded="lg"
             variant="tonal"
-            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"
-          ></v-alert>
+            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"></v-alert>
 
           <!-- athlete -->
           <v-select
@@ -27,8 +24,7 @@
             label="انتخاب شاگرد"
             :loading="athletesLoading"
             v-model="workoutData.athleteId"
-            @click:clear="workoutData.athleteId = null"
-          >
+            @click:clear="workoutData.athleteId = null">
           </v-select>
 
           <!-- name -->
@@ -37,8 +33,7 @@
             color="primary"
             variant="outlined"
             label="عنوان برنامه"
-            v-model="workoutData.name"
-          >
+            v-model="workoutData.name">
           </v-text-field>
 
           <!-- sessions -->
@@ -50,8 +45,7 @@
             color="primary"
             variant="outlined"
             label="تعداد جلسات در هفته"
-            v-model.number="workoutData.sessionsPerWeek"
-          ></v-text-field>
+            v-model.number="workoutData.sessionsPerWeek"></v-text-field>
 
           <!-- duration -->
           <v-text-field
@@ -62,8 +56,7 @@
             :error="!!durationError"
             :hide-details="!durationError"
             :error-messages="durationError"
-            v-model="workoutData.duration"
-          ></v-text-field>
+            v-model="workoutData.duration"></v-text-field>
 
           <!-- description -->
           <v-textarea
@@ -72,8 +65,7 @@
             color="primary"
             label="توضیحات"
             variant="outlined"
-            v-model="workoutData.description"
-          >
+            v-model="workoutData.description">
           </v-textarea>
 
           <v-btn
@@ -89,18 +81,13 @@
 
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4"
-        >
+          class="w-[600px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4">
           <v-expansion-panels
             v-model="panels"
             rounded="lg"
             elevation="1"
-            variant="outlined"
-            bg-color="#eeeeee60"
-          >
-            <v-expansion-panel
-              v-for="(session, i) in workoutData.sessionsPerWeek"
-            >
+            bg-color="#eeeeee60">
+            <v-expansion-panel v-for="(session, i) in sessionsCount">
               <!-- title -->
               <v-expansion-panel-title>{{
                 persianSessions[i]
@@ -109,30 +96,31 @@
               <!-- body -->
               <v-expansion-panel-text>
                 <div
-                  class="w-full flex flex-col items-center justify-start gap-4"
-                >
+                  class="w-full flex flex-col items-center justify-start gap-4">
                   <!-- field -->
                   <div
-                    class="category-input p-4 flex items-center justify-start gap-2"
-                  >
+                    class="category-input w-full p-4 flex items-center justify-start gap-2">
                     <v-select
                       multiple
+                      clearable
                       hide-details
+                      label="دسته بندی"
                       color="secondary"
                       variant="outlined"
-                      label="دسته بندی"
                       :items="categories"
-                      v-model="sessions[i].categorys"
-                    ></v-select>
-                    <v-btn
-                      variant="outlined"
-                      color="primary"
-                      class="h-10 text-base rounded-lg"
-                    >
-                      <i-check-solid
-                        class="text-primary text-lg"
-                      ></i-check-solid>
-                    </v-btn>
+                      :disabled="sessions[i].exerciseData.sessionId"
+                      v-model="sessions[i].categoryData.categorys"></v-select>
+
+                    <div>
+                      <v-btn
+                        color="primary"
+                        variant="outlined"
+                        @click="addSession(i)"
+                        class="min-w-8 size-10 text-base rounded-lg"
+                        :disabled="sessions[i].exerciseData.sessionId">
+                        <i-check-solid class="text-primary tex"></i-check-solid>
+                      </v-btn>
+                    </div>
                   </div>
                 </div>
               </v-expansion-panel-text>
@@ -169,18 +157,116 @@ const categoriesLoading = ref(false);
 // data
 const athletes = ref([]);
 // const sessions = ref([]);
-const workoutId = ref(62);
+const workoutId = ref(66);
 const sessions = ref([
   {
-    headerId: workoutId.value,
-    categorys: [],
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
   },
   {
-    headerId: workoutId.value,
-    categorys: [],
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+    },
   },
 ]);
-const sessionsCount = ref(null);
+const sessionsWithExercises = ref([]);
+const sessionsCount = ref(7);
 const categories = ref([]);
 const workoutData = ref({
   name: "برنامه تستی",
@@ -199,7 +285,7 @@ const persianSessions = ref([
   "جلسه اول",
   "جلسه دوم",
   "جلسه سوم",
-  "جلسه چهار",
+  "جلسه چهارم",
   "جلسه پنجم",
   "جلسه ششم",
   "جلسه هفتم",
@@ -262,8 +348,19 @@ const addWorkout = async () => {
       sessionsCount.value = workoutData.value.sessionsPerWeek;
       for (let index = 0; index < workoutData.value.sessionsPerWeek; index++) {
         sessions.value.push({
-          headerId: workoutId.value,
-          categorys: [],
+          categoryData: {
+            headerId: workoutId.value,
+            categorys: [],
+          },
+          exerciseData: {
+            sessionId: null,
+            exerciseId: null,
+            exercise: null,
+            set: null,
+            repeat: null,
+            rest: null,
+            description: null,
+          },
         });
       }
 
@@ -273,6 +370,33 @@ const addWorkout = async () => {
       error && $toast.error(error.message);
       addLoading.vlue = false;
     });
+};
+const addSession = async (i) => {
+  const sessionData = sessions.value[i].categoryData;
+
+  // check if categories are empty
+  if (!sessionData.categorys.length) {
+    $toast.error("لطفاً دسته بندی مورد نظر را انتخاب کنید");
+  } else {
+    await $axios
+      .post("/Coach/AddSession", sessionData)
+      .then((response) => {
+        // errors
+        const errorMessage = response.data.errorCode;
+        switch (errorMessage) {
+          case "NumberOfSessionIsFull":
+            $toast.error("جلسات این برنامه تکمیل می‌باشد");
+            return;
+        }
+
+        workoutId.value = response.data.result;
+        $toast.success("جلسه با موفقیت ایجاد شد");
+
+        const newSessionId = response.data.result;
+        sessions.value[i].exerciseData.sessionId = newSessionId;
+      })
+      .catch((error) => error && console.log("add session error: ", error));
+  }
 };
 
 // fetch
@@ -302,8 +426,8 @@ const getCategories = async () => {
     .then((response) => {
       categories.value = response.data.result.records.map((item) => {
         return {
-          title: `${item.firstName} ${item.lastName}`,
-          value: item.id,
+          title: item.name,
+          value: item.name,
         };
       });
     })
@@ -324,7 +448,8 @@ watch(
   () => sessions.value,
   (value) => {
     console.log("value: ", value);
-  }
+  },
+  { deep: true }
 );
 </script>
 
@@ -339,6 +464,9 @@ watch(
   @apply !min-h-14 h-14;
 }
 
+.category-input .v-input {
+  @apply !min-w-0;
+}
 .category-input .v-input .v-field__outline .v-label {
   @apply !bg-transparent;
 }
