@@ -129,9 +129,117 @@
                   </div>
 
                   <span
+                    v-show="sessions[i].exerciseData.sessionId"
                     class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
 
-                  <p>dd</p>
+                  <v-row
+                    dense
+                    class="exercise-input w-full px-1 py-4"
+                    v-show="sessions[i].exerciseData.sessionId">
+                    <!-- exercise -->
+                    <v-col cols="6">
+                      <v-text-field
+                        label="حرکت"
+                        hide-details
+                        color="secondary"
+                        class="mb-1"
+                        variant="outlined"
+                        :disabled="
+                          addSessionLoading ||
+                          !sessions[i].exerciseData.sessionId
+                        "
+                        v-model="
+                          sessions[i].exerciseData.exerciseId
+                        "></v-text-field>
+                    </v-col>
+
+                    <!-- set -->
+                    <v-col cols="6">
+                      <v-text-field
+                        label="ست"
+                        hide-details
+                        type="number"
+                        color="secondary"
+                        class="mb-1"
+                        variant="outlined"
+                        :disabled="
+                          addSessionLoading ||
+                          !sessions[i].exerciseData.sessionId
+                        "
+                        v-model.number="
+                          sessions[i].exerciseData.set
+                        "></v-text-field>
+                    </v-col>
+
+                    <!-- repeat -->
+                    <v-col cols="6">
+                      <v-text-field
+                        label="تکرار"
+                        hide-details
+                        type="number"
+                        color="secondary"
+                        class="mb-1"
+                        variant="outlined"
+                        :disabled="
+                          addSessionLoading ||
+                          !sessions[i].exerciseData.sessionId
+                        "
+                        v-model.number="
+                          sessions[i].exerciseData.repeat
+                        "></v-text-field>
+                    </v-col>
+
+                    <!-- rest -->
+                    <v-col cols="6">
+                      <v-text-field
+                        label="استراحت"
+                        hide-details
+                        type="number"
+                        color="secondary"
+                        class="mb-1"
+                        variant="outlined"
+                        :disabled="
+                          addSessionLoading ||
+                          !sessions[i].exerciseData.sessionId
+                        "
+                        v-model.number="
+                          sessions[i].exerciseData.rest
+                        "></v-text-field>
+                    </v-col>
+
+                    <!-- description -->
+                    <v-col cols="12">
+                      <v-textarea
+                        rows="4"
+                        no-resize
+                        hide-details
+                        label="استراحت"
+                        color="secondary"
+                        class="*:min-h-28 mb-1"
+                        variant="outlined"
+                        :disabled="
+                          addSessionLoading ||
+                          !sessions[i].exerciseData.sessionId
+                        "
+                        v-model="
+                          sessions[i].exerciseData.description
+                        "></v-textarea>
+                    </v-col>
+
+                    <v-col cols="12">
+                      <v-btn
+                        block
+                        class="h-10"
+                        rounded="lg"
+                        color="primary"
+                        :disabled="
+                          addSessionLoading ||
+                          !sessions[i].exerciseData.sessionId
+                        "
+                        >ثبت حرکت</v-btn
+                      >
+                    </v-col>
+                  </v-row>
                 </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -176,7 +284,7 @@ const sessions = ref([
       categorys: [],
     },
     exerciseData: {
-      sessionId: null,
+      sessionId: 44,
       exerciseId: null,
       exercise: null,
       set: null,
@@ -191,7 +299,7 @@ const sessions = ref([
       categorys: [],
     },
     exerciseData: {
-      sessionId: null,
+      sessionId: 44,
       exerciseId: null,
       exercise: null,
       set: null,
@@ -483,16 +591,20 @@ watch(
   @apply !min-h-14 h-14;
 }
 
-.category-input .v-input {
+.category-input .v-input,
+.exercise-input .v-input {
   @apply !min-w-0;
 }
-.category-input .v-input .v-field__outline .v-label {
+.category-input .v-input .v-field__outline .v-label,
+.exercise-input .v-input .v-field__outline .v-label {
   @apply !bg-transparent;
 }
-.category-input .v-field__field {
+.category-input .v-field__field,
+.exercise-input .v-field__field {
   @apply !min-h-10 h-10 max-h-10;
 }
-.category-input .v-field__input {
+.category-input .v-field__input,
+.exercise-input .v-field__input {
   @apply -mt-1.5 text-sm;
 }
 </style>
