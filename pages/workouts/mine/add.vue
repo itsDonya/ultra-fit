@@ -108,7 +108,9 @@
                       color="secondary"
                       variant="outlined"
                       :items="categories"
-                      :disabled="sessions[i].exerciseData.sessionId"
+                      :disabled="
+                        addSessionLoading || sessions[i].exerciseData.sessionId
+                      "
                       v-model="sessions[i].categoryData.categorys"></v-select>
 
                     <div>
@@ -117,7 +119,10 @@
                         variant="outlined"
                         @click="addSession(i)"
                         class="min-w-8 size-10 text-base rounded-lg"
-                        :disabled="sessions[i].exerciseData.sessionId">
+                        :disabled="
+                          addSessionLoading ||
+                          sessions[i].exerciseData.sessionId
+                        ">
                         <i-check-solid class="text-primary tex"></i-check-solid>
                       </v-btn>
                     </div>
@@ -158,6 +163,7 @@ const { $toast, $axios } = useNuxtApp();
 const addLoading = ref(false);
 const athletesLoading = ref(false);
 const categoriesLoading = ref(false);
+const addSessionLoading = ref(false);
 
 // data
 const athletes = ref([]);
@@ -377,11 +383,13 @@ const addWorkout = async () => {
     });
 };
 const addSession = async (i) => {
+  addSessionLoading.value = true;
   const sessionData = sessions.value[i].categoryData;
 
   // check if categories are empty
   if (!sessionData.categorys.length) {
     $toast.error("لطفاً دسته بندی مورد نظر را انتخاب کنید");
+    addSessionLoading.value = false;
   } else {
     await $axios
       .post("/Coach/AddSession", sessionData)
@@ -391,6 +399,7 @@ const addSession = async (i) => {
         switch (errorMessage) {
           case "NumberOfSessionIsFull":
             $toast.error("جلسات این برنامه تکمیل می‌باشد");
+            addSessionLoading.value = false;
             return;
         }
 
@@ -399,8 +408,13 @@ const addSession = async (i) => {
 
         const newSessionId = response.data.result;
         sessions.value[i].exerciseData.sessionId = newSessionId;
+
+        addSessionLoading.value = false;
       })
-      .catch((error) => error && console.log("add session error: ", error));
+      .catch((error) => {
+        error && console.log("add session error: ", error);
+        addSessionLoading.value = false;
+      });
   }
 };
 
