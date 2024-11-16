@@ -129,7 +129,7 @@ const userRegister = async () => {
     })
     .then((res) => {
       if (res.data.errorCode == "UserNameAlreadyExsist") {
-        nuxtApp.$toast.error("نام کاربری تکراری است");
+        nuxtApp.$toast.error("شماره موبایل تکراری است");
         data.value.username = null;
       } else {
         const TOKEN = res.data.result.token;

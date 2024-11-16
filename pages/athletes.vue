@@ -1,6 +1,6 @@
 <template>
   <article
-    class="w-full h-full flex flex-col items-start justify-between gap-4">
+    class="w-full h-full p-6 flex flex-col items-start justify-between gap-4">
     <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
@@ -47,7 +47,7 @@
             <th class="text-[10px] md:text-sm 3xl:text-base">ردیف</th>
             <th class="text-[10px] md:text-sm 3xl:text-base">نام</th>
             <th class="text-[10px] md:text-sm 3xl:text-base">نام خانوادگی</th>
-            <th class="text-[10px] md:text-sm 3xl:text-base">نام کاربری</th>
+            <th class="text-[10px] md:text-sm 3xl:text-base">شماره موبایل</th>
             <th></th>
           </tr>
         </thead>
@@ -135,7 +135,7 @@
             <input
               type="text"
               v-model="addAthleteData.userName"
-              placeholder="نام کاربری"
+              placeholder="شماره موبایل"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
         </div>
@@ -186,7 +186,7 @@
             <input
               type="text"
               v-model="editAthleteData.userName"
-              placeholder="نام کاربری"
+              placeholder="شماره موبایل"
               class="w-full h-11 px-3 text-sm bg-inherit border border-neutral-950/15 focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/10 rounded-lg transition-200" />
           </div>
         </div>

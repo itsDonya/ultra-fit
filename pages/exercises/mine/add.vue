@@ -1,5 +1,5 @@
 <template>
-  <div class="w-full mx-auto bg-white rounded-xl-tw">
+  <article class="w-full p-6 mx-auto bg-white rounded-xl-tw">
     <div class="w-full h-full flex flex-col items-start justify-start gap-4">
       <p class="text-neutral-600 font-bold">افزودن حرکت جدید</p>
 
@@ -144,7 +144,7 @@
         انصراف
       </v-btn> -->
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup>

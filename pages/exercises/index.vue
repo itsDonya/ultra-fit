@@ -1,20 +1,16 @@
 <template>
   <article
-    class="w-full md:h-full flex flex-col items-start justify-between gap-8 pb-24 md:pb-4"
-  >
+    class="w-full md:h-full p-6 flex flex-col items-start justify-between gap-8 pb-24 md:pb-4">
     <div
-      class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4"
-    >
+      class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4">
       <div
-        class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0"
-      >
+        class="w-full flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0">
         <!-- title -->
         <h2 class="md:text-xl text-neutral-700 font-bold">لیست حرکات</h2>
 
         <!-- filters -->
         <div
-          class="w-full md:w-auto -mb-6s flex items-center justify-end gap-2"
-        >
+          class="w-full md:w-auto -mb-6s flex items-center justify-end gap-2">
           <!-- search -->
           <v-text-field
             clearable
@@ -22,8 +18,7 @@
             color="secondary"
             variant="outlined"
             hide-details
-            v-model="filters.search"
-          ></v-text-field>
+            v-model="filters.search"></v-text-field>
 
           <!-- category -->
           <v-select
@@ -34,8 +29,7 @@
             hide-details
             :items="categories"
             :loading="categoriesLoading"
-            v-model="filters.categoryId"
-          ></v-select>
+            v-model="filters.categoryId"></v-select>
 
           <!-- type -->
           <v-select
@@ -46,38 +40,32 @@
             hide-details
             :items="typesList"
             :loading="categoriesLoading"
-            v-model="filters.exerciseType"
-          ></v-select>
+            v-model="filters.exerciseType"></v-select>
         </div>
       </div>
 
       <i-spinner-solid
         v-if="fetchLoading"
-        class="mx-auto my-8 text-2xl text-primary animate-spin"
-      ></i-spinner-solid>
+        class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
 
       <p
         v-else-if="exerciseList.length == 0"
-        class="my-6 mx-auto text-neutral-600"
-      >
+        class="my-6 mx-auto text-neutral-600">
         در حال حاضر اطلاعاتی وجود ندارد
       </p>
 
       <ul
         v-if="!fetchLoading && exerciseList.length"
-        class="w-full grid grid-cols-2 md:grid-cols-5 grid-rows-5 md:grid-rows-2 items-start justify-start gap-x-6 md:gap-x-2 lg:gap-x-6 xl:gap-x-14 gap-y-6 md:gap-y-2 lg:gap-y-4"
-      >
+        class="w-full grid grid-cols-2 md:grid-cols-5 grid-rows-5 md:grid-rows-2 items-start justify-start gap-x-6 md:gap-x-2 lg:gap-x-6 xl:gap-x-14 gap-y-6 md:gap-y-2 lg:gap-y-4">
         <li
           @click="router.push(`/exercises/${item.id}`)"
           v-for="(item, i) in exerciseList"
           :key="i"
-          class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer"
-        >
+          class="w-full p-1.5 flex flex-col items-start justify-start gap-4 cursor-pointer">
           <img
             :src="$config.public.imageCdn + item.logo"
             class="w-full aspect-square object-cover origin-center rounded-md"
-            alt=""
-          />
+            alt="" />
 
           <div class="w-full flex flex-col items-start gap-0.5">
             <p class="text-dark line-clamp-1">{{ item.name }}</p>
@@ -92,8 +80,7 @@
     <app-pagination
       v-bind="pagination"
       v-if="!fetchLoading && exerciseList.length"
-      @update-page="updatePage($event)"
-    ></app-pagination>
+      @update-page="updatePage($event)"></app-pagination>
   </article>
 </template>
 
