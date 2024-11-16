@@ -109,7 +109,8 @@
                       variant="outlined"
                       :items="categories"
                       :disabled="
-                        addSessionLoading || sessions[i].exerciseData.sessionId
+                        addSessionLoading ||
+                        !!sessions[i].exerciseData.sessionId
                       "
                       v-model="sessions[i].categoryData.categorys"></v-select>
 
@@ -145,8 +146,9 @@
                         class="mb-1"
                         variant="outlined"
                         :disabled="
-                          addSessionLoading ||
-                          !sessions[i].exerciseData.sessionId
+                          addExerciseLoading ||
+                          !sessions[i].exerciseData.sessionId ||
+                          sessions[i].exerciseData.submitted
                         "
                         v-model="
                           sessions[i].exerciseData.exerciseId
@@ -163,8 +165,9 @@
                         class="mb-1"
                         variant="outlined"
                         :disabled="
-                          addSessionLoading ||
-                          !sessions[i].exerciseData.sessionId
+                          addExerciseLoading ||
+                          !sessions[i].exerciseData.sessionId ||
+                          sessions[i].exerciseData.submitted
                         "
                         v-model.number="
                           sessions[i].exerciseData.set
@@ -181,8 +184,9 @@
                         class="mb-1"
                         variant="outlined"
                         :disabled="
-                          addSessionLoading ||
-                          !sessions[i].exerciseData.sessionId
+                          addExerciseLoading ||
+                          !sessions[i].exerciseData.sessionId ||
+                          sessions[i].exerciseData.submitted
                         "
                         v-model.number="
                           sessions[i].exerciseData.repeat
@@ -199,8 +203,9 @@
                         class="mb-1"
                         variant="outlined"
                         :disabled="
-                          addSessionLoading ||
-                          !sessions[i].exerciseData.sessionId
+                          addExerciseLoading ||
+                          !sessions[i].exerciseData.sessionId ||
+                          sessions[i].exerciseData.submitted
                         "
                         v-model.number="
                           sessions[i].exerciseData.rest
@@ -218,24 +223,28 @@
                         class="*:min-h-28 mb-1"
                         variant="outlined"
                         :disabled="
-                          addSessionLoading ||
-                          !sessions[i].exerciseData.sessionId
+                          addExerciseLoading ||
+                          !sessions[i].exerciseData.sessionId ||
+                          sessions[i].exerciseData.submitted
                         "
                         v-model="
                           sessions[i].exerciseData.description
                         "></v-textarea>
                     </v-col>
 
-                    <v-col cols="12">
+                    <v-col
+                      cols="12"
+                      v-show="!sessions[i].exerciseData.submitted">
                       <v-btn
                         block
                         class="h-10"
                         rounded="lg"
                         color="primary"
                         :disabled="
-                          addSessionLoading ||
+                          addExerciseLoading ||
                           !sessions[i].exerciseData.sessionId
                         "
+                        @click="addExercise(i)"
                         >ثبت حرکت</v-btn
                       >
                     </v-col>
@@ -272,6 +281,7 @@ const addLoading = ref(false);
 const athletesLoading = ref(false);
 const categoriesLoading = ref(false);
 const addSessionLoading = ref(false);
+const addExerciseLoading = ref(false);
 
 // data
 const athletes = ref([]);
@@ -291,6 +301,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
   {
@@ -306,6 +317,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
   {
@@ -321,6 +333,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
   {
@@ -336,6 +349,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
   {
@@ -351,6 +365,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
   {
@@ -366,6 +381,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
   {
@@ -381,6 +397,7 @@ const sessions = ref([
       repeat: null,
       rest: null,
       description: null,
+      submitted: false,
     },
   },
 ]);
@@ -479,6 +496,7 @@ const addWorkout = async () => {
             repeat: null,
             rest: null,
             description: null,
+            submitted: false,
           },
         });
       }
@@ -524,6 +542,10 @@ const addSession = async (i) => {
         addSessionLoading.value = false;
       });
   }
+};
+const addExercise = (i) => {
+  sessions.value[i].exerciseData.submitted = true;
+  $toast.success("حرکت با موفقیت افزوده شد");
 };
 
 // fetch
