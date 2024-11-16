@@ -129,126 +129,228 @@
                     </div>
                   </div>
 
-                  <span
-                    v-show="sessions[i].exerciseData.sessionId"
-                    class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
+                  <template v-if="sessions[i].exerciseData.sessionId">
+                    <span
+                      class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
 
-                  <v-row
-                    dense
-                    class="exercise-input w-full px-1 py-4"
-                    v-show="sessions[i].exerciseData.sessionId">
-                    <!-- exercise -->
-                    <v-col cols="6">
-                      <v-text-field
-                        label="حرکت"
-                        hide-details
-                        color="secondary"
-                        class="mb-1"
-                        variant="outlined"
-                        :disabled="
-                          addExerciseLoading ||
-                          !sessions[i].exerciseData.sessionId ||
-                          sessions[i].exerciseData.submitted
-                        "
-                        v-model="
-                          sessions[i].exerciseData.exerciseId
-                        "></v-text-field>
-                    </v-col>
+                    <v-row dense class="exercise-input w-full px-1 py-4">
+                      <!-- exercise -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="حرکت"
+                          hide-details
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="
+                            addExerciseLoading ||
+                            !sessions[i].exerciseData.sessionId ||
+                            sessions[i].exerciseData.submitted
+                          "
+                          v-model="
+                            sessions[i].exerciseData.exerciseId
+                          "></v-text-field>
+                      </v-col>
 
-                    <!-- set -->
-                    <v-col cols="6">
-                      <v-text-field
-                        label="ست"
-                        hide-details
-                        type="number"
-                        color="secondary"
-                        class="mb-1"
-                        variant="outlined"
-                        :disabled="
-                          addExerciseLoading ||
-                          !sessions[i].exerciseData.sessionId ||
-                          sessions[i].exerciseData.submitted
-                        "
-                        v-model.number="
-                          sessions[i].exerciseData.set
-                        "></v-text-field>
-                    </v-col>
+                      <!-- set -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="ست"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="
+                            addExerciseLoading ||
+                            !sessions[i].exerciseData.sessionId ||
+                            sessions[i].exerciseData.submitted
+                          "
+                          v-model.number="
+                            sessions[i].exerciseData.set
+                          "></v-text-field>
+                      </v-col>
 
-                    <!-- repeat -->
-                    <v-col cols="6">
-                      <v-text-field
-                        label="تکرار"
-                        hide-details
-                        type="number"
-                        color="secondary"
-                        class="mb-1"
-                        variant="outlined"
-                        :disabled="
-                          addExerciseLoading ||
-                          !sessions[i].exerciseData.sessionId ||
-                          sessions[i].exerciseData.submitted
-                        "
-                        v-model.number="
-                          sessions[i].exerciseData.repeat
-                        "></v-text-field>
-                    </v-col>
+                      <!-- repeat -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="تکرار"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="
+                            addExerciseLoading ||
+                            !sessions[i].exerciseData.sessionId ||
+                            sessions[i].exerciseData.submitted
+                          "
+                          v-model.number="
+                            sessions[i].exerciseData.repeat
+                          "></v-text-field>
+                      </v-col>
 
-                    <!-- rest -->
-                    <v-col cols="6">
-                      <v-text-field
-                        label="استراحت"
-                        hide-details
-                        type="number"
-                        color="secondary"
-                        class="mb-1"
-                        variant="outlined"
-                        :disabled="
-                          addExerciseLoading ||
-                          !sessions[i].exerciseData.sessionId ||
-                          sessions[i].exerciseData.submitted
-                        "
-                        v-model.number="
-                          sessions[i].exerciseData.rest
-                        "></v-text-field>
-                    </v-col>
+                      <!-- rest -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="استراحت"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="
+                            addExerciseLoading ||
+                            !sessions[i].exerciseData.sessionId ||
+                            sessions[i].exerciseData.submitted
+                          "
+                          v-model.number="
+                            sessions[i].exerciseData.rest
+                          "></v-text-field>
+                      </v-col>
 
-                    <!-- description -->
-                    <v-col cols="12">
-                      <v-textarea
-                        rows="4"
-                        no-resize
-                        hide-details
-                        label="استراحت"
-                        color="secondary"
-                        class="*:min-h-28 mb-1"
-                        variant="outlined"
-                        :disabled="
-                          addExerciseLoading ||
-                          !sessions[i].exerciseData.sessionId ||
-                          sessions[i].exerciseData.submitted
-                        "
-                        v-model="
-                          sessions[i].exerciseData.description
-                        "></v-textarea>
-                    </v-col>
+                      <!-- description -->
+                      <v-col cols="12">
+                        <v-textarea
+                          rows="4"
+                          no-resize
+                          hide-details
+                          label="توضیحات"
+                          color="secondary"
+                          class="*:min-h-28 mb-1"
+                          variant="outlined"
+                          :disabled="
+                            addExerciseLoading ||
+                            !sessions[i].exerciseData.sessionId ||
+                            sessions[i].exerciseData.submitted
+                          "
+                          v-model="
+                            sessions[i].exerciseData.description
+                          "></v-textarea>
+                      </v-col>
 
-                    <v-col
-                      cols="12"
-                      v-show="!sessions[i].exerciseData.submitted">
+                      <v-col
+                        cols="12"
+                        v-if="!sessions[i].exerciseData.submitted">
+                        <v-btn
+                          block
+                          class="h-10"
+                          rounded="lg"
+                          color="primary"
+                          :disabled="
+                            addExerciseLoading ||
+                            !sessions[i].exerciseData.sessionId
+                          "
+                          @click="addExercise(i)"
+                          >ثبت حرکت</v-btn
+                        >
+                      </v-col>
+
                       <v-btn
-                        block
-                        class="h-10"
-                        rounded="lg"
+                        variant="text"
                         color="primary"
-                        :disabled="
-                          addExerciseLoading ||
-                          !sessions[i].exerciseData.sessionId
-                        "
-                        @click="addExercise(i)"
-                        >ثبت حرکت</v-btn
-                      >
-                    </v-col>
-                  </v-row>
+                        rounded="md"
+                        v-if="sessions[i].exerciseData.submitted"
+                        @click="sessions[i].superData.active = true">
+                        <i-plus-solid class="ml-2 text-primary"></i-plus-solid>
+                        <span>افزودن حرکت سوپر</span>
+                      </v-btn>
+                    </v-row>
+                  </template>
+
+                  <template v-if="sessions[i].superData.active">
+                    <span
+                      class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
+
+                    <v-row dense class="exercise-input w-full px-1 py-4">
+                      <!-- exercise -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="حرکت"
+                          hide-details
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model="
+                            sessions[i].exerciseData.exerciseId
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- set -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="ست"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model.number="
+                            sessions[i].exerciseData.set
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- repeat -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="تکرار"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model.number="
+                            sessions[i].exerciseData.repeat
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- rest -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="استراحت"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model.number="
+                            sessions[i].exerciseData.rest
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- description -->
+                      <v-col cols="12">
+                        <v-textarea
+                          rows="4"
+                          no-resize
+                          hide-details
+                          label="توضیحات"
+                          color="secondary"
+                          class="*:min-h-28 mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model="
+                            sessions[i].exerciseData.description
+                          "></v-textarea>
+                      </v-col>
+
+                      <v-col cols="12" v-if="sessions[i].superData.active">
+                        <v-btn
+                          block
+                          class="h-10"
+                          rounded="lg"
+                          color="primary"
+                          :disabled="addSuperLoading"
+                          @click="addExercise(i)"
+                          >ثبت حرکت سوپر</v-btn
+                        >
+                      </v-col>
+                    </v-row>
+                  </template>
                 </div>
               </v-expansion-panel-text>
             </v-expansion-panel>
@@ -282,6 +384,7 @@ const athletesLoading = ref(false);
 const categoriesLoading = ref(false);
 const addSessionLoading = ref(false);
 const addExerciseLoading = ref(false);
+const addSuperLoading = ref(false);
 
 // data
 const athletes = ref([]);
@@ -303,6 +406,15 @@ const sessions = ref([
       description: null,
       submitted: false,
     },
+    superData: {
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
   },
   {
     categoryData: {
@@ -319,14 +431,7 @@ const sessions = ref([
       description: null,
       submitted: false,
     },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
+    superData: {
       exerciseId: null,
       exercise: null,
       set: null,
@@ -351,14 +456,7 @@ const sessions = ref([
       description: null,
       submitted: false,
     },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
+    superData: {
       exerciseId: null,
       exercise: null,
       set: null,
@@ -383,6 +481,15 @@ const sessions = ref([
       description: null,
       submitted: false,
     },
+    superData: {
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
   },
   {
     categoryData: {
@@ -391,6 +498,65 @@ const sessions = ref([
     },
     exerciseData: {
       sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+    superData: {
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+    superData: {
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+  },
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: [],
+    },
+    exerciseData: {
+      sessionId: null,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+    superData: {
       exerciseId: null,
       exercise: null,
       set: null,
@@ -490,6 +656,15 @@ const addWorkout = async () => {
           },
           exerciseData: {
             sessionId: null,
+            exerciseId: null,
+            exercise: null,
+            set: null,
+            repeat: null,
+            rest: null,
+            description: null,
+            submitted: false,
+          },
+          superData: {
             exerciseId: null,
             exercise: null,
             set: null,
