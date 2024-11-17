@@ -179,7 +179,7 @@
 
                     <div
                       v-if="sessions[i].superData.submitted"
-                      class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow"
+                      class="w-full h-12 pr-4 mt-2 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow overflow-hidden"
                     >
                       <p class="text-dark font-bold">
                         {{ sessions[i].superData.exerciseId }}
@@ -189,14 +189,11 @@
                         </span>
                       </p>
 
-                      <v-btn
-                        variant="text"
-                        color="red"
-                        rounded="md"
-                        :loading="removeExerciseLoading"
-                        @click="removeExercise(i)"
-                        >حذف</v-btn
+                      <div
+                        class="h-full aspect-square bg-orange-500/10 flex-center"
                       >
+                        <span class="mb-1 text-orange-500">سوپر</span>
+                      </div>
                     </div>
 
                     <v-row
@@ -313,24 +310,36 @@
                       </v-col>
                     </v-row>
 
-                    <v-btn
-                      variant="text"
-                      color="primary"
-                      rounded="md"
-                      class="mt-2 place-self-start"
-                      v-if="
-                        sessions[i].exerciseData.submitted &&
-                        !sessions[i].superData.active
-                      "
-                      @click="
-                        sessions[i].superData.submitted
-                          ? (sessions[i].superData2.active = true)
-                          : (sessions[i].superData.active = true)
-                      "
-                    >
-                      <i-plus-solid class="ml-2 text-primary"></i-plus-solid>
-                      <span>افزودن حرکت سوپر</span>
-                    </v-btn>
+                    <div class="w-full flex items-center justify-between">
+                      <v-btn
+                        variant="text"
+                        color="primary"
+                        rounded="md"
+                        class="mt-2 place-self-start"
+                        v-if="
+                          sessions[i].exerciseData.submitted &&
+                          !sessions[i].superData.active
+                        "
+                        @click="
+                          sessions[i].superData.submitted
+                            ? (sessions[i].superData2.active = true)
+                            : (sessions[i].superData.active = true)
+                        "
+                      >
+                        <i-plus-solid class="ml-2 text-primary"></i-plus-solid>
+                        <span>افزودن حرکت سوپر</span>
+                      </v-btn>
+
+                      <v-btn
+                        variant="text"
+                        color="red"
+                        rounded="md"
+                        @click="removeSuper(i)"
+                        :loading="removeSuperLoading"
+                        v-if="sessions[i].superData.submitted"
+                        >حذف حرکات سوپر</v-btn
+                      >
+                    </div>
                   </template>
 
                   <!-- ---- super ---- -->
@@ -468,265 +477,12 @@ const addSessionLoading = ref(false);
 const addExerciseLoading = ref(false);
 const removeExerciseLoading = ref(false);
 const addSuperLoading = ref(false);
+const removeSuperLoading = ref(false);
 
 // data
 const athletes = ref([]);
 const sessions = ref([]);
 const workoutId = ref(null);
-// const sessions = ref([
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: 44,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: 44,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: null,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: null,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: null,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: null,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-//   {
-//     categoryData: {
-//       headerId: workoutId.value,
-//       categorys: [],
-//     },
-//     exerciseData: {
-//       sessionId: null,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//     superData2: {
-//       sessionExerciseId: 0,
-//       exerciseId: null,
-//       exercise: null,
-//       set: null,
-//       repeat: null,
-//       rest: null,
-//       description: null,
-//       submitted: false,
-//     },
-//   },
-// ]);
 const sessionsCount = ref(0);
 const categories = ref([]);
 const workoutData = ref({
@@ -998,6 +754,46 @@ const addSuperExercise = async (i) => {
     .catch((error) => {
       error && console.log("add super error: ", error);
       addSuperLoading.value = false;
+    });
+};
+const removeSuper = async (i) => {
+  removeSuperLoading.value = true;
+
+  const sessionExerciseId = sessions.value[i].exerciseData.id;
+
+  await $axios
+    .post(`/Coach/RemoveSuper?sessionExerciseId=${sessionExerciseId}`)
+    .then((response) => {
+      console.log("remove super response: ", response);
+
+      sessions.value[i].superData = {
+        exerciseId: sessionExerciseId,
+        exercise: null,
+        set: null,
+        repeat: null,
+        rest: null,
+        description: null,
+        submitted: false,
+        active: false,
+      };
+      sessions.value[i].superData2 = {
+        exerciseId: sessionExerciseId,
+        exercise: null,
+        set: null,
+        repeat: null,
+        rest: null,
+        description: null,
+        submitted: false,
+        active: false,
+      };
+
+      $toast.success("حذف حرکت سوپر با موفقیت انجام شد");
+
+      removeSuperLoading.value = false;
+    })
+    .catch((error) => {
+      error && console.log("remove super error: ", error);
+      removeSuperLoading.value = false;
     });
 };
 
