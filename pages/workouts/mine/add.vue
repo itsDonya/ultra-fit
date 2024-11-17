@@ -156,10 +156,37 @@
                       <p class="text-dark font-bold">
                         {{ sessions[i].exerciseData.exerciseId }}
                         <span class="mr-2 text-sm text-neutral-400 font-normal"
-                          >({{ sessions[i].exerciseData.set }}*{{
-                            sessions[i].exerciseData.repeat
-                          }})</span
+                          >{{ sessions[i].exerciseData.set }} ست
+                          {{ sessions[i].exerciseData.repeat }} تایی</span
                         >
+                      </p>
+
+                      <v-btn
+                        variant="text"
+                        color="red"
+                        rounded="md"
+                        :loading="removeExerciseLoading"
+                        @click="removeExercise(i)"
+                        >حذف</v-btn
+                      >
+                    </div>
+
+                    <!-- submitted -->
+                    <span
+                      v-if="sessions[i].superData.submitted"
+                      class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"
+                    ></span>
+
+                    <div
+                      v-if="sessions[i].superData.submitted"
+                      class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow"
+                    >
+                      <p class="text-dark font-bold">
+                        {{ sessions[i].superData.exerciseId }}
+                        <span class="mr-2 text-sm text-neutral-400 font-normal">
+                          {{ sessions[i].superData.set }} ست
+                          {{ sessions[i].superData.repeat }} تایی
+                        </span>
                       </p>
 
                       <v-btn
@@ -274,7 +301,8 @@
                           block
                           class="h-10"
                           rounded="lg"
-                          color="primary"
+                          variant="outlined"
+                          color="teal"
                           :disabled="
                             addExerciseLoading ||
                             !sessions[i].exerciseData.sessionId
@@ -289,12 +317,16 @@
                       variant="text"
                       color="primary"
                       rounded="md"
-                      class="place-self-start"
+                      class="mt-2 place-self-start"
                       v-if="
                         sessions[i].exerciseData.submitted &&
                         !sessions[i].superData.active
                       "
-                      @click="sessions[i].superData.active = true"
+                      @click="
+                        sessions[i].superData.submitted
+                          ? (sessions[i].superData2.active = true)
+                          : (sessions[i].superData.active = true)
+                      "
                     >
                       <i-plus-solid class="ml-2 text-primary"></i-plus-solid>
                       <span>افزودن حرکت سوپر</span>
@@ -350,12 +382,11 @@
                         <v-text-field
                           label="تکرار"
                           hide-details
-                          type="number"
                           color="secondary"
                           class="mb-1"
                           variant="outlined"
                           :disabled="addSuperLoading"
-                          v-model.number="sessions[i].superData.repeat"
+                          v-model="sessions[i].superData.repeat"
                         ></v-text-field>
                       </v-col>
 
@@ -393,7 +424,8 @@
                           block
                           class="h-10"
                           rounded="lg"
-                          color="primary"
+                          variant="outlined"
+                          color="teal"
                           :disabled="addSuperLoading"
                           @click="addSuperExercise(i)"
                           >ثبت حرکت سوپر</v-btn
@@ -929,14 +961,44 @@ const removeExercise = async (i) => {
       removeExerciseLoading.value = false;
     })
     .catch((error) => {
-      error && console.log("add exercise error: ", error);
+      error && console.log("remove exercise error: ", error);
       removeExerciseLoading.value = false;
     });
 };
 
-const addSuperExercise = (i) => {
-  sessions.value[i].superData.submitted = true;
-  $toast.success("حرکت سوپر با موفقیت افزوده شد");
+const addSuperExercise = async (i) => {
+  addSuperLoading.value = true;
+
+  const superData = {
+    sessionExerciseId: sessions.value[i].exerciseData.id,
+    ...sessions.value[i].superData,
+  };
+
+  await $axios
+    .post("/Coach/AddSuper", superData)
+    .then((response) => {
+      console.log("add super exercise response: ", response);
+
+      sessions.value[i].superData.submitted = true;
+      sessions.value[i].superData.active = false;
+
+      // errors
+      // const errorMessage = response.data.errorCode;
+      // switch (errorMessage) {
+      //   case "NumberOfSessionIsFull":
+      //     $toast.error("جلسات این برنامه تکمیل می‌باشد");
+      //     addSuperLoading.value = false;
+      //     return;
+      // }
+
+      $toast.success("حرکت سوپر با موفقیت افزوده شد");
+
+      addSuperLoading.value = false;
+    })
+    .catch((error) => {
+      error && console.log("add super error: ", error);
+      addSuperLoading.value = false;
+    });
 };
 
 // fetch
