@@ -177,6 +177,11 @@
                       dense
                       class="exercise-input w-full py-4"
                     >
+                      <!-- title -->
+                      <v-col cols="12" class="mb-2">
+                        <h2 class="text-dark font-bold">افزودن حرکت</h2>
+                      </v-col>
+
                       <!-- exercise -->
                       <v-col cols="6">
                         <v-text-field
@@ -285,7 +290,10 @@
                       color="primary"
                       rounded="md"
                       class="place-self-start"
-                      v-if="sessions[i].exerciseData.submitted"
+                      v-if="
+                        sessions[i].exerciseData.submitted &&
+                        !sessions[i].superData.active
+                      "
                       @click="sessions[i].superData.active = true"
                     >
                       <i-plus-solid class="ml-2 text-primary"></i-plus-solid>
@@ -294,12 +302,22 @@
                   </template>
 
                   <!-- ---- super ---- -->
-                  <template v-if="sessions[i].superData.active">
+                  <template
+                    v-if="
+                      sessions[i].exerciseData.submitted &&
+                      sessions[i].superData.active
+                    "
+                  >
                     <span
-                      class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"
+                      class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"
                     ></span>
 
                     <v-row dense class="exercise-input w-full py-4">
+                      <!-- title -->
+                      <v-col cols="12" class="mb-2">
+                        <h2 class="text-dark font-bold">افزودن حرکت سوپر</h2>
+                      </v-col>
+
                       <!-- exercise -->
                       <v-col cols="6">
                         <v-text-field
@@ -774,7 +792,6 @@ const addWorkout = async () => {
             submitted: false,
           },
           superData: {
-            sessionExerciseId: 0,
             exerciseId: null,
             exercise: null,
             set: null,
@@ -784,7 +801,6 @@ const addWorkout = async () => {
             submitted: false,
           },
           superData2: {
-            sessionExerciseId: 0,
             exerciseId: null,
             exercise: null,
             set: null,
@@ -896,6 +912,8 @@ const removeExercise = async (i) => {
         description: null,
         submitted: false,
       };
+
+      sessions.value[i].superData.active = false;
 
       // errors
       // const errorMessage = response.data.errorCode;
