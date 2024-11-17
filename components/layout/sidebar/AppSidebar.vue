@@ -30,8 +30,9 @@
             >
               <nuxt-link class="w-full" :to="child.path">
                 <div
-                  class="w-full h-11 xl:h-12 px-4 flex items-center justify-start gap-3 rounded-lg transition-all duration-200"
+                  class="h-11 xl:h-12 px-4 mx-3 flex items-center justify-start gap-2.5 rounded-lg transition-all duration-200"
                 >
+                  <span class="icon size-1.5 bg-none rounded-full"></span>
                   <span class="text-sm text-white">{{ child.title }}</span>
                 </div>
               </nuxt-link>
@@ -166,5 +167,8 @@ onMounted(() => {
 }
 .router-link-exact-active div {
   @apply bg-white/15;
+}
+.router-link-exact-active div .icon {
+  @apply bg-neutral-200/60;
 }
 </style>
