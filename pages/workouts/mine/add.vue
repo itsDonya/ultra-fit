@@ -148,18 +148,28 @@
                       class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"
                     ></span>
 
+                    <!-- submitted -->
                     <div
                       v-if="sessions[i].exerciseData.submitted"
                       class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-secondary rounded-lg shadow"
                     >
-                      <span class="text-dark font-bold"
-                        >نام حرکت
+                      <p class="text-dark font-bold">
+                        {{ sessions[i].exerciseData.exerciseId }}
                         <span class="mr-2 text-sm text-neutral-400 font-normal"
-                          >(3*5)</span
-                        ></span
-                      >
+                          >({{ sessions[i].exerciseData.set }}*{{
+                            sessions[i].exerciseData.repeat
+                          }})</span
+                        >
+                      </p>
 
-                      <v-btn variant="text" color="red" rounded="md">حذف</v-btn>
+                      <v-btn
+                        variant="text"
+                        color="red"
+                        rounded="md"
+                        :loading="removeExerciseLoading"
+                        @click="removeExercise(i)"
+                        >حذف</v-btn
+                      >
                     </div>
 
                     <v-row
@@ -205,7 +215,6 @@
                         <v-text-field
                           label="تکرار"
                           hide-details
-                          type="number"
                           color="secondary"
                           class="mb-1"
                           variant="outlined"
@@ -213,7 +222,7 @@
                             addExerciseLoading ||
                             !sessions[i].exerciseData.sessionId
                           "
-                          v-model.number="sessions[i].exerciseData.repeat"
+                          v-model="sessions[i].exerciseData.repeat"
                         ></v-text-field>
                       </v-col>
 
@@ -396,8 +405,8 @@
 
 <script setup>
 // variables
-const step = ref(1);
-const panels = ref([]);
+const step = ref(0);
+const panels = ref([0]);
 const stopped = ref(false);
 const { $toast, $axios } = useNuxtApp();
 
@@ -407,275 +416,275 @@ const athletesLoading = ref(false);
 const categoriesLoading = ref(false);
 const addSessionLoading = ref(false);
 const addExerciseLoading = ref(false);
+const removeExerciseLoading = ref(false);
 const addSuperLoading = ref(false);
 
 // data
 const athletes = ref([]);
-// const sessions = ref([]);
-const workoutId = ref(66);
-const sessions = ref([
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: 44,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: 44,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: [],
-    },
-    exerciseData: {
-      sessionId: null,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      sessionExerciseId: 0,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-]);
-const sessionsWithExercises = ref([]);
-const sessionsCount = ref(7);
+const sessions = ref([]);
+const workoutId = ref(null);
+// const sessions = ref([
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: 44,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: 44,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: null,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: null,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: null,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: null,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+//   {
+//     categoryData: {
+//       headerId: workoutId.value,
+//       categorys: [],
+//     },
+//     exerciseData: {
+//       sessionId: null,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//     superData2: {
+//       sessionExerciseId: 0,
+//       exerciseId: null,
+//       exercise: null,
+//       set: null,
+//       repeat: null,
+//       rest: null,
+//       description: null,
+//       submitted: false,
+//     },
+//   },
+// ]);
+const sessionsCount = ref(0);
 const categories = ref([]);
 const workoutData = ref({
-  name: "برنامه تستی",
-  duration: 20,
-  athleteId: 37,
-  description: "توضیحات تستی",
-  sessionsPerWeek: 2,
+  name: null,
+  duration: null,
+  athleteId: null,
+  description: null,
+  sessionsPerWeek: null,
 });
 
 // errors
@@ -765,6 +774,17 @@ const addWorkout = async () => {
             submitted: false,
           },
           superData: {
+            sessionExerciseId: 0,
+            exerciseId: null,
+            exercise: null,
+            set: null,
+            repeat: null,
+            rest: null,
+            description: null,
+            submitted: false,
+          },
+          superData2: {
+            sessionExerciseId: 0,
             exerciseId: null,
             exercise: null,
             set: null,
@@ -819,9 +839,81 @@ const addSession = async (i) => {
   }
 };
 
-const addExercise = (i) => {
-  sessions.value[i].exerciseData.submitted = true;
-  $toast.success("حرکت با موفقیت افزوده شد");
+const addExercise = async (i) => {
+  addExerciseLoading.value = true;
+
+  const sessionData = sessions.value[i].exerciseData;
+
+  await $axios
+    .post("/Coach/AddSessionExercise", sessionData)
+    .then((response) => {
+      console.log("add exercise response: ", response);
+
+      sessions.value[i].exerciseData.id = response.data.result;
+      sessions.value[i].exerciseData.submitted = true;
+
+      // errors
+      // const errorMessage = response.data.errorCode;
+      // switch (errorMessage) {
+      //   case "NumberOfSessionIsFull":
+      //     $toast.error("جلسات این برنامه تکمیل می‌باشد");
+      //     addExerciseLoading.value = false;
+      //     return;
+      // }
+
+      $toast.success("حرکت با موفقیت افزوده شد");
+
+      addExerciseLoading.value = false;
+    })
+    .catch((error) => {
+      error && console.log("add exercise error: ", error);
+      addExerciseLoading.value = false;
+    });
+};
+
+const removeExercise = async (i) => {
+  removeExerciseLoading.value = true;
+
+  await $axios
+    .delete(
+      "/Coach/RemoveSessionExercise",
+      {},
+      {
+        sessionExerciseId: sessions.value[i].exerciseData.id,
+      }
+    )
+    .then((response) => {
+      console.log("remove exercise response: ", response);
+
+      const sessionId = sessions.value[i].exerciseData.sessionId;
+      sessions.value[i].exerciseData = {
+        sessionId: sessionId,
+        exerciseId: null,
+        exercise: null,
+        set: null,
+        repeat: null,
+        rest: null,
+        description: null,
+        submitted: false,
+      };
+
+      // errors
+      // const errorMessage = response.data.errorCode;
+      // switch (errorMessage) {
+      //   case "NumberOfSessionIsFull":
+      //     $toast.error("جلسات این برنامه تکمیل می‌باشد");
+      //     removeExerciseLoading.value = false;
+      //     return;
+      // }
+
+      $toast.success("حرکت با موفقیت حذف شد");
+
+      removeExerciseLoading.value = false;
+    })
+    .catch((error) => {
+      error && console.log("add exercise error: ", error);
+      removeExerciseLoading.value = false;
+    });
 };
 
 const addSuperExercise = (i) => {
