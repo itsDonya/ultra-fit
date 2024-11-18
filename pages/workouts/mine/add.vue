@@ -351,7 +351,7 @@
                       <v-dialog v-model="exercisesDialog">
                         <v-card
                           rounded="lg"
-                          class="exercises-modal w-[500px] h-screen m-auto p-4 bg-white gap-4">
+                          class="exercises-modal w-[600px] h-screen m-auto p-4 bg-white gap-4">
                           <!-- header -->
                           <div class="w-full flex items-center justify-between">
                             <p class="text-dark">
@@ -366,80 +366,102 @@
                             </div>
                           </div>
 
-                          <!-- TEST -->
-                          <!-- filters -->
-                          <div
-                            class="w-full md:w-auto -mb-6s flex items-center justify-end gap-2">
-                            <!-- search -->
-                            <v-text-field
-                              clearable
-                              label="جستجو"
-                              color="secondary"
-                              variant="outlined"
-                              hide-details
-                              v-model="exerciseFilters.search"></v-text-field>
-
-                            <!-- category -->
-                            <v-select
-                              clearable
-                              color="secondary"
-                              label="دسته بندی"
-                              variant="outlined"
-                              hide-details
-                              :items="exerciseCategories"
-                              :loading="categoriesLoading"
-                              v-model="exerciseFilters.categoryId"></v-select>
-
-                            <!-- type -->
-                            <v-select
-                              clearable
-                              color="secondary"
-                              label="نوع حرکت"
-                              variant="outlined"
-                              hide-details
-                              :items="typesList"
-                              v-model="exerciseFilters.exerciseType"></v-select>
+                          <div class="w-full">
+                            <v-tabs v-model="exercisesWindow">
+                              <v-tab>حرکات عمومی</v-tab>
+                              <v-tab>حرکات من</v-tab>
+                            </v-tabs>
                           </div>
 
-                          <i-spinner-solid
-                            v-if="exercisesLoading"
-                            class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
-
-                          <p
-                            v-else-if="exercises.length == 0"
-                            class="my-6 mx-auto text-neutral-600">
-                            در حال حاضر اطلاعاتی وجود ندارد
-                          </p>
-
-                          <ul
-                            v-if="!exercisesLoading && exercises.length"
-                            class="w-full grid grid-cols-3 items-start justify-start gap-4">
-                            <li
-                              @click="setSelectedExercise(i, item)"
-                              v-for="(item, index) in exercises"
-                              :key="index"
-                              class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-4 rounded-md cursor-pointer transition-200">
-                              <img
-                                :src="$config.public.imageCdn + item.logo"
-                                class="w-full aspect-square object-cover origin-center rounded-md"
-                                alt="" />
-
+                          <!-- TEST -->
+                          <v-window v-model="exercisesWindow" class="min-h-max">
+                            <!-- general -->
+                            <v-window-item class="min-h-max">
                               <div
-                                class="w-full flex flex-col items-start gap-0.5">
-                                <p class="text-dark line-clamp-1">
-                                  {{ item.name }}
-                                </p>
-                                <p class="text-xs text-primary/80 line-clamp-1">
-                                  {{ item.engName }}
-                                </p>
-                              </div>
-                            </li>
-                          </ul>
+                                class="w-full md:w-auto mb-4 pt-2 flex items-center justify-end gap-2">
+                                <!-- search -->
+                                <v-text-field
+                                  clearable
+                                  label="جستجو"
+                                  color="secondary"
+                                  variant="outlined"
+                                  hide-details
+                                  v-model="
+                                    exerciseFilters.search
+                                  "></v-text-field>
 
-                          <app-pagination
-                            v-bind="pagination"
-                            v-if="!exercisesLoading && exercises.length"
-                            @update-page="updatePage($event)"></app-pagination>
+                                <!-- category -->
+                                <v-select
+                                  clearable
+                                  color="secondary"
+                                  label="دسته بندی"
+                                  variant="outlined"
+                                  hide-details
+                                  :items="exerciseCategories"
+                                  :loading="categoriesLoading"
+                                  v-model="
+                                    exerciseFilters.categoryId
+                                  "></v-select>
+
+                                <!-- type -->
+                                <v-select
+                                  clearable
+                                  color="secondary"
+                                  label="نوع حرکت"
+                                  variant="outlined"
+                                  hide-details
+                                  :items="typesList"
+                                  v-model="
+                                    exerciseFilters.exerciseType
+                                  "></v-select>
+                              </div>
+
+                              <i-spinner-solid
+                                v-if="exercisesLoading"
+                                class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+
+                              <p
+                                v-else-if="exercises.length == 0"
+                                class="my-6 mx-auto text-neutral-600">
+                                در حال حاضر اطلاعاتی وجود ندارد
+                              </p>
+
+                              <ul
+                                v-if="!exercisesLoading && exercises.length"
+                                class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4">
+                                <li
+                                  @click="setSelectedExercise(i, item)"
+                                  v-for="(item, index) in exercises"
+                                  :key="index"
+                                  class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200">
+                                  <img
+                                    :src="$config.public.imageCdn + item.logo"
+                                    class="w-full aspect-square object-cover origin-center rounded-md"
+                                    alt="" />
+
+                                  <div
+                                    class="w-full flex flex-col items-start gap-0.5">
+                                    <p class="text-sm text-dark line-clamp-1">
+                                      {{ item.name }}
+                                    </p>
+                                    <p
+                                      class="text-xs text-primary/80 line-clamp-1">
+                                      {{ item.engName }}
+                                    </p>
+                                  </div>
+                                </li>
+                              </ul>
+
+                              <app-pagination
+                                class="mt-4"
+                                v-bind="pagination"
+                                v-if="!exercisesLoading && exercises.length"
+                                @update-page="
+                                  updatePage($event)
+                                "></app-pagination>
+                            </v-window-item>
+                          </v-window>
+                          <!-- filters -->
                         </v-card>
                       </v-dialog>
                     </v-row>
@@ -723,6 +745,7 @@ import { typesList } from "@/utils/types";
 const step = ref(1);
 const panels = ref([0]);
 const stopped = ref(false);
+const exercisesWindow = ref(1);
 const { $toast, $axios } = useNuxtApp();
 
 // dialogs
@@ -1341,5 +1364,23 @@ watch(
 .category-input .v-field__input,
 .exercise-input .v-field__input {
   @apply -mt-1.5 text-sm;
+}
+</style>
+
+<style lang="scss">
+.exercises-modal {
+  .v-tabs {
+    .v-btn {
+      border-radius: 10px 10px 0 0 !important;
+    }
+
+    .v-btn:not(.v-tab--selected) {
+      color: #036ab380 !important;
+    }
+    .v-btn.v-tab--selected {
+      color: #036ab3 !important;
+      background-color: #a4d8fc60;
+    }
+  }
 }
 </style>
