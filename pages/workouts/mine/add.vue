@@ -133,7 +133,7 @@
                     <span
                       class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
 
-                    <!-- submitted -->
+                    <!-- submitted (regular) -->
                     <div
                       v-if="sessions[i].exerciseData.submitted"
                       class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-secondary rounded-lg shadow">
@@ -150,12 +150,13 @@
                         color="red"
                         rounded="md"
                         :loading="removeExerciseLoading"
-                        @click="deleteAlert = true"
+                        @click="deleteExerciseDialog = true"
                         >حذف</v-btn
                       >
                     </div>
 
-                    <v-dialog v-model="deleteAlert" max-width="500">
+                    <!-- delete confirmation -->
+                    <v-dialog v-model="deleteExerciseDialog" max-width="500">
                       <v-card class="rounded-lg !p-4">
                         <p class="text-[14px] text-red pt-1">
                           <v-icon size="large" class="ml-2"
@@ -165,7 +166,9 @@
                         </p>
 
                         <div class="mt-6 flex items-center justify-end gap-2">
-                          <v-btn color="red" @click="deleteAlert = false"
+                          <v-btn
+                            color="red"
+                            @click="deleteExerciseDialog = false"
                             >بستن</v-btn
                           >
                           <v-btn
@@ -179,7 +182,7 @@
                       </v-card>
                     </v-dialog>
 
-                    <!-- submitted -->
+                    <!-- submitted (super) -->
                     <span
                       v-if="sessions[i].superData.submitted"
                       class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"></span>
@@ -235,6 +238,7 @@
                           color="secondary"
                           class="mb-1 *:*:pl-0.5"
                           variant="outlined"
+                          @input="sessions[i].exerciseData.exerciseId = null"
                           sappend-inner-icon="mdi-lock-outline"
                           :disabled="
                             addExerciseLoading ||
@@ -245,6 +249,7 @@
                             <v-btn
                               rounded="lg"
                               color="primary"
+                              @click="showExercises(i)"
                               class="!min-w-max !w-max !max-w-max">
                               <i-magnifying-glass-solid
                                 class="text-white"></i-magnifying-glass-solid>
@@ -342,6 +347,101 @@
                           >ثبت حرکت</v-btn
                         >
                       </v-col>
+
+                      <v-dialog v-model="exercisesDialog">
+                        <v-card
+                          rounded="lg"
+                          class="exercises-modal w-[500px] h-screen m-auto p-4 bg-white gap-4">
+                          <!-- header -->
+                          <div class="w-full flex items-center justify-between">
+                            <p class="text-dark">
+                              انتخاب حرکت برای {{ persianSessions[i] }}
+                            </p>
+
+                            <div
+                              @click="exercisesDialog = false"
+                              class="size-9 hover:bg-neutral-400/10 flex-center rounded-full transition-200 cursor-pointer">
+                              <i-xmark-solid
+                                class="text-neutral-600"></i-xmark-solid>
+                            </div>
+                          </div>
+
+                          <!-- TEST -->
+                          <!-- filters -->
+                          <div
+                            class="w-full md:w-auto -mb-6s flex items-center justify-end gap-2">
+                            <!-- search -->
+                            <v-text-field
+                              clearable
+                              label="جستجو"
+                              color="secondary"
+                              variant="outlined"
+                              hide-details
+                              v-model="exerciseFilters.search"></v-text-field>
+
+                            <!-- category -->
+                            <v-select
+                              clearable
+                              color="secondary"
+                              label="دسته بندی"
+                              variant="outlined"
+                              hide-details
+                              :items="exerciseCategories"
+                              :loading="categoriesLoading"
+                              v-model="exerciseFilters.categoryId"></v-select>
+
+                            <!-- type -->
+                            <v-select
+                              clearable
+                              color="secondary"
+                              label="نوع حرکت"
+                              variant="outlined"
+                              hide-details
+                              :items="typesList"
+                              v-model="exerciseFilters.exerciseType"></v-select>
+                          </div>
+
+                          <i-spinner-solid
+                            v-if="exercisesLoading"
+                            class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+
+                          <p
+                            v-else-if="exercises.length == 0"
+                            class="my-6 mx-auto text-neutral-600">
+                            در حال حاضر اطلاعاتی وجود ندارد
+                          </p>
+
+                          <ul
+                            v-if="!exercisesLoading && exercises.length"
+                            class="w-full grid grid-cols-3 items-start justify-start gap-4">
+                            <li
+                              @click="setSelectedExercise(i, item)"
+                              v-for="(item, index) in exercises"
+                              :key="index"
+                              class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-4 rounded-md cursor-pointer transition-200">
+                              <img
+                                :src="$config.public.imageCdn + item.logo"
+                                class="w-full aspect-square object-cover origin-center rounded-md"
+                                alt="" />
+
+                              <div
+                                class="w-full flex flex-col items-start gap-0.5">
+                                <p class="text-dark line-clamp-1">
+                                  {{ item.name }}
+                                </p>
+                                <p class="text-xs text-primary/80 line-clamp-1">
+                                  {{ item.engName }}
+                                </p>
+                              </div>
+                            </li>
+                          </ul>
+
+                          <app-pagination
+                            v-bind="pagination"
+                            v-if="!exercisesLoading && exercises.length"
+                            @update-page="updatePage($event)"></app-pagination>
+                        </v-card>
+                      </v-dialog>
                     </v-row>
 
                     <div class="w-full flex items-center justify-between">
@@ -617,16 +717,22 @@
 </template>
 
 <script setup>
+import { typesList } from "@/utils/types";
+
 // variables
 const step = ref(1);
 const panels = ref([0]);
 const stopped = ref(false);
-const deleteAlert = ref(false);
 const { $toast, $axios } = useNuxtApp();
+
+// dialogs
+const exercisesDialog = ref(true);
+const deleteExerciseDialog = ref(false);
 
 // loadings
 const addLoading = ref(false);
 const athletesLoading = ref(false);
+const exercisesLoading = ref(false);
 const categoriesLoading = ref(false);
 const addSessionLoading = ref(false);
 const addExerciseLoading = ref(false);
@@ -634,9 +740,24 @@ const removeExerciseLoading = ref(false);
 const addSuperLoading = ref(false);
 const removeSuperLoading = ref(false);
 
+// filters
+const exerciseFilters = ref({
+  search: null,
+  categoryId: null,
+  exerciseType: null,
+});
+
+// pagination
+const pagination = ref({
+  page: 1,
+  pageSize: 12,
+  totalRecord: 0,
+});
+
 // data
 const athletes = ref([]);
 const workoutId = ref(116);
+const exercises = ref([]);
 // const sessions = ref([]);
 const sessions = ref([
   {
@@ -677,6 +798,7 @@ const sessions = ref([
 // const workoutId = ref(null);
 const sessionsCount = ref(1);
 const categories = ref([]);
+const exerciseCategories = ref([]);
 const workoutData = ref({
   name: null,
   duration: null,
@@ -799,6 +921,7 @@ const addWorkout = async () => {
       addLoading.vlue = false;
     });
 };
+
 const addSession = async (i) => {
   addSessionLoading.value = true;
   const sessionData = sessions.value[i].categoryData;
@@ -839,10 +962,14 @@ const addSession = async (i) => {
 const addExercise = async (i) => {
   addExerciseLoading.value = true;
 
-  const sessionData = sessions.value[i].exerciseData;
+  const exerciseData = sessions.value[i].exerciseData;
+  console.log("exerciseData: ", exerciseData);
 
   await $axios
-    .post("/Coach/AddSessionExercise", sessionData)
+    .post("/Coach/AddSessionExercise", {
+      ...exerciseData,
+      exercise: exerciseData.exerciseId ? null : exerciseData.exercise,
+    })
     .then((response) => {
       console.log("add exercise response: ", response);
 
@@ -936,7 +1063,7 @@ const removeExercise = async (i) => {
       //     return;
       // }
 
-      deleteAlert.value = false;
+      deleteExerciseDialog.value = false;
 
       $toast.success("حرکت با موفقیت حذف شد");
 
@@ -1014,6 +1141,7 @@ const addSuperExercise = async (i) => {
       sessions.value[i].superData.active = false;
     });
 };
+
 const removeSuper = async (i) => {
   removeSuperLoading.value = true;
 
@@ -1065,6 +1193,33 @@ const removeSuper = async (i) => {
     });
 };
 
+const showExercises = async (i) => {
+  exercisesDialog.value = true;
+};
+
+const setSelectedExercise = (index, item) => {
+  sessions.value[index].exerciseData.exerciseId = item.id;
+  sessions.value[index].exerciseData.exercise = item.name;
+
+  exercisesDialog.value = false;
+
+  exercises.value = {};
+
+  exerciseFilters.value = {
+    search: null,
+    categoryId: null,
+    exerciseType: null,
+  };
+
+  pagination.value = {
+    page: 1,
+    pageSize: 12,
+    totalRecord: 0,
+  };
+
+  getExercises();
+};
+
 // fetch
 const getAthletes = async () => {
   athletesLoading.value = true;
@@ -1090,6 +1245,12 @@ const getCategories = async () => {
   await $axios
     .post(`/Category/GetAll`)
     .then((response) => {
+      exerciseCategories.value = response.data.result.records.map((item) => {
+        return {
+          title: item.name,
+          value: item.id,
+        };
+      });
       categories.value = response.data.result.records.map((item) => {
         return {
           title: item.name,
@@ -1102,10 +1263,33 @@ const getCategories = async () => {
       categoriesLoading.value = false;
     });
 };
+const getExercises = async () => {
+  exercisesLoading.value = true;
+
+  await $axios
+    .post(`/Exercise/GetPublicExercise`, {
+      ...pagination.value,
+      ...exerciseFilters.value,
+    })
+    .then((response) => {
+      exercises.value = response.data.result.records;
+      pagination.value.totalRecord = response.data.result.totalRecord;
+      exercisesLoading.value = false;
+    })
+    .catch((error) => {
+      error && console.log("exercises error: ", error);
+      exercisesLoading.value = false;
+    });
+};
+const updatePage = (pageNumber) => {
+  pagination.value.page = pageNumber;
+  getExercises();
+};
 
 // lifecycles
 onMounted(() => {
   getAthletes();
+  getExercises();
   getCategories();
 });
 
@@ -1114,6 +1298,14 @@ watch(
   () => sessions.value,
   (value) => {
     console.log("value: ", value);
+  },
+  { deep: true }
+);
+watch(
+  () => exerciseFilters.value,
+  () => {
+    updatePage(1);
+    getExercises();
   },
   { deep: true }
 );
@@ -1130,18 +1322,22 @@ watch(
   @apply !min-h-14 h-14;
 }
 
+.exercises-modal .v-input,
 .category-input .v-input,
 .exercise-input .v-input {
   @apply !min-w-0;
 }
+.exercises-modal .v-input .v-field__outline .v-label,
 .category-input .v-input .v-field__outline .v-label,
 .exercise-input .v-input .v-field__outline .v-label {
   @apply !bg-transparent;
 }
+.exercises-modal .v-field__field,
 .category-input .v-field__field,
 .exercise-input .v-field__field {
   @apply !min-h-10 h-10 max-h-10;
 }
+.exercises-modal .v-field__input,
 .category-input .v-field__input,
 .exercise-input .v-field__input {
   @apply -mt-1.5 text-sm;
