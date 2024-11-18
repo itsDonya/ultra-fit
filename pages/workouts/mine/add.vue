@@ -455,15 +455,14 @@
             </v-expansion-panel>
           </v-expansion-panels>
 
-          <v-btn
+          <!-- <v-btn
             block
             color="primary"
-            @click="addWorkout"
             :loading="addLoading"
             :disabled="!validWorkout || addLoading"
             class="!h-11 rounded-lg"
             >ثبت و ایجاد برنامه</v-btn
-          >
+          > -->
         </div>
       </v-window-item>
     </v-window>
@@ -646,7 +645,8 @@ const addSession = async (i) => {
         addSessionLoading.value = false;
       })
       .catch((error) => {
-        error && console.log("add session error: ", error);
+        (error.message && $toast.error(error.message)) ||
+          console.log("add session error: ", error);
         addSessionLoading.value = false;
       });
   }
@@ -679,7 +679,8 @@ const addExercise = async (i) => {
       addExerciseLoading.value = false;
     })
     .catch((error) => {
-      error && console.log("add exercise error: ", error);
+      (error.message && $toast.error(error.message)) ||
+        console.log("add exercise error: ", error);
       addExerciseLoading.value = false;
     });
 };
@@ -712,7 +713,7 @@ const removeExercise = async (i) => {
         submitted: false,
       };
       sessions.value[i].superData = {
-        exerciseId: sessionExerciseId,
+        exerciseId: null,
         exercise: null,
         set: null,
         repeat: null,
@@ -722,7 +723,7 @@ const removeExercise = async (i) => {
         active: false,
       };
       sessions.value[i].superData2 = {
-        exerciseId: sessionExerciseId,
+        exerciseId: null,
         exercise: null,
         set: null,
         repeat: null,
@@ -750,7 +751,8 @@ const removeExercise = async (i) => {
       removeExerciseLoading.value = false;
     })
     .catch((error) => {
-      error && console.log("remove exercise error: ", error);
+      (error.message && $toast.error(error.message)) ||
+        console.log("remove exercise error: ", error);
       removeExerciseLoading.value = false;
     });
 };
@@ -768,25 +770,49 @@ const addSuperExercise = async (i) => {
     .then((response) => {
       console.log("add super exercise response: ", response);
 
+      // errors
+      const errorMessage = response.data.errorCode;
+      switch (errorMessage) {
+        case "SessionExerciseDoesntExists":
+          $toast.error("هنوز حرکتی برای این جلسه ثبت نکردید");
+
+          addSuperLoading.value = false;
+
+          sessions.value[i].superData = {
+            exerciseId: null,
+            exercise: null,
+            set: null,
+            repeat: null,
+            rest: null,
+            description: null,
+            submitted: false,
+            active: false,
+          };
+          sessions.value[i].superData2 = {
+            exerciseId: null,
+            exercise: null,
+            set: null,
+            repeat: null,
+            rest: null,
+            description: null,
+            submitted: false,
+            active: false,
+          };
+          return;
+      }
+
       sessions.value[i].superData.submitted = true;
       sessions.value[i].superData.active = false;
-
-      // errors
-      // const errorMessage = response.data.errorCode;
-      // switch (errorMessage) {
-      //   case "NumberOfSessionIsFull":
-      //     $toast.error("جلسات این برنامه تکمیل می‌باشد");
-      //     addSuperLoading.value = false;
-      //     return;
-      // }
 
       $toast.success("حرکت سوپر با موفقیت افزوده شد");
 
       addSuperLoading.value = false;
     })
     .catch((error) => {
-      error && console.log("add super error: ", error);
+      (error.message && $toast.error(error.message)) ||
+        console.log("add super error: ", error);
       addSuperLoading.value = false;
+      sessions.value[i].superData.active = false;
     });
 };
 const removeSuper = async (i) => {
@@ -799,8 +825,17 @@ const removeSuper = async (i) => {
     .then((response) => {
       console.log("remove super response: ", response);
 
+      // errors
+      const errorMessage = response.data.errorCode;
+      switch (errorMessage) {
+        case "SessionExerciseDoesntExists":
+          $toast.error("هنوز حرکتی برای این جلسه ثبت نکردید");
+          addSuperLoading.value = false;
+          return;
+      }
+
       sessions.value[i].superData = {
-        exerciseId: sessionExerciseId,
+        exerciseId: null,
         exercise: null,
         set: null,
         repeat: null,
@@ -810,7 +845,7 @@ const removeSuper = async (i) => {
         active: false,
       };
       sessions.value[i].superData2 = {
-        exerciseId: sessionExerciseId,
+        exerciseId: null,
         exercise: null,
         set: null,
         repeat: null,
@@ -825,7 +860,8 @@ const removeSuper = async (i) => {
       removeSuperLoading.value = false;
     })
     .catch((error) => {
-      error && console.log("remove super error: ", error);
+      (error.message && $toast.error(error.message)) ||
+        console.log("remove super error: ", error);
       removeSuperLoading.value = false;
     });
 };
