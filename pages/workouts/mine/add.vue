@@ -138,7 +138,7 @@
                       v-if="sessions[i].exerciseData.submitted"
                       class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-secondary rounded-lg shadow">
                       <p class="text-dark font-bold">
-                        {{ sessions[i].exerciseData.exerciseId }}
+                        {{ sessions[i].exerciseData.exercise }}
                         <span class="mr-2 text-sm text-neutral-400 font-normal"
                           >{{ sessions[i].exerciseData.set }} ست
                           {{ sessions[i].exerciseData.repeat }} تایی</span
@@ -233,15 +233,24 @@
                           label="حرکت"
                           hide-details
                           color="secondary"
-                          class="mb-1"
+                          class="mb-1 *:*:pl-0.5"
                           variant="outlined"
+                          sappend-inner-icon="mdi-lock-outline"
                           :disabled="
                             addExerciseLoading ||
                             !sessions[i].exerciseData.sessionId
                           "
-                          v-model="
-                            sessions[i].exerciseData.exerciseId
-                          "></v-text-field>
+                          v-model="sessions[i].exerciseData.exercise">
+                          <template #append-inner>
+                            <v-btn
+                              rounded="lg"
+                              color="primary"
+                              class="!min-w-max !w-max !max-w-max">
+                              <i-magnifying-glass-solid
+                                class="text-white"></i-magnifying-glass-solid>
+                            </v-btn>
+                          </template>
+                        </v-text-field>
                       </v-col>
 
                       <!-- set -->
@@ -609,7 +618,7 @@
 
 <script setup>
 // variables
-const step = ref(0);
+const step = ref(1);
 const panels = ref([0]);
 const stopped = ref(false);
 const deleteAlert = ref(false);
@@ -627,9 +636,46 @@ const removeSuperLoading = ref(false);
 
 // data
 const athletes = ref([]);
-const sessions = ref([]);
-const workoutId = ref(null);
-const sessionsCount = ref(0);
+const workoutId = ref(116);
+// const sessions = ref([]);
+const sessions = ref([
+  {
+    categoryData: {
+      headerId: workoutId.value,
+      categorys: ["کول"],
+    },
+    exerciseData: {
+      sessionId: 56,
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+    superData: {
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+    superData2: {
+      exerciseId: null,
+      exercise: null,
+      set: null,
+      repeat: null,
+      rest: null,
+      description: null,
+      submitted: false,
+    },
+  },
+]);
+// const workoutId = ref(null);
+const sessionsCount = ref(1);
 const categories = ref([]);
 const workoutData = ref({
   name: null,
