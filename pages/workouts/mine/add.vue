@@ -387,7 +387,7 @@
                                   variant="outlined"
                                   hide-details
                                   v-model="
-                                    exerciseFilters.search
+                                    generalExerciseFilters.search
                                   "></v-text-field>
 
                                 <!-- category -->
@@ -400,7 +400,7 @@
                                   :items="exerciseCategories"
                                   :loading="categoriesLoading"
                                   v-model="
-                                    exerciseFilters.categoryId
+                                    generalExerciseFilters.categoryId
                                   "></v-select>
 
                                 <!-- type -->
@@ -412,26 +412,29 @@
                                   hide-details
                                   :items="typesList"
                                   v-model="
-                                    exerciseFilters.exerciseType
+                                    generalExerciseFilters.exerciseType
                                   "></v-select>
                               </div>
 
                               <i-spinner-solid
-                                v-if="exercisesLoading"
+                                v-if="generalExercisesLoading"
                                 class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
 
                               <p
-                                v-else-if="exercises.length == 0"
+                                v-else-if="generalExercises.length == 0"
                                 class="my-6 mx-auto text-neutral-600">
                                 در حال حاضر اطلاعاتی وجود ندارد
                               </p>
 
                               <ul
-                                v-if="!exercisesLoading && exercises.length"
+                                v-if="
+                                  !generalExercisesLoading &&
+                                  generalExercises.length
+                                "
                                 class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4">
                                 <li
                                   @click="setSelectedExercise(i, item)"
-                                  v-for="(item, index) in exercises"
+                                  v-for="(item, index) in generalExercises"
                                   :key="index"
                                   class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200">
                                   <img
@@ -454,14 +457,16 @@
 
                               <app-pagination
                                 class="mt-4"
-                                v-bind="pagination"
-                                v-if="!exercisesLoading && exercises.length"
+                                v-bind="generalExercisesPagination"
+                                v-if="
+                                  !generalExercisesLoading &&
+                                  generalExercises.length
+                                "
                                 @update-page="
                                   updatePage($event)
                                 "></app-pagination>
                             </v-window-item>
                           </v-window>
-                          <!-- filters -->
                         </v-card>
                       </v-dialog>
                     </v-row>
@@ -755,7 +760,7 @@ const deleteExerciseDialog = ref(false);
 // loadings
 const addLoading = ref(false);
 const athletesLoading = ref(false);
-const exercisesLoading = ref(false);
+const generalExercisesLoading = ref(false);
 const categoriesLoading = ref(false);
 const addSessionLoading = ref(false);
 const addExerciseLoading = ref(false);
@@ -764,14 +769,14 @@ const addSuperLoading = ref(false);
 const removeSuperLoading = ref(false);
 
 // filters
-const exerciseFilters = ref({
+const generalExerciseFilters = ref({
   search: null,
   categoryId: null,
   exerciseType: null,
 });
 
 // pagination
-const pagination = ref({
+const generalExercisesPagination = ref({
   page: 1,
   pageSize: 12,
   totalRecord: 0,
@@ -780,7 +785,7 @@ const pagination = ref({
 // data
 const athletes = ref([]);
 const workoutId = ref(116);
-const exercises = ref([]);
+const generalExercises = ref([]);
 // const sessions = ref([]);
 const sessions = ref([
   {
@@ -1226,21 +1231,21 @@ const setSelectedExercise = (index, item) => {
 
   exercisesDialog.value = false;
 
-  exercises.value = {};
+  generalExercises.value = {};
 
-  exerciseFilters.value = {
+  generalExerciseFilters.value = {
     search: null,
     categoryId: null,
     exerciseType: null,
   };
 
-  pagination.value = {
+  generalExercisesPagination.value = {
     page: 1,
     pageSize: 12,
     totalRecord: 0,
   };
 
-  getExercises();
+  getGeneralExercises();
 };
 
 // fetch
@@ -1286,33 +1291,34 @@ const getCategories = async () => {
       categoriesLoading.value = false;
     });
 };
-const getExercises = async () => {
-  exercisesLoading.value = true;
+const getGeneralExercises = async () => {
+  generalExercisesLoading.value = true;
 
   await $axios
     .post(`/Exercise/GetPublicExercise`, {
-      ...pagination.value,
-      ...exerciseFilters.value,
+      ...generalExercisesPagination.value,
+      ...generalExerciseFilters.value,
     })
     .then((response) => {
-      exercises.value = response.data.result.records;
-      pagination.value.totalRecord = response.data.result.totalRecord;
-      exercisesLoading.value = false;
+      generalExercises.value = response.data.result.records;
+      generalExercisesPagination.value.totalRecord =
+        response.data.result.totalRecord;
+      generalExercisesLoading.value = false;
     })
     .catch((error) => {
       error && console.log("exercises error: ", error);
-      exercisesLoading.value = false;
+      generalExercisesLoading.value = false;
     });
 };
 const updatePage = (pageNumber) => {
-  pagination.value.page = pageNumber;
-  getExercises();
+  generalExercisesPagination.value.page = pageNumber;
+  getGeneralExercises();
 };
 
 // lifecycles
 onMounted(() => {
   getAthletes();
-  getExercises();
+  getGeneralExercises();
   getCategories();
 });
 
@@ -1325,10 +1331,10 @@ watch(
   { deep: true }
 );
 watch(
-  () => exerciseFilters.value,
+  () => generalExerciseFilters.value,
   () => {
     updatePage(1);
-    getExercises();
+    getGeneralExercises();
   },
   { deep: true }
 );
