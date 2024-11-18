@@ -201,6 +201,23 @@
                       </div>
                     </div>
 
+                    <div
+                      v-if="sessions[i].superData2.submitted"
+                      class="w-full h-12 pr-4 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow overflow-hidden">
+                      <p class="text-dark font-bold">
+                        {{ sessions[i].superData2.exerciseId }}
+                        <span class="mr-2 text-sm text-neutral-400 font-normal">
+                          {{ sessions[i].superData2.set }} ست
+                          {{ sessions[i].superData2.repeat }} تایی
+                        </span>
+                      </p>
+
+                      <div
+                        class="h-full aspect-square bg-orange-500/10 flex-center">
+                        <span class="mb-1 text-orange-500">سوپر</span>
+                      </div>
+                    </div>
+
                     <v-row
                       v-if="!sessions[i].exerciseData.submitted"
                       dense
@@ -326,7 +343,11 @@
                         class="mt-2 place-self-start"
                         v-if="
                           sessions[i].exerciseData.submitted &&
-                          !sessions[i].superData.active
+                          !sessions[i].superData.active &&
+                          !(
+                            sessions[i].superData.submitted &&
+                            sessions[i].superData2.submitted
+                          )
                         "
                         @click="
                           sessions[i].superData.submitted
@@ -336,6 +357,7 @@
                         <i-plus-solid class="ml-2 text-primary"></i-plus-solid>
                         <span>افزودن حرکت سوپر</span>
                       </v-btn>
+                      <span v-else></span>
 
                       <v-btn
                         variant="text"
@@ -437,6 +459,111 @@
                       </v-col>
 
                       <v-col cols="12" v-if="sessions[i].superData.active">
+                        <v-btn
+                          block
+                          class="h-10"
+                          rounded="lg"
+                          variant="outlined"
+                          color="teal"
+                          :disabled="addSuperLoading"
+                          @click="addSuperExercise(i)"
+                          >ثبت حرکت سوپر</v-btn
+                        >
+                      </v-col>
+                    </v-row>
+                  </template>
+
+                  <!-- ---- super 2 ---- -->
+                  <template
+                    v-if="
+                      sessions[i].exerciseData.submitted &&
+                      sessions[i].superData.submitted &&
+                      sessions[i].superData2.active
+                    ">
+                    <span
+                      class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"></span>
+
+                    <v-row dense class="exercise-input w-full py-4">
+                      <!-- title -->
+                      <v-col cols="12" class="mb-2">
+                        <h2 class="text-dark font-bold">افزودن حرکت سوپر</h2>
+                      </v-col>
+
+                      <!-- exercise -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="حرکت"
+                          hide-details
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model="
+                            sessions[i].superData2.exerciseId
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- set -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="ست"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model.number="
+                            sessions[i].superData2.set
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- repeat -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="تکرار"
+                          hide-details
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model="
+                            sessions[i].superData2.repeat
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- rest -->
+                      <v-col cols="6">
+                        <v-text-field
+                          label="استراحت"
+                          hide-details
+                          type="number"
+                          color="secondary"
+                          class="mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model.number="
+                            sessions[i].superData2.rest
+                          "></v-text-field>
+                      </v-col>
+
+                      <!-- description -->
+                      <v-col cols="12">
+                        <v-textarea
+                          rows="4"
+                          no-resize
+                          hide-details
+                          label="توضیحات"
+                          color="secondary"
+                          class="*:min-h-28 mb-1"
+                          variant="outlined"
+                          :disabled="addSuperLoading"
+                          v-model="
+                            sessions[i].superData2.description
+                          "></v-textarea>
+                      </v-col>
+
+                      <v-col cols="12" v-if="sessions[i].superData2.active">
                         <v-btn
                           block
                           class="h-10"
@@ -770,7 +897,9 @@ const addSuperExercise = async (i) => {
 
   const superData = {
     sessionExerciseId: sessions.value[i].exerciseData.id,
-    ...sessions.value[i].superData,
+    ...(sessions.value[i].superData.submitted
+      ? { ...sessions.value[i].superData2 }
+      : { ...sessions.value[i].superData }),
   };
 
   await $axios
@@ -809,8 +938,13 @@ const addSuperExercise = async (i) => {
           return;
       }
 
-      sessions.value[i].superData.submitted = true;
-      sessions.value[i].superData.active = false;
+      if (sessions.value[i].superData.submitted) {
+        sessions.value[i].superData2.submitted = true;
+        sessions.value[i].superData2.active = false;
+      } else {
+        sessions.value[i].superData.submitted = true;
+        sessions.value[i].superData.active = false;
+      }
 
       $toast.success("حرکت سوپر با موفقیت افزوده شد");
 
