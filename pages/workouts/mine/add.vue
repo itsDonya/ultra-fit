@@ -1453,10 +1453,10 @@ const getGeneralExercises = async () => {
     });
 };
 const updatePage = (pageNumber) => {
-  if (exercisesWindow == 0) {
+  if (exercisesWindow.value == 0) {
     generalExercisesPagination.value.page = pageNumber;
     getGeneralExercises();
-  } else if (exercisesWindow == 1) {
+  } else if (exercisesWindow.value == 1) {
     customExercisesPagination.value.page = pageNumber;
     getCustomExercises();
   }
