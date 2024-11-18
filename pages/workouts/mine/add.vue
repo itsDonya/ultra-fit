@@ -662,7 +662,15 @@ const addExercise = async (i) => {
     .then((response) => {
       console.log("add exercise response: ", response);
 
-      sessions.value[i].exerciseData.id = response.data.result;
+      const resultId = response.data.result;
+
+      if (resultId == 0) {
+        addExerciseLoading.value = 0;
+        $toast.error("حرکت انتخاب شده صحیح نمی‌باشد؛ دوباره تلاش کنید");
+        return;
+      }
+
+      sessions.value[i].exerciseData.id = resultId;
       sessions.value[i].exerciseData.submitted = true;
 
       // errors
