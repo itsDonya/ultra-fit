@@ -438,7 +438,11 @@
                                   :key="index"
                                   class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200">
                                   <img
-                                    :src="$config.public.imageCdn + item.logo"
+                                    :src="
+                                      item.logo
+                                        ? $config.public.imageCdn + item.logo
+                                        : '/img/image-placeholder.png'
+                                    "
                                     class="w-full aspect-square object-cover origin-center rounded-md"
                                     alt="" />
 
@@ -461,6 +465,102 @@
                                 v-if="
                                   !generalExercisesLoading &&
                                   generalExercises.length
+                                "
+                                @update-page="
+                                  updatePage($event)
+                                "></app-pagination>
+                            </v-window-item>
+
+                            <!-- custom -->
+                            <v-window-item class="min-h-max">
+                              <div
+                                class="w-full md:w-auto mb-4 pt-2 flex items-center justify-end gap-2">
+                                <!-- search -->
+                                <v-text-field
+                                  clearable
+                                  label="جستجو"
+                                  color="secondary"
+                                  variant="outlined"
+                                  hide-details
+                                  v-model="
+                                    customExerciseFilters.search
+                                  "></v-text-field>
+
+                                <!-- category -->
+                                <v-select
+                                  clearable
+                                  color="secondary"
+                                  label="دسته بندی"
+                                  variant="outlined"
+                                  hide-details
+                                  :items="exerciseCategories"
+                                  :loading="categoriesLoading"
+                                  v-model="
+                                    customExerciseFilters.categoryId
+                                  "></v-select>
+
+                                <!-- type -->
+                                <v-select
+                                  clearable
+                                  color="secondary"
+                                  label="نوع حرکت"
+                                  variant="outlined"
+                                  hide-details
+                                  :items="typesList"
+                                  v-model="
+                                    customExerciseFilters.exerciseType
+                                  "></v-select>
+                              </div>
+
+                              <i-spinner-solid
+                                v-if="customExercisesLoading"
+                                class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+
+                              <p
+                                v-else-if="customExercises.length == 0"
+                                class="my-6 mx-auto text-neutral-600">
+                                در حال حاضر اطلاعاتی وجود ندارد
+                              </p>
+
+                              <ul
+                                v-if="
+                                  !customExercisesLoading &&
+                                  customExercises.length
+                                "
+                                class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4">
+                                <li
+                                  @click="setSelectedExercise(i, item)"
+                                  v-for="(item, index) in customExercises"
+                                  :key="index"
+                                  class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200">
+                                  <img
+                                    :src="
+                                      item.logo
+                                        ? $config.public.imageCdn + item.logo
+                                        : '/img/image-placeholder.png'
+                                    "
+                                    class="w-full aspect-square object-cover origin-center rounded-md"
+                                    alt="" />
+
+                                  <div
+                                    class="w-full flex flex-col items-start gap-0.5">
+                                    <p class="text-sm text-dark line-clamp-1">
+                                      {{ item.name }}
+                                    </p>
+                                    <p
+                                      class="text-xs text-primary/80 line-clamp-1">
+                                      {{ item.engName }}
+                                    </p>
+                                  </div>
+                                </li>
+                              </ul>
+
+                              <app-pagination
+                                class="mt-4"
+                                v-bind="customExercisesPagination"
+                                v-if="
+                                  !customExercisesLoading &&
+                                  customExercises.length
                                 "
                                 @update-page="
                                   updatePage($event)
@@ -759,17 +859,23 @@ const deleteExerciseDialog = ref(false);
 
 // loadings
 const addLoading = ref(false);
+const addSuperLoading = ref(false);
 const athletesLoading = ref(false);
-const generalExercisesLoading = ref(false);
 const categoriesLoading = ref(false);
 const addSessionLoading = ref(false);
 const addExerciseLoading = ref(false);
-const removeExerciseLoading = ref(false);
-const addSuperLoading = ref(false);
 const removeSuperLoading = ref(false);
+const removeExerciseLoading = ref(false);
+const customExercisesLoading = ref(false);
+const generalExercisesLoading = ref(false);
 
 // filters
 const generalExerciseFilters = ref({
+  search: null,
+  categoryId: null,
+  exerciseType: null,
+});
+const customExerciseFilters = ref({
   search: null,
   categoryId: null,
   exerciseType: null,
@@ -781,10 +887,16 @@ const generalExercisesPagination = ref({
   pageSize: 12,
   totalRecord: 0,
 });
+const customExercisesPagination = ref({
+  page: 1,
+  pageSize: 12,
+  totalRecord: 0,
+});
 
 // data
 const athletes = ref([]);
 const workoutId = ref(116);
+const customExercises = ref([]);
 const generalExercises = ref([]);
 // const sessions = ref([]);
 const sessions = ref([
@@ -1231,14 +1343,25 @@ const setSelectedExercise = (index, item) => {
 
   exercisesDialog.value = false;
 
+  customExercises.value = {};
   generalExercises.value = {};
 
+  customExerciseFilters.value = {
+    search: null,
+    categoryId: null,
+    exerciseType: null,
+  };
   generalExerciseFilters.value = {
     search: null,
     categoryId: null,
     exerciseType: null,
   };
 
+  customExercisesPagination.value = {
+    page: 1,
+    pageSize: 12,
+    totalRecord: 0,
+  };
   generalExercisesPagination.value = {
     page: 1,
     pageSize: 12,
@@ -1291,6 +1414,25 @@ const getCategories = async () => {
       categoriesLoading.value = false;
     });
 };
+const getCustomExercises = async () => {
+  customExercisesLoading.value = true;
+
+  await $axios
+    .post(`/Exercise/GetCoachExercise`, {
+      ...customExercisesLoading.value,
+      ...customExerciseFilters.value,
+    })
+    .then((response) => {
+      customExercises.value = response.data.result.records;
+      customExercisesLoading.value.totalRecord =
+        response.data.result.totalRecord;
+      customExercisesLoading.value = false;
+    })
+    .catch((error) => {
+      error && console.log("exercises error: ", error);
+      customExercisesLoading.value = false;
+    });
+};
 const getGeneralExercises = async () => {
   generalExercisesLoading.value = true;
 
@@ -1311,15 +1453,21 @@ const getGeneralExercises = async () => {
     });
 };
 const updatePage = (pageNumber) => {
-  generalExercisesPagination.value.page = pageNumber;
-  getGeneralExercises();
+  if (exercisesWindow == 0) {
+    generalExercisesPagination.value.page = pageNumber;
+    getGeneralExercises();
+  } else if (exercisesWindow == 1) {
+    customExercisesPagination.value.page = pageNumber;
+    getCustomExercises();
+  }
 };
 
 // lifecycles
 onMounted(() => {
   getAthletes();
-  getGeneralExercises();
   getCategories();
+  getCustomExercises();
+  getGeneralExercises();
 });
 
 // watchers
@@ -1335,6 +1483,14 @@ watch(
   () => {
     updatePage(1);
     getGeneralExercises();
+  },
+  { deep: true }
+);
+watch(
+  () => customExerciseFilters.value,
+  () => {
+    updatePage(1);
+    getCustomExercises();
   },
   { deep: true }
 );
