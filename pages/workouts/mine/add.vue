@@ -578,6 +578,17 @@
                     </v-row>
                   </template>
                 </div>
+
+                <v-btn
+                  color="teal"
+                  variant="text"
+                  rounded="sm"
+                  @click="panels = [i + 1]"
+                  v-if="i + 1 < sessionsCount"
+                  class="block !place-self-end !self-end !justify-self-end">
+                  <span class="text-teal-500">رفتن به جلسه‌ی بعد</span>
+                  <i-arrow-left class="text-teal-500 mt-1 mr-2"></i-arrow-left>
+                </v-btn>
               </v-expansion-panel-text>
             </v-expansion-panel>
           </v-expansion-panels>
