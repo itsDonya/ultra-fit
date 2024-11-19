@@ -4,7 +4,7 @@
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="w-[540px] !min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
+          class="sm:w-[540px] sm:!min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
           <!-- warning -->
           <v-alert
             type="info"

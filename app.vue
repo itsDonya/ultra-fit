@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: "UltraFitApp",
+  name: "MyAthleteApp",
 };
 </script>
 
