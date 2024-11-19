@@ -1,5 +1,6 @@
 <template>
-  <article class="w-full flex flex-col items-start justify-start gap-8">
+  <article
+    class="w-full max-h-screen p-6 pb-24 flex flex-col items-start justify-start gap-8 overflow-auto">
     <div
       class="w-full p-4 lg:p-0 flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
@@ -31,7 +32,7 @@
           <!-- category -->
           <p class="text-xs md:text-sm 3xl:text-base text-dark/80">
             دسته بندی:
-            <span class="font-bold"> ---- دسته بندی رو نمیفرستی ---- </span>
+            <span class="font-bold">{{ exerciseData.category.name }}</span>
           </p>
 
           <!-- type -->
@@ -46,7 +47,7 @@
         <!-- actions -->
         <div class="flex items-center justify-end gap-2">
           <!-- edit -->
-          <v-btn
+          <!-- <v-btn
             @click="router.push(`/exercises/mine/${route.params.id}/edit`)"
             class="h-8 md:h-9"
             color="#eab308"
@@ -54,7 +55,7 @@
             rounded="lg">
             <span class="text-xs md:text-sm">ویرایش</span>
             <i-pen-solid class="mr-2 text-yellow-500"></i-pen-solid>
-          </v-btn>
+          </v-btn> -->
 
           <!-- delete -->
           <v-btn
@@ -172,15 +173,16 @@ const getExerciseData = async (id) => {
     });
 };
 const deleteExercise = async () => {
-  console.log("id:::: ", Number(route.params.id));
   deleteLoading.value = true;
 
   await $axios
     .delete(`/Exercise/DeleteCoachExercise`, {
-      id: Number(route.params.id),
+      data: {
+        id: Number(route.params.id),
+      },
     })
     .then((response) => {
-      console.log("data: ", response.data.result);
+      deleteDialog.value = false;
       $toast.success("عملیات با موفقیت انجام شد");
       router.push("/exercises/mine");
     })

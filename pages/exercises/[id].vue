@@ -1,7 +1,7 @@
 <template>
-  <article class="w-full flex flex-col items-start justify-start gap-8">
-    <div
-      class="w-full p-4 lg:p-6 flex flex-col items-start justify-start gap-4">
+  <article
+    class="w-full max-h-screen p-6 pb-24 flex flex-col items-start justify-start gap-8 overflow-auto">
+    <div class="w-full flex flex-col items-start justify-start gap-4">
       <div class="w-full flex items-center justify-between">
         <!-- title -->
         <h2
