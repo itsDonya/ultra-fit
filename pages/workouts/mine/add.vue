@@ -867,14 +867,14 @@ import { typesList } from "@/utils/types";
 import { watch } from "vue";
 
 // variables
-const step = ref(1);
+const step = ref(0);
 const panels = ref([0]);
 const stopped = ref(false);
 const exercisesWindow = ref(0);
 const { $toast, $axios } = useNuxtApp();
 
 // dialogs
-const exercisesDialog = ref(true);
+const exercisesDialog = ref(false);
 const deleteExerciseDialog = ref(false);
 
 // loadings
@@ -915,49 +915,12 @@ const customExercisesPagination = ref({
 
 // data
 const athletes = ref([]);
-const workoutId = ref(116);
+const sessions = ref([]);
+const categories = ref([]);
+const workoutId = ref(null);
+const sessionsCount = ref(0);
 const customExercises = ref([]);
 const generalExercises = ref([]);
-// const sessions = ref([]);
-const sessions = ref([
-  {
-    categoryData: {
-      headerId: workoutId.value,
-      categorys: ["کول"],
-    },
-    exerciseData: {
-      sessionId: 56,
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData: {
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-    superData2: {
-      exerciseId: null,
-      exercise: null,
-      set: null,
-      repeat: null,
-      rest: null,
-      description: null,
-      submitted: false,
-    },
-  },
-]);
-// const workoutId = ref(null);
-const sessionsCount = ref(1);
-const categories = ref([]);
 const exerciseCategories = ref([]);
 const workoutData = ref({
   name: null,
