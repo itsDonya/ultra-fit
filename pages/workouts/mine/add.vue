@@ -1,17 +1,20 @@
 <template>
   <div
-    class="w-full max-h-screen mx-auto !pb-24 p-6 flex flex-center rounded-xl-tw overflow-auto">
+    class="w-full max-h-screen mx-auto !pb-24 p-6 flex flex-center rounded-xl-tw overflow-auto"
+  >
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="sm:w-[540px] sm:!min-w-[540px] py-2 flex flex-col items-start justify-center gap-4">
+          class="sm:w-[540px] sm:!min-w-[540px] py-2 flex flex-col items-start justify-center gap-4"
+        >
           <!-- warning -->
           <v-alert
             type="info"
             class="mb-2"
             rounded="lg"
             variant="tonal"
-            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"></v-alert>
+            text="در صورت انتخاب نکردن شاگرد، این برنامه به‌صورت عمومی در دسترس قرار خواهد گرفت"
+          ></v-alert>
 
           <!-- athlete -->
           <v-select
@@ -24,7 +27,8 @@
             label="انتخاب شاگرد"
             :loading="athletesLoading"
             v-model="workoutData.athleteId"
-            @click:clear="workoutData.athleteId = null">
+            @click:clear="workoutData.athleteId = null"
+          >
           </v-select>
 
           <!-- name -->
@@ -33,7 +37,8 @@
             color="primary"
             variant="outlined"
             label="عنوان برنامه"
-            v-model="workoutData.name">
+            v-model="workoutData.name"
+          >
           </v-text-field>
 
           <!-- sessions -->
@@ -45,7 +50,8 @@
             color="primary"
             variant="outlined"
             label="تعداد جلسات در هفته"
-            v-model.number="workoutData.sessionsPerWeek"></v-text-field>
+            v-model.number="workoutData.sessionsPerWeek"
+          ></v-text-field>
 
           <!-- duration -->
           <v-text-field
@@ -56,7 +62,8 @@
             :error="!!durationError"
             :hide-details="!durationError"
             :error-messages="durationError"
-            v-model="workoutData.duration"></v-text-field>
+            v-model="workoutData.duration"
+          ></v-text-field>
 
           <!-- description -->
           <v-textarea
@@ -65,7 +72,8 @@
             color="primary"
             label="توضیحات"
             variant="outlined"
-            v-model="workoutData.description">
+            v-model="workoutData.description"
+          >
           </v-textarea>
 
           <v-btn
@@ -81,12 +89,14 @@
 
       <v-window-item>
         <div
-          class="w-[600px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4">
+          class="w-[600px] !min-w-[680px] py-2 flex flex-col items-start justify-center gap-4"
+        >
           <v-expansion-panels
             v-model="panels"
             rounded="lg"
             elevation="1"
-            bg-color="#eeeeee60">
+            bg-color="#eeeeee60"
+          >
             <template v-for="(session, i) in sessionsCount">
               <v-expansion-panel :disabled="sessions[i].removed">
                 <!-- title -->
@@ -102,9 +112,11 @@
                         !sessions[i].removed &&
                         sessions[i].exerciseData.sessionId
                       "
-                      class="size-8 hover:bg-neutral-200 flex-center rounded-full transition-200 z-[20]">
+                      class="size-8 hover:bg-neutral-200 flex-center rounded-full transition-200 z-[20]"
+                    >
                       <i-trash-can-regular
-                        class="text-red-500"></i-trash-can-regular>
+                        class="text-red-500"
+                      ></i-trash-can-regular>
                     </div>
                   </div>
 
@@ -142,10 +154,12 @@
                 <!-- body -->
                 <v-expansion-panel-text v-if="!sessions[i].removed">
                   <div
-                    class="w-full flex flex-col items-center justify-start gap-2">
+                    class="w-full flex flex-col items-center justify-start gap-2"
+                  >
                     <!-- category -->
                     <div
-                      class="category-input w-full py-4 flex items-center justify-start gap-2">
+                      class="category-input w-full py-4 flex items-center justify-start gap-2"
+                    >
                       <v-select
                         multiple
                         clearable
@@ -158,7 +172,8 @@
                           addSessionLoading ||
                           !!sessions[i].exerciseData.sessionId
                         "
-                        v-model="sessions[i].categoryData.categorys"></v-select>
+                        v-model="sessions[i].categoryData.categorys"
+                      ></v-select>
 
                       <div>
                         <v-btn
@@ -169,21 +184,25 @@
                           :disabled="
                             addSessionLoading ||
                             sessions[i].exerciseData.sessionId
-                          ">
+                          "
+                        >
                           <i-check-solid
-                            class="text-primary tex"></i-check-solid>
+                            class="text-primary tex"
+                          ></i-check-solid>
                         </v-btn>
                       </div>
                     </div>
 
                     <template v-if="sessions[i].exerciseData.sessionId">
                       <span
-                        class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"></span>
+                        class="w-full h-[1px] bg-neutral-300/80 rounded-[50%]"
+                      ></span>
 
                       <!-- submitted (regular) -->
                       <div
                         v-if="sessions[i].exerciseData.submitted"
-                        class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-secondary rounded-lg shadow">
+                        class="w-full h-12 pr-4 pl-1.5 mt-2 bg-white flex items-center justify-between border-r-4 border-secondary rounded-lg shadow"
+                      >
                         <p class="text-dark font-bold">
                           {{ sessions[i].exerciseData.exercise }}
                           <span
@@ -234,40 +253,47 @@
                       <!-- submitted (super) -->
                       <span
                         v-if="sessions[i].superData.submitted"
-                        class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"></span>
+                        class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"
+                      ></span>
 
                       <div
                         v-if="sessions[i].superData.submitted"
-                        class="w-full h-12 pr-4 mt-2 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow overflow-hidden">
+                        class="w-full h-12 pr-4 mt-2 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow overflow-hidden"
+                      >
                         <p class="text-dark font-bold">
                           {{ sessions[i].superData.exercise }}
                           <span
-                            class="mr-2 text-sm text-neutral-400 font-normal">
+                            class="mr-2 text-sm text-neutral-400 font-normal"
+                          >
                             {{ sessions[i].superData.set }} ست
                             {{ sessions[i].superData.repeat }} تایی
                           </span>
                         </p>
 
                         <div
-                          class="h-full aspect-square bg-orange-500/10 flex-center">
+                          class="h-full aspect-square bg-orange-500/10 flex-center"
+                        >
                           <span class="mb-1 text-orange-500">سوپر</span>
                         </div>
                       </div>
 
                       <div
                         v-if="sessions[i].superData2.submitted"
-                        class="w-full h-12 pr-4 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow overflow-hidden">
+                        class="w-full h-12 pr-4 bg-white flex items-center justify-between border-r-4 border-teal-500 rounded-lg shadow overflow-hidden"
+                      >
                         <p class="text-dark font-bold">
                           {{ sessions[i].superData2.exercise }}
                           <span
-                            class="mr-2 text-sm text-neutral-400 font-normal">
+                            class="mr-2 text-sm text-neutral-400 font-normal"
+                          >
                             {{ sessions[i].superData2.set }} ست
                             {{ sessions[i].superData2.repeat }} تایی
                           </span>
                         </p>
 
                         <div
-                          class="h-full aspect-square bg-orange-500/10 flex-center">
+                          class="h-full aspect-square bg-orange-500/10 flex-center"
+                        >
                           <span class="mb-1 text-orange-500">سوپر</span>
                         </div>
                       </div>
@@ -275,7 +301,8 @@
                       <v-row
                         v-if="!sessions[i].exerciseData.submitted"
                         dense
-                        class="exercise-input w-full py-4">
+                        class="exercise-input w-full py-4"
+                      >
                         <!-- title -->
                         <v-col cols="12" class="mb-2">
                           <h2 class="text-dark font-bold">افزودن حرکت</h2>
@@ -294,15 +321,18 @@
                               addExerciseLoading ||
                               !sessions[i].exerciseData.sessionId
                             "
-                            v-model="sessions[i].exerciseData.exercise">
+                            v-model="sessions[i].exerciseData.exercise"
+                          >
                             <template #append-inner>
                               <v-btn
                                 rounded="lg"
                                 color="primary"
                                 @click="showExercises(i)"
-                                class="!min-w-max !w-max !max-w-max">
+                                class="!min-w-max !w-max !max-w-max"
+                              >
                                 <i-magnifying-glass-solid
-                                  class="text-white"></i-magnifying-glass-solid>
+                                  class="text-white"
+                                ></i-magnifying-glass-solid>
                               </v-btn>
                             </template>
                           </v-text-field>
@@ -321,9 +351,8 @@
                               addExerciseLoading ||
                               !sessions[i].exerciseData.sessionId
                             "
-                            v-model.number="
-                              sessions[i].exerciseData.set
-                            "></v-text-field>
+                            v-model.number="sessions[i].exerciseData.set"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- repeat -->
@@ -338,9 +367,8 @@
                               addExerciseLoading ||
                               !sessions[i].exerciseData.sessionId
                             "
-                            v-model="
-                              sessions[i].exerciseData.repeat
-                            "></v-text-field>
+                            v-model="sessions[i].exerciseData.repeat"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- rest -->
@@ -356,9 +384,8 @@
                               addExerciseLoading ||
                               !sessions[i].exerciseData.sessionId
                             "
-                            v-model.number="
-                              sessions[i].exerciseData.rest
-                            "></v-text-field>
+                            v-model.number="sessions[i].exerciseData.rest"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- description -->
@@ -375,14 +402,14 @@
                               addExerciseLoading ||
                               !sessions[i].exerciseData.sessionId
                             "
-                            v-model="
-                              sessions[i].exerciseData.description
-                            "></v-textarea>
+                            v-model="sessions[i].exerciseData.description"
+                          ></v-textarea>
                         </v-col>
 
                         <v-col
                           cols="12"
-                          v-if="!sessions[i].exerciseData.submitted">
+                          v-if="!sessions[i].exerciseData.submitted"
+                        >
                           <v-btn
                             block
                             class="h-10"
@@ -391,7 +418,13 @@
                             color="teal"
                             :disabled="
                               addExerciseLoading ||
-                              !sessions[i].exerciseData.sessionId
+                              !sessions[i].exerciseData.sessionId ||
+                              !(
+                                sessions[i].exerciseData.exercise ||
+                                sessions[i].exerciseData.exerciseId
+                              ) ||
+                              !sessions[i].exerciseData.set ||
+                              !sessions[i].exerciseData.repeat
                             "
                             @click="addExercise(i)"
                             >ثبت حرکت</v-btn
@@ -417,9 +450,11 @@
                             sessions[i].superData.submitted
                               ? (sessions[i].superData2.active = true)
                               : (sessions[i].superData.active = true)
-                          ">
+                          "
+                        >
                           <i-plus-solid
-                            class="ml-2 text-primary"></i-plus-solid>
+                            class="ml-2 text-primary"
+                          ></i-plus-solid>
                           <span>افزودن حرکت سوپر</span>
                         </v-btn>
                         <span v-else></span>
@@ -448,7 +483,8 @@
                             </p>
 
                             <div
-                              class="mt-6 flex items-center justify-end gap-2">
+                              class="mt-6 flex items-center justify-end gap-2"
+                            >
                               <v-btn
                                 color="red"
                                 @click="deleteSuperDialog = false"
@@ -473,7 +509,8 @@
                       <v-dialog v-model="exercisesDialog">
                         <v-card
                           rounded="lg"
-                          class="exercises-modal w-[600px] h-screen m-auto p-4 bg-white gap-4">
+                          class="exercises-modal w-[600px] h-screen m-auto p-4 bg-white gap-4"
+                        >
                           <!-- header -->
                           <div class="w-full flex items-center justify-between">
                             <p class="text-dark">
@@ -482,9 +519,11 @@
 
                             <div
                               @click="exercisesDialog = false"
-                              class="size-9 hover:bg-neutral-400/10 flex-center rounded-full transition-200 cursor-pointer">
+                              class="size-9 hover:bg-neutral-400/10 flex-center rounded-full transition-200 cursor-pointer"
+                            >
                               <i-xmark-solid
-                                class="text-neutral-600"></i-xmark-solid>
+                                class="text-neutral-600"
+                              ></i-xmark-solid>
                             </div>
                           </div>
 
@@ -499,7 +538,8 @@
                             <!-- general -->
                             <v-window-item class="min-h-max">
                               <div
-                                class="w-full md:w-auto mb-4 pt-2 flex items-center justify-end gap-2">
+                                class="w-full md:w-auto mb-4 pt-2 flex items-center justify-end gap-2"
+                              >
                                 <!-- search -->
                                 <v-text-field
                                   clearable
@@ -507,9 +547,8 @@
                                   color="secondary"
                                   variant="outlined"
                                   hide-details
-                                  v-model="
-                                    generalExerciseFilters.search
-                                  "></v-text-field>
+                                  v-model="generalExerciseFilters.search"
+                                ></v-text-field>
 
                                 <!-- category -->
                                 <v-select
@@ -520,9 +559,8 @@
                                   hide-details
                                   :items="exerciseCategories"
                                   :loading="categoriesLoading"
-                                  v-model="
-                                    generalExerciseFilters.categoryId
-                                  "></v-select>
+                                  v-model="generalExerciseFilters.categoryId"
+                                ></v-select>
 
                                 <!-- type -->
                                 <v-select
@@ -532,18 +570,19 @@
                                   variant="outlined"
                                   hide-details
                                   :items="typesList"
-                                  v-model="
-                                    generalExerciseFilters.exerciseType
-                                  "></v-select>
+                                  v-model="generalExerciseFilters.exerciseType"
+                                ></v-select>
                               </div>
 
                               <i-spinner-solid
                                 v-if="generalExercisesLoading"
-                                class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+                                class="mx-auto my-8 text-2xl text-primary animate-spin"
+                              ></i-spinner-solid>
 
                               <p
                                 v-else-if="generalExercises.length == 0"
-                                class="my-6 mx-auto text-neutral-600">
+                                class="my-6 mx-auto text-neutral-600"
+                              >
                                 در حال حاضر اطلاعاتی وجود ندارد
                               </p>
 
@@ -552,12 +591,14 @@
                                   !generalExercisesLoading &&
                                   generalExercises.length
                                 "
-                                class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4">
+                                class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4"
+                              >
                                 <li
                                   @click="setSelectedExercise(i, item)"
                                   v-for="(item, index) in generalExercises"
                                   :key="index"
-                                  class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200">
+                                  class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200"
+                                >
                                   <img
                                     :src="
                                       item.logo
@@ -565,15 +606,18 @@
                                         : '/img/image-placeholder.png'
                                     "
                                     class="w-full aspect-square object-cover origin-center rounded-md"
-                                    alt="" />
+                                    alt=""
+                                  />
 
                                   <div
-                                    class="w-full flex flex-col items-start gap-0.5">
+                                    class="w-full flex flex-col items-start gap-0.5"
+                                  >
                                     <p class="text-sm text-dark line-clamp-1">
                                       {{ item.name }}
                                     </p>
                                     <p
-                                      class="text-xs text-primary/80 line-clamp-1">
+                                      class="text-xs text-primary/80 line-clamp-1"
+                                    >
                                       {{ item.engName }}
                                     </p>
                                   </div>
@@ -587,15 +631,15 @@
                                   !generalExercisesLoading &&
                                   generalExercises.length
                                 "
-                                @update-page="
-                                  updatePage($event)
-                                "></app-pagination>
+                                @update-page="updatePage($event)"
+                              ></app-pagination>
                             </v-window-item>
 
                             <!-- custom -->
                             <v-window-item class="min-h-max">
                               <div
-                                class="w-full md:w-auto mb-4 pt-2 flex items-center justify-end gap-2">
+                                class="w-full md:w-auto mb-4 pt-2 flex items-center justify-end gap-2"
+                              >
                                 <!-- search -->
                                 <v-text-field
                                   clearable
@@ -603,9 +647,8 @@
                                   color="secondary"
                                   variant="outlined"
                                   hide-details
-                                  v-model="
-                                    customExerciseFilters.search
-                                  "></v-text-field>
+                                  v-model="customExerciseFilters.search"
+                                ></v-text-field>
 
                                 <!-- category -->
                                 <v-select
@@ -616,9 +659,8 @@
                                   hide-details
                                   :items="exerciseCategories"
                                   :loading="categoriesLoading"
-                                  v-model="
-                                    customExerciseFilters.categoryId
-                                  "></v-select>
+                                  v-model="customExerciseFilters.categoryId"
+                                ></v-select>
 
                                 <!-- type -->
                                 <v-select
@@ -628,18 +670,19 @@
                                   variant="outlined"
                                   hide-details
                                   :items="typesList"
-                                  v-model="
-                                    customExerciseFilters.exerciseType
-                                  "></v-select>
+                                  v-model="customExerciseFilters.exerciseType"
+                                ></v-select>
                               </div>
 
                               <i-spinner-solid
                                 v-if="customExercisesLoading"
-                                class="mx-auto my-8 text-2xl text-primary animate-spin"></i-spinner-solid>
+                                class="mx-auto my-8 text-2xl text-primary animate-spin"
+                              ></i-spinner-solid>
 
                               <p
                                 v-else-if="customExercises.length == 0"
-                                class="my-6 mx-auto text-neutral-600">
+                                class="my-6 mx-auto text-neutral-600"
+                              >
                                 در حال حاضر اطلاعاتی وجود ندارد
                               </p>
 
@@ -648,12 +691,14 @@
                                   !customExercisesLoading &&
                                   customExercises.length
                                 "
-                                class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4">
+                                class="w-full min-h-max grid grid-cols-4 items-start justify-start gap-4"
+                              >
                                 <li
                                   @click="setSelectedExercise(i, item)"
                                   v-for="(item, index) in customExercises"
                                   :key="index"
-                                  class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200">
+                                  class="w-full p-1.5 hover:bg-secondary/20 flex flex-col items-start justify-start gap-2 rounded-md cursor-pointer transition-200"
+                                >
                                   <img
                                     :src="
                                       item.logo
@@ -661,15 +706,18 @@
                                         : '/img/image-placeholder.png'
                                     "
                                     class="w-full aspect-square object-cover origin-center rounded-md"
-                                    alt="" />
+                                    alt=""
+                                  />
 
                                   <div
-                                    class="w-full flex flex-col items-start gap-0.5">
+                                    class="w-full flex flex-col items-start gap-0.5"
+                                  >
                                     <p class="text-sm text-dark line-clamp-1">
                                       {{ item.name }}
                                     </p>
                                     <p
-                                      class="text-xs text-primary/80 line-clamp-1">
+                                      class="text-xs text-primary/80 line-clamp-1"
+                                    >
                                       {{ item.engName }}
                                     </p>
                                   </div>
@@ -683,9 +731,8 @@
                                   !customExercisesLoading &&
                                   customExercises.length
                                 "
-                                @update-page="
-                                  updatePage($event)
-                                "></app-pagination>
+                                @update-page="updatePage($event)"
+                              ></app-pagination>
                             </v-window-item>
                           </v-window>
                         </v-card>
@@ -697,9 +744,11 @@
                       v-if="
                         sessions[i].exerciseData.submitted &&
                         sessions[i].superData.active
-                      ">
+                      "
+                    >
                       <span
-                        class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"></span>
+                        class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"
+                      ></span>
 
                       <v-row dense class="exercise-input w-full py-4">
                         <!-- title -->
@@ -717,15 +766,18 @@
                             variant="outlined"
                             :disabled="addSuperLoading"
                             @input="sessions[i].superData.exerciseId = null"
-                            v-model="sessions[i].superData.exercise">
+                            v-model="sessions[i].superData.exercise"
+                          >
                             <template #append-inner>
                               <v-btn
                                 rounded="lg"
                                 color="primary"
                                 @click="showExercises(i)"
-                                class="!min-w-max !w-max !max-w-max">
+                                class="!min-w-max !w-max !max-w-max"
+                              >
                                 <i-magnifying-glass-solid
-                                  class="text-white"></i-magnifying-glass-solid>
+                                  class="text-white"
+                                ></i-magnifying-glass-solid>
                               </v-btn>
                             </template>
                           </v-text-field>
@@ -741,9 +793,8 @@
                             class="mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model.number="
-                              sessions[i].superData.set
-                            "></v-text-field>
+                            v-model.number="sessions[i].superData.set"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- repeat -->
@@ -755,9 +806,8 @@
                             class="mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model="
-                              sessions[i].superData.repeat
-                            "></v-text-field>
+                            v-model="sessions[i].superData.repeat"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- rest -->
@@ -770,9 +820,8 @@
                             class="mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model.number="
-                              sessions[i].superData.rest
-                            "></v-text-field>
+                            v-model.number="sessions[i].superData.rest"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- description -->
@@ -786,9 +835,8 @@
                             class="*:min-h-28 mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model="
-                              sessions[i].superData.description
-                            "></v-textarea>
+                            v-model="sessions[i].superData.description"
+                          ></v-textarea>
                         </v-col>
 
                         <v-col cols="12" v-if="sessions[i].superData.active">
@@ -798,7 +846,15 @@
                             rounded="lg"
                             variant="outlined"
                             color="teal"
-                            :disabled="addSuperLoading"
+                            :disabled="
+                              addSuperLoading ||
+                              !(
+                                sessions[i].superData.exercise ||
+                                sessions[i].superData.exerciseId
+                              ) ||
+                              !sessions[i].superData.set ||
+                              !sessions[i].superData.repeat
+                            "
                             @click="addSuperExercise(i)"
                             >ثبت حرکت سوپر</v-btn
                           >
@@ -812,9 +868,11 @@
                         sessions[i].exerciseData.submitted &&
                         sessions[i].superData.submitted &&
                         sessions[i].superData2.active
-                      ">
+                      "
+                    >
                       <span
-                        class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"></span>
+                        class="w-full h-[1px] mt-4 bg-neutral-300/80 rounded-[50%]"
+                      ></span>
 
                       <v-row dense class="exercise-input w-full py-4">
                         <!-- title -->
@@ -832,15 +890,18 @@
                             variant="outlined"
                             :disabled="addSuperLoading"
                             @input="sessions[i].superData2.exerciseId = null"
-                            v-model="sessions[i].superData2.exercise">
+                            v-model="sessions[i].superData2.exercise"
+                          >
                             <template #append-inner>
                               <v-btn
                                 rounded="lg"
                                 color="primary"
                                 @click="showExercises(i)"
-                                class="!min-w-max !w-max !max-w-max">
+                                class="!min-w-max !w-max !max-w-max"
+                              >
                                 <i-magnifying-glass-solid
-                                  class="text-white"></i-magnifying-glass-solid>
+                                  class="text-white"
+                                ></i-magnifying-glass-solid>
                               </v-btn>
                             </template>
                           </v-text-field>
@@ -856,9 +917,8 @@
                             class="mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model.number="
-                              sessions[i].superData2.set
-                            "></v-text-field>
+                            v-model.number="sessions[i].superData2.set"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- repeat -->
@@ -870,9 +930,8 @@
                             class="mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model="
-                              sessions[i].superData2.repeat
-                            "></v-text-field>
+                            v-model="sessions[i].superData2.repeat"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- rest -->
@@ -885,9 +944,8 @@
                             class="mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model.number="
-                              sessions[i].superData2.rest
-                            "></v-text-field>
+                            v-model.number="sessions[i].superData2.rest"
+                          ></v-text-field>
                         </v-col>
 
                         <!-- description -->
@@ -901,9 +959,8 @@
                             class="*:min-h-28 mb-1"
                             variant="outlined"
                             :disabled="addSuperLoading"
-                            v-model="
-                              sessions[i].superData2.description
-                            "></v-textarea>
+                            v-model="sessions[i].superData2.description"
+                          ></v-textarea>
                         </v-col>
 
                         <v-col cols="12" v-if="sessions[i].superData2.active">
@@ -913,7 +970,15 @@
                             rounded="lg"
                             variant="outlined"
                             color="teal"
-                            :disabled="addSuperLoading"
+                            :disabled="
+                              addSuperLoading ||
+                              !(
+                                sessions[i].superData2.exercise ||
+                                sessions[i].superData2.exerciseId
+                              ) ||
+                              !sessions[i].superData2.set ||
+                              !sessions[i].superData2.repeat
+                            "
                             @click="addSuperExercise(i)"
                             >ثبت حرکت سوپر</v-btn
                           >
@@ -928,10 +993,12 @@
                     rounded="sm"
                     @click="panels = [i + 1]"
                     v-if="i + 1 < sessionsCount"
-                    class="block !place-self-end !self-end !justify-self-end">
+                    class="block !place-self-end !self-end !justify-self-end"
+                  >
                     <span class="text-teal-500">رفتن به جلسه‌ی بعد</span>
                     <i-arrow-left
-                      class="text-teal-500 mt-1 mr-2"></i-arrow-left>
+                      class="text-teal-500 mt-1 mr-2"
+                    ></i-arrow-left>
                   </v-btn>
                 </v-expansion-panel-text>
               </v-expansion-panel>
@@ -1267,11 +1334,7 @@ const removeExercise = async (i) => {
 
   await $axios
     .delete(
-      "/Coach/RemoveSessionExercise",
-      {},
-      {
-        sessionExerciseId,
-      }
+      `/Coach/RemoveSessionExercise?sessionExerciseId=${sessionExerciseId}`
     )
     .then((response) => {
       console.log("remove exercise response: ", response);

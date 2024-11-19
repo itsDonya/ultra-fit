@@ -1,7 +1,8 @@
 <template>
   <aside
     :class="[`${isOpen ? 'min-w-4/5 w-4/5 p-2' : ' min-w-0 w-0 max-w-0 p-0'}`]"
-    class="panel-sidebar absolute top-0 right-0 lg:static h-full lg:min-w-56 lg:w-56 lg:max-w-56 lg:p-2 transition-all duration-300 overflow-hidden z-10">
+    class="panel-sidebar absolute top-0 right-0 lg:static h-full lg:min-w-56 lg:w-56 lg:max-w-56 lg:p-2 transition-all duration-300 overflow-hidden z-10"
+  >
     <v-expansion-panels>
       <template v-for="(item, i) in sidebarLinks">
         <v-expansion-panel v-if="item.children" elevation="0">
@@ -9,10 +10,12 @@
             <v-list-item class="p-0">
               <div :key="i" :to="item.path">
                 <div
-                  class="h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+                  class="h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200"
+                >
                   <component
                     :is="`i-${item.icon}`"
-                    class="text-white"></component>
+                    class="text-white"
+                  ></component>
                   <span class="text-sm text-white">{{ item.title }}</span>
                 </div>
               </div>
@@ -23,10 +26,12 @@
             <v-list-item
               v-for="(child, j) in item.children"
               :key="j"
-              class="!w-full !m-0 !p-0">
+              class="!w-full !m-0 !p-0"
+            >
               <nuxt-link class="w-full" :to="child.path">
                 <div
-                  class="h-11 xl:h-12 px-4 mx-3 flex items-center justify-start gap-2.5 rounded-lg transition-all duration-200">
+                  class="h-11 xl:h-12 px-4 mx-3 flex items-center justify-start gap-2.5 rounded-lg transition-all duration-200"
+                >
                   <span class="icon size-1.5 bg-none rounded-full"></span>
                   <span class="text-sm text-white">{{ child.title }}</span>
                 </div>
@@ -38,7 +43,8 @@
         <v-list-item v-else class="w-full p-0">
           <nuxt-link class="w-full" :key="i" :to="item.path">
             <div
-              class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200">
+              class="w-full h-11 xl:h-12 px-4 bg-none flex items-center justify-start gap-3 rounded-lg transition-all duration-200"
+            >
               <component :is="`i-${item.icon}`" class="text-white"></component>
               <span class="text-sm text-white">{{ item.title }}</span>
             </div>
@@ -63,26 +69,26 @@ const sidebarLinks = ref([
   //   title: "داشبورد",
   //   path: "/coming-soon",
   // },
-  {
-    value: "Exercises",
-    icon: "dumbbell",
-    title: "حرکات",
+  // {
+  //   value: "Exercises",
+  //   icon: "dumbbell",
+  //   title: "حرکات",
 
-    children: [
-      {
-        title: "حرکات عمومی",
-        path: "/exercises",
-      },
-      {
-        title: "حرکات من",
-        path: "/exercises/mine",
-      },
-      {
-        title: "ایجاد حرکت",
-        path: "/exercises/mine/add",
-      },
-    ],
-  },
+  //   children: [
+  //     {
+  //       title: "حرکات عمومی",
+  //       path: "/exercises",
+  //     },
+  //     {
+  //       title: "حرکات من",
+  //       path: "/exercises/mine",
+  //     },
+  //     {
+  //       title: "ایجاد حرکت",
+  //       path: "/exercises/mine/add",
+  //     },
+  //   ],
+  // },
   {
     value: "Workouts",
     icon: "calendar-lines",
