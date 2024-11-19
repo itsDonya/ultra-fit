@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full max-h-screen mx-auto !pb-20 p-6 flex flex-center rounded-xl-tw overflow-auto">
+    class="w-full max-h-screen mx-auto !pb-24 p-6 flex flex-center rounded-xl-tw overflow-auto">
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div

@@ -1,6 +1,6 @@
 <template>
   <article
-    class="general-exercises w-full max-h-screen p-6 flex flex-col items-start justify-between gap-8 pb-20 overflow-auto">
+    class="general-exercises w-full max-h-screen p-6 flex flex-col items-start justify-between gap-8 pb-24 overflow-auto">
     <div
       class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4">
       <div
@@ -56,7 +56,7 @@
 
       <ul
         v-if="!fetchLoading && exerciseList.length"
-        class="w-full grid grid-cols-2 md:grid-cols-8 grid-rows-5 md:grid-rows-3 items-start justify-start gap-4">
+        class="w-full grid grid-cols-2 md:grid-cols-8 grid-rows-5 md:grid-rows-2 items-start justify-start gap-4">
         <li
           @click="router.push(`/exercises/${item.id}`)"
           v-for="(item, i) in exerciseList"
