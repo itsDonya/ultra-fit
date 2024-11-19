@@ -1,6 +1,6 @@
 <template>
   <article
-    class="w-full md:h-full p-6 flex flex-col items-start justify-between gap-8 pb-24 md:pb-4">
+    class="general-exercises w-full max-h-screen p-6 flex flex-col items-start justify-between gap-8 pb-20 overflow-auto">
     <div
       class="w-full p-1 lg:p-0 flex flex-col items-start justify-start gap-4">
       <div
@@ -56,7 +56,7 @@
 
       <ul
         v-if="!fetchLoading && exerciseList.length"
-        class="w-full grid grid-cols-2 md:grid-cols-5 grid-rows-5 md:grid-rows-2 items-start justify-start gap-x-6 md:gap-x-2 lg:gap-x-6 xl:gap-x-14 gap-y-6 md:gap-y-2 lg:gap-y-4">
+        class="w-full grid grid-cols-2 md:grid-cols-8 grid-rows-5 md:grid-rows-3 items-start justify-start gap-4">
         <li
           @click="router.push(`/exercises/${item.id}`)"
           v-for="(item, i) in exerciseList"
@@ -107,7 +107,7 @@ const filters = ref({
 // pagination
 const pagination = ref({
   page: 1,
-  pageSize: 10,
+  pageSize: 24,
   totalRecord: 0,
 });
 
@@ -165,10 +165,24 @@ onMounted(() => {
 watch(
   () => filters.value,
   () => {
+    updatePage(1);
     getExercises();
   },
   { deep: true }
 );
 </script>
 
-<style></style>
+<style>
+.general-exercises .v-input {
+  @apply !min-w-0 !w-44;
+}
+.general-exercises .v-input .v-field__outline .v-label {
+  @apply !bg-transparent;
+}
+.general-exercises .v-field__field {
+  @apply !min-h-10 h-10 max-h-10;
+}
+.general-exercises .v-field__input {
+  @apply -mt-1.5 text-sm;
+}
+</style>
