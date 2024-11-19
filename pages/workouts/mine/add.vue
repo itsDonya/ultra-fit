@@ -373,7 +373,6 @@
                             </v-tabs>
                           </div>
 
-                          <!-- TEST -->
                           <v-window v-model="exercisesWindow" class="min-h-max">
                             <!-- general -->
                             <v-window-item class="min-h-max">
@@ -845,12 +844,13 @@
 
 <script setup>
 import { typesList } from "@/utils/types";
+import { watch } from "vue";
 
 // variables
 const step = ref(1);
 const panels = ref([0]);
 const stopped = ref(false);
-const exercisesWindow = ref(1);
+const exercisesWindow = ref(0);
 const { $toast, $axios } = useNuxtApp();
 
 // dialogs
@@ -1493,6 +1493,34 @@ watch(
     getCustomExercises();
   },
   { deep: true }
+);
+watch(
+  () => exercisesDialog.value,
+  (value) => {
+    if (!value) {
+      customExerciseFilters.value = {
+        search: null,
+        categoryId: null,
+        exerciseType: null,
+      };
+      generalExerciseFilters.value = {
+        search: null,
+        categoryId: null,
+        exerciseType: null,
+      };
+
+      customExercisesPagination.value = {
+        page: 1,
+        pageSize: 12,
+        totalRecord: 0,
+      };
+      generalExercisesPagination.value = {
+        page: 1,
+        pageSize: 12,
+        totalRecord: 0,
+      };
+    }
+  }
 );
 </script>
 
