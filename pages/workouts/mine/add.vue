@@ -881,14 +881,13 @@
             </v-expansion-panel>
           </v-expansion-panels>
 
-          <!-- <v-btn
+          <v-btn
             block
             color="primary"
-            :loading="addLoading"
-            :disabled="!validWorkout || addLoading"
+            to="/workouts/mine"
             class="!h-11 rounded-lg"
-            >ثبت و ایجاد برنامه</v-btn
-          > -->
+            >ثبت نهایی و ایجاد برنامه</v-btn
+          >
         </div>
       </v-window-item>
     </v-window>
