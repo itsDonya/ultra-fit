@@ -1235,16 +1235,15 @@ const removeSession = async (e, i) => {
     .then((response) => {
       console.log("remove session response: ", response);
 
-      sessions.value[i].removed = true;
-
       // errors
-      // const errorMessage = response.data.errorCode;
-      // switch (errorMessage) {
-      //   case "NumberOfSessionIsFull":
-      //     $toast.error("جلسات این برنامه تکمیل می‌باشد");
-      //     deleteSessionDialog.value = false;
-      //     return;
-      // }
+      const errorMessage = response.data.errorCode;
+      if (errorMessage == "SessionHasExercise") {
+        $toast.error("برای حذف جلسه ابتدا تمامی حرکات آن را پاک کنید");
+        deleteSessionDialog.value = false;
+        return;
+      }
+
+      sessions.value[i].removed = true;
 
       deleteSessionDialog.value = false;
 
@@ -1265,7 +1264,6 @@ const removeExercise = async (i) => {
   removeExerciseLoading.value = true;
 
   const sessionExerciseId = sessions.value[i].exerciseData.id;
-  console.log("sessionExerciseId: ", sessionExerciseId);
 
   await $axios
     .delete(
@@ -1564,12 +1562,12 @@ const getCustomExercises = async () => {
 
   await $axios
     .post(`/Exercise/GetCoachExercise`, {
-      ...customExercisesLoading.value,
+      ...customExercisesPagination.value,
       ...customExerciseFilters.value,
     })
     .then((response) => {
       customExercises.value = response.data.result.records;
-      customExercisesLoading.value.totalRecord =
+      customExercisesPagination.value.totalRecord =
         response.data.result.totalRecord;
       customExercisesLoading.value = false;
     })
