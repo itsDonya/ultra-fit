@@ -376,11 +376,44 @@
                         variant="text"
                         color="red"
                         rounded="md"
-                        @click="removeSuper(i)"
+                        @click="deleteSuperDialog = true"
                         :loading="removeSuperLoading"
                         v-if="sessions[i].superData.submitted"
                         >حذف حرکات سوپر</v-btn
                       >
+
+                      <v-dialog v-model="deleteSuperDialog" max-width="500">
+                        <v-card class="rounded-lg !p-4">
+                          <p class="text-[14px] text-red pt-1">
+                            <v-icon size="large" class="ml-2"
+                              >mdi-alert-circle</v-icon
+                            >
+                            {{
+                              sessions[i].superData2.submitted
+                                ? "توجه داشته باشید که تمامی حرکات سوپر حذف خواهند شد"
+                                : "از حذف حرکت سوپر مطمئن هستید؟"
+                            }}
+                          </p>
+
+                          <div class="mt-6 flex items-center justify-end gap-2">
+                            <v-btn
+                              color="red"
+                              @click="deleteSuperDialog = false"
+                              >بستن</v-btn
+                            >
+                            <v-btn
+                              @click="
+                                removeSuper(i);
+                                deleteSuperDialog = false;
+                              "
+                              color="red"
+                              variant="tonal"
+                              class="!border-[1px] !border-red"
+                              >حذف</v-btn
+                            >
+                          </div>
+                        </v-card>
+                      </v-dialog>
                     </div>
 
                     <!-- exercises dialog -->
@@ -875,6 +908,7 @@ const { $toast, $axios } = useNuxtApp();
 
 // dialogs
 const exercisesDialog = ref(false);
+const deleteSuperDialog = ref(false);
 const deleteExerciseDialog = ref(false);
 
 // loadings
@@ -1315,7 +1349,7 @@ const removeSuper = async (i) => {
         active: false,
       };
 
-      $toast.success("حذف حرکت سوپر با موفقیت انجام شد");
+      $toast.success("حذف حرکات سوپر با موفقیت انجام شد");
 
       removeSuperLoading.value = false;
     })
