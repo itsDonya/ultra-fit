@@ -5,7 +5,7 @@
     <v-window v-model="step" class="m-auto">
       <v-window-item>
         <div
-          class="sm:w-[540px] sm:!min-w-[540px] py-2 flex flex-col items-start justify-center gap-4"
+          class="workout-fields sm:w-[540px] sm:!min-w-[540px] py-2 flex flex-col items-start justify-center gap-4"
         >
           <!-- warning -->
           <v-alert
@@ -18,7 +18,6 @@
 
           <!-- athlete -->
           <v-select
-            chips
             clearable
             hide-details
             color="primary"
@@ -1746,6 +1745,7 @@ watch(
 .exercise-input .v-input {
   @apply !min-w-0;
 }
+.workout-fields .v-input .v-field__outline .v-label,
 .exercises-modal .v-input .v-field__outline .v-label,
 .category-input .v-input .v-field__outline .v-label,
 .exercise-input .v-input .v-field__outline .v-label {
